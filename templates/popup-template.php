@@ -78,6 +78,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php esc_html_e( 'Settings', 'wp-notice-manager' ); ?>
 			</a>
 		</div>
+
+		<!-- Toast Container -->
+		<div id="wpnm-toast-container" class="wpnm-toast-container"></div>
+
+		<!-- Custom Confirm Modal -->
+		<div class="wpnm-confirm-modal" id="wpnm-confirm-modal" style="display: none;">
+			<div class="wpnm-confirm-content">
+				<h3><?php esc_html_e( 'Confirm Action', 'wp-notice-manager' ); ?></h3>
+				<p id="wpnm-confirm-message"><?php esc_html_e( 'Are you sure?', 'wp-notice-manager' ); ?></p>
+				<div class="wpnm-confirm-actions">
+					<button type="button" class="wpnm-btn wpnm-btn-secondary" id="wpnm-confirm-cancel"><?php esc_html_e( 'Cancel', 'wp-notice-manager' ); ?></button>
+					<button type="button" class="wpnm-btn wpnm-btn-danger" id="wpnm-confirm-yes"><?php esc_html_e( 'Clear All', 'wp-notice-manager' ); ?></button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
