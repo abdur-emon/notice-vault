@@ -11,6 +11,8 @@
 	 * Notice Popup Handler
 	 */
 	const NoticePopup = {
+		previousFocus: null,
+
 		/**
 		 * Initialize
 		 */
@@ -70,19 +72,61 @@
 			// Clear all
 			$(document).on('click', '#wpnm-clear-all', function(e) {
 				e.preventDefault();
-				if (confirm(wpnmPopup.i18n.confirmClearAll)) {
-					NoticePopup.clearAll();
+				$('#wpnm-confirm-modal').fadeIn(200);
+			});
+
+			// Modal Confirm Cancel
+			$(document).on('click', '#wpnm-confirm-cancel', function() {
+				$('#wpnm-confirm-modal').fadeOut(200);
+			});
+
+			// Modal Confirm Yes
+			$(document).on('click', '#wpnm-confirm-yes', function() {
+				$('#wpnm-confirm-modal').fadeOut(200);
+				NoticePopup.clearAll();
+			});
+
+			// Focus Trapping within Popup
+			$(document).on('keydown', '#wpnm-popup', function(e) {
+				if (e.key === 'Tab') {
+					NoticePopup.trapFocus(e);
 				}
 			});
+		},
+
+		/**
+		 * Trap focus inside popup
+		 */
+		trapFocus: function(e) {
+			const focusableElements = $('#wpnm-popup').find('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter(':visible').not('#wpnm-confirm-modal *');
+			if (focusableElements.length === 0) return;
+
+			const firstElement = focusableElements[0];
+			const lastElement = focusableElements[focusableElements.length - 1];
+
+			if (e.shiftKey) { // Shift + Tab
+				if (document.activeElement === firstElement) {
+					lastElement.focus();
+					e.preventDefault();
+				}
+			} else { // Tab
+				if (document.activeElement === lastElement) {
+					firstElement.focus();
+					e.preventDefault();
+				}
+			}
 		},
 
 		/**
 		 * Open popup
 		 */
 		openPopup: function() {
+			this.previousFocus = document.activeElement;
 			$('#wpnm-popup-overlay').show();
 			setTimeout(function() {
 				$('#wpnm-popup-overlay').addClass('wpnm-active');
+				// Focus the close button for accessibility
+				$('#wpnm-popup-overlay').find('.wpnm-close-popup').focus();
 			}, 10);
 			this.loadNotices();
 		},
@@ -94,6 +138,10 @@
 			$('#wpnm-popup-overlay').removeClass('wpnm-active');
 			setTimeout(function() {
 				$('#wpnm-popup-overlay').hide();
+				// Restore focus
+				if (NoticePopup.previousFocus) {
+					NoticePopup.previousFocus.focus();
+				}
 			}, 300);
 		},
 
@@ -247,6 +295,7 @@
 						$('.wpnm-notice-item').addClass('wpnm-notice-read');
 						$('.wpnm-mark-read').remove();
 						NoticePopup.updateToolbarCount(0);
+						NoticePopup.showToast(response.data.message || wpnmPopup.i18n.markAllRead);
 					}
 				}
 			});
@@ -269,6 +318,7 @@
 						$('.wpnm-empty-state').show();
 						$('.wpnm-notices-list').hide();
 						NoticePopup.updateToolbarCount(0);
+						NoticePopup.showToast(response.data.message || wpnmPopup.i18n.clearAll);
 					}
 				}
 			});
@@ -308,6 +358,28 @@
 			if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
 			if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
 			return past.toLocaleDateString();
+		},
+
+		/**
+		 * Show Toast Notification
+		 */
+		showToast: function(message, type = 'success') {
+			const $toast = $('<div>')
+				.addClass('wpnm-toast wpnm-toast-' + type)
+				.text(message);
+				
+			$('#wpnm-toast-container').append($toast);
+			
+			// Trigger reflow for transition
+			$toast[0].offsetHeight;
+			$toast.addClass('wpnm-toast-show');
+			
+			setTimeout(function() {
+				$toast.removeClass('wpnm-toast-show');
+				setTimeout(function() {
+					$toast.remove();
+				}, 300);
+			}, 3000);
 		}
 	};
 
