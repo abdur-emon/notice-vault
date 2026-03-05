@@ -167,8 +167,8 @@
 							notice.type +
 						'</div>' +
 						'<div class="wpnm-notice-actions">' +
-							(!notice.is_read ? '<button class="wpnm-notice-action wpnm-mark-read" data-notice-id="' + notice.id + '" title="Mark as read"><span class="dashicons dashicons-yes"></span></button>' : '') +
-							'<button class="wpnm-notice-action wpnm-dismiss" data-notice-id="' + notice.id + '" title="Dismiss"><span class="dashicons dashicons-no-alt"></span></button>' +
+							(!notice.is_read ? '<button class="wpnm-notice-action wpnm-mark-read" data-notice-id="' + notice.id + '" title="Mark as read" aria-label="Mark as read"><span class="dashicons dashicons-yes"></span></button>' : '') +
+							'<button class="wpnm-notice-action wpnm-dismiss" data-notice-id="' + notice.id + '" title="Dismiss" aria-label="Dismiss notice"><span class="dashicons dashicons-no-alt"></span></button>' +
 						'</div>' +
 					'</div>' +
 					'<div class="wpnm-notice-content">' + notice.content + '</div>' +
@@ -218,10 +218,12 @@
 				success: function(response) {
 					if (response.success) {
 						$('[data-notice-id="' + noticeId + '"]').fadeOut(300, function() {
-							$(this).remove();
-							if ($('.wpnm-notice-item').length === 0) {
-								$('.wpnm-empty-state').show();
-							}
+							$(this).slideUp(200, function() {
+								$(this).remove();
+								if ($('.wpnm-notice-item').length === 0) {
+									$('.wpnm-empty-state').fadeIn(200);
+								}
+							});
 						});
 						NoticePopup.updateToolbarCount(response.data.count);
 					}

@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<h2 class="wpnm-popup-title">
 				<span class="dashicons dashicons-bell"></span>
 				<?php esc_html_e( 'Notices', 'wp-notice-manager' ); ?>
-				<span class="wpnm-notice-count-badge">0</span>
+				<span class="wpnm-notice-count-badge" aria-live="polite" aria-atomic="true">0</span>
 			</h2>
 			<button type="button" class="wpnm-close-popup" aria-label="<?php esc_attr_e( 'Close', 'wp-notice-manager' ); ?>">
 				<span class="dashicons dashicons-no-alt"></span>
@@ -67,7 +67,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<div class="wpnm-empty-state" style="display: none;">
 				<span class="dashicons dashicons-yes-alt"></span>
-				<p><?php esc_html_e( 'No notices to display', 'wp-notice-manager' ); ?></p>
+				<p><?php esc_html_e( 'You\'re all caught up! No new notices.', 'wp-notice-manager' ); ?></p>
 			</div>
 		</div>
 
