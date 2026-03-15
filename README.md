@@ -113,7 +113,7 @@ Yes! Notice Manager is fully translation-ready with a .pot file included.
 
 
 
-== Screenshots ==
+== Screenshot ==
 
 1. Admin toolbar with notice counter
 2. Popup interface showing notices
