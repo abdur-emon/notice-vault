@@ -31,7 +31,11 @@
 			});
 
 			// Close popup
-			$(document).on('click', '.wpnm-close-popup, .wpnm-popup-overlay', function (e) {
+			$(document).on('click', '.wpnm-close-popup', function (e) {
+				NoticePopup.closePopup();
+			});
+
+			$(document).on('click', '.wpnm-popup-overlay', function (e) {
 				if (e.target === this) {
 					NoticePopup.closePopup();
 				}
