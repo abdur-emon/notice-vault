@@ -1,4 +1,4 @@
-WP Notice Manager
+Notice Manager
 ├── .htaccess
 ├── ARCHITECTURE.md
 ├── CHANGELOG.md
@@ -10,27 +10,24 @@ WP Notice Manager
 ├── PROJECT_SUMMARY.md
 ├── README.md
 ├── SECURITY.md
-├── index.php
-├── readme.txt
-├── uninstall.php
-├── wp-notice-manager.php
-├── assets/
-│   ├── index.php
-│   ├── css/
+├── assets
+│   ├── css
 │   │   ├── admin.css
 │   │   ├── index.php
 │   │   └── popup.css
-│   └── js/
-│   │   ├── admin.js
-│   │   ├── index.php
-│   │   └── popup.js
-├── includes/
+│   ├── images
+│   │   └── logo.png
 │   ├── index.php
-│   ├── admin/
+│   └── js
+│       ├── admin.js
+│       ├── index.php
+│       └── popup.js
+├── includes
+│   ├── admin
 │   │   ├── class-notice-popup.php
 │   │   ├── class-settings-page.php
 │   │   └── index.php
-│   ├── core/
+│   ├── core
 │   │   ├── class-activator.php
 │   │   ├── class-autoloader.php
 │   │   ├── class-cleanup.php
@@ -38,21 +35,26 @@ WP Notice Manager
 │   │   ├── class-loader.php
 │   │   ├── class-plugin.php
 │   │   └── index.php
-│   ├── notices/
+│   ├── index.php
+│   ├── notices
 │   │   ├── class-notice-capture.php
 │   │   ├── class-notice-classifier.php
 │   │   ├── class-notice-storage.php
 │   │   └── index.php
-│   ├── permissions/
+│   ├── permissions
 │   │   ├── class-visibility-manager.php
 │   │   └── index.php
-│   └── toolbar/
+│   └── toolbar
 │       ├── class-admin-toolbar.php
 │       └── index.php
-├── languages/
+├── index.php
+├── languages
 │   ├── index.php
 │   └── wp-notice-manager.pot
-└── templates/
-    ├── index.php
-    ├── popup-template.php
-    └── settings-page.php
+├── readme.txt
+├── templates
+│   ├── index.php
+│   ├── popup-template.php
+│   └── settings-page.php
+├── uninstall.php
+└── wp-notice-manager.php
