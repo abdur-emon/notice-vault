@@ -1,4 +1,4 @@
-=== Notice Manager ===
+=== Notice Manager - Manage Notices & Work Smarter ===
 Contributors: abduremon
 Tags: Admin notices, hide admin notices, hide admin notifications, dashboard notices, notices
 Requires at least: 5.0
