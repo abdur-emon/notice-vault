@@ -111,6 +111,7 @@ class Plugin
 		$this->loader->add_action('admin_init', $settings_page, 'register_settings');
 		$this->loader->add_action('admin_enqueue_scripts', $settings_page, 'enqueue_assets');
 		$this->loader->add_action('wp_ajax_wpnm_search_users', $settings_page, 'ajax_search_users');
+		$this->loader->add_filter('plugin_action_links_' . WPNM_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links');
 
 		// Initialize Notice Popup.
 		$notice_popup = new \WP_Notice_Manager\Admin\Notice_Popup();

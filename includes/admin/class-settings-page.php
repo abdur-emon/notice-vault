@@ -487,6 +487,20 @@ class Settings_Page
 	}
 
 	/**
+	 * Add settings link to plugin action links.
+	 *
+	 * @since 1.0.0
+	 * @param array $links Array of plugin action links.
+	 * @return array Modified array of plugin action links.
+	 */
+	public function add_plugin_action_links($links)
+	{
+		$settings_link = '<a href="' . admin_url('admin.php?page=' . self::PAGE_SLUG) . '">' . __('Settings', 'wp-notice-manager') . '</a>';
+		array_unshift($links, $settings_link);
+		return $links;
+	}
+
+	/**
 	 * AJAX: Search users for Select2.
 	 *
 	 * @since 1.0.0
