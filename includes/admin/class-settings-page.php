@@ -54,12 +54,14 @@ class Settings_Page
 	 */
 	public function add_settings_page()
 	{
-		add_options_page(
+		add_menu_page(
 			__('WP Notice Manager Settings', 'wp-notice-manager'),
 			__('Notice Manager', 'wp-notice-manager'),
 			'manage_options',
 			self::PAGE_SLUG,
-			array($this, 'render_settings_page')
+			array($this, 'render_settings_page'),
+			'dashicons-bell',
+			25
 		);
 	}
 
