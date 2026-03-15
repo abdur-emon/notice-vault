@@ -82,11 +82,7 @@ class Admin_Toolbar
 				'<span class="wpnm-count-badge">%s</span>',
 				esc_html($count)
 			);
-			$text = sprintf(
-				/* translators: %d: number of notices */
-				esc_html__('Notices (%d)', 'wp-notice-manager'),
-				$count
-			);
+			$text = esc_html__('Notices', 'wp-notice-manager');
 			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 		}
 
