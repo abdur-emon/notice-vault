@@ -134,12 +134,14 @@
 	color: #fff;
 	font-size: 11px;
 	font-weight: 700;
-	padding: 2px 7px;
-	border-radius: 20px;
-	min-width: 18px;
+	padding: 2px 8px;
+	border-radius: 50px;
+	min-width: 20px;
 	text-align: center;
 	margin-left: 5px;
 	vertical-align: middle;
+	line-height: 1;
+	box-sizing: border-box;
 }
 
 .wpnm-close-popup {
@@ -407,12 +409,14 @@
 	color: #fff;
 	font-size: 10px;
 	font-weight: 700;
-	padding: 1px 7px;
-	border-radius: 20px;
+	padding: 2px 8px;
+	border-radius: 50px;
 	margin-left: 6px;
-	min-width: 16px;
+	min-width: 18px;
 	text-align: center;
 	vertical-align: middle;
+	line-height: 1;
+	box-sizing: border-box;
 }
 
 #wp-admin-bar-wpnm-notices .ab-icon:before {
