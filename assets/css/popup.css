@@ -129,19 +129,20 @@
 }
 
 .wpnm-notice-count-badge {
-	display: inline-block;
-	background: #d63638;
-	color: #fff;
-	font-size: 11px;
-	font-weight: 700;
-	padding: 2px 8px;
-	border-radius: 50px;
-	min-width: 20px;
-	text-align: center;
-	margin-left: 5px;
-	vertical-align: middle;
-	line-height: 1;
-	box-sizing: border-box;
+	display: inline-block !important;
+	background: #d63638 !important;
+	color: #fff !important;
+	font-size: 11px !important;
+	font-weight: 700 !important;
+	padding: 0 6px !important;
+	border-radius: 20px !important;
+	min-width: 18px !important;
+	height: 18px !important;
+	line-height: 18px !important;
+	text-align: center !important;
+	margin-left: 5px !important;
+	vertical-align: middle !important;
+	box-sizing: border-box !important;
 }
 
 .wpnm-close-popup {
@@ -403,20 +404,22 @@
 }
 
 /* Admin Toolbar Styles */
-.wpnm-count-badge {
-	display: inline-block;
-	background: #d63638;
-	color: #fff;
-	font-size: 10px;
-	font-weight: 700;
-	padding: 2px 8px;
-	border-radius: 50px;
-	margin-left: 6px;
-	min-width: 18px;
-	text-align: center;
-	vertical-align: middle;
-	line-height: 1;
-	box-sizing: border-box;
+#wpadminbar .wpnm-count-badge {
+	display: inline-block !important;
+	background: #d63638 !important;
+	color: #fff !important;
+	font-size: 10px !important;
+	font-weight: 700 !important;
+	padding: 0 6px !important;
+	border-radius: 20px !important;
+	min-width: 18px !important;
+	height: 18px !important;
+	line-height: 18px !important;
+	text-align: center !important;
+	margin-left: 6px !important;
+	vertical-align: middle !important;
+	box-sizing: border-box !important;
+	box-shadow: none !important;
 }
 
 #wp-admin-bar-wpnm-notices .ab-icon:before {
