@@ -138,6 +138,3 @@ Yes! Notice Manager is fully translation-ready with a .pot file included.
 
 = 1.0.0 =
 * [Major Update] Must Update.
-
-
-
