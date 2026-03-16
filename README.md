@@ -1,5 +1,5 @@
 === Notice Manager - Manage Notices & Work Smarter ===
-Contributors: abduremon
+Contributors: abduremon, mdismail-cse
 Tags: Admin notices, hide admin notices, hide admin notifications, dashboard notices, notices
 Requires at least: 5.0
 Tested up to: 6.4
