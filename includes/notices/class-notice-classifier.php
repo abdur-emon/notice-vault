@@ -4,11 +4,11 @@
  *
  * Classifies admin notices by type.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Notices
  */
 
-namespace WP_Notice_Manager\Notices;
+namespace Notice_Manager\Notices;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

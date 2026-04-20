@@ -4,13 +4,13 @@
  *
  * Captures admin notices using output buffering.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Notices
  */
 
-namespace WP_Notice_Manager\Notices;
+namespace Notice_Manager\Notices;
 
-use WP_Notice_Manager\Permissions\Visibility_Manager;
+use Notice_Manager\Permissions\Visibility_Manager;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

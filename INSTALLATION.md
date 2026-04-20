@@ -1,4 +1,4 @@
-# WP Notice Manager - Installation & Testing Guide
+# Notice Manager - Installation & Testing Guide
 
 ## 📋 Table of Contents
 
@@ -39,17 +39,17 @@
 1. **Log in** to your WordPress admin panel
 2. Navigate to **Plugins → Add New**
 3. Click **Upload Plugin**
-4. Choose the `wp-notice-manager.zip` file
+4. Choose the `notice-manager.zip` file
 5. Click **Install Now**
 6. Click **Activate Plugin**
 
 ### Method 2: FTP Upload
 
-1. **Extract** the `wp-notice-manager.zip` file
-2. **Upload** the `wp-notice-manager` folder to `/wp-content/plugins/`
+1. **Extract** the `notice-manager.zip` file
+2. **Upload** the `notice-manager` folder to `/wp-content/plugins/`
 3. **Log in** to WordPress admin panel
 4. Navigate to **Plugins**
-5. Find **WP Notice Manager** and click **Activate**
+5. Find **Notice Manager** and click **Activate**
 
 ### Method 3: WP-CLI
 
@@ -58,10 +58,10 @@
 cd /path/to/wordpress
 
 # Install the plugin
-wp plugin install wp-notice-manager.zip
+wp plugin install notice-manager.zip
 
 # Activate the plugin
-wp plugin activate wp-notice-manager
+wp plugin activate notice-manager
 ```
 
 ---
@@ -298,7 +298,7 @@ If you encounter issues:
 
 ## ✅ Success!
 
-If all tests pass, your WP Notice Manager installation is complete and working correctly!
+If all tests pass, your Notice Manager installation is complete and working correctly!
 
 You can now enjoy a cleaner WordPress dashboard with all notices organized in one place.
 

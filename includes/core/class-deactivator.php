@@ -4,11 +4,11 @@
  *
  * Handles plugin deactivation tasks.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Core
  */
 
-namespace WP_Notice_Manager\Core;
+namespace Notice_Manager\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

@@ -4,11 +4,11 @@
  *
  * Handles plugin settings page.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Admin
  */
 
-namespace WP_Notice_Manager\Admin;
+namespace Notice_Manager\Admin;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -30,7 +30,7 @@ class Settings_Page
 	 *
 	 * @var string
 	 */
-	const PAGE_SLUG = 'wp-notice-manager';
+	const PAGE_SLUG = 'notice-manager';
 
 	/**
 	 * Option group name.
@@ -55,8 +55,8 @@ class Settings_Page
 	public function add_settings_page()
 	{
 		add_menu_page(
-			__('WP Notice Manager Settings', 'wp-notice-manager'),
-			__('Notice Manager', 'wp-notice-manager'),
+			__('Notice Manager Settings', 'notice-manager'),
+			__('Notice Manager', 'notice-manager'),
 			'manage_options',
 			self::PAGE_SLUG,
 			array($this, 'render_settings_page'),
@@ -84,7 +84,7 @@ class Settings_Page
 		// Notice Type Settings Section.
 		add_settings_section(
 			'wpnm_notice_types',
-			__('Notice Type Settings', 'wp-notice-manager'),
+			__('Notice Type Settings', 'notice-manager'),
 			array($this, 'render_notice_types_section'),
 			self::PAGE_SLUG
 		);
@@ -92,7 +92,7 @@ class Settings_Page
 		// Popup Settings Section.
 		add_settings_section(
 			'wpnm_popup_settings',
-			__('Popup Settings', 'wp-notice-manager'),
+			__('Popup Settings', 'notice-manager'),
 			array($this, 'render_popup_section'),
 			self::PAGE_SLUG
 		);
@@ -100,7 +100,7 @@ class Settings_Page
 		// User Visibility Section.
 		add_settings_section(
 			'wpnm_visibility',
-			__('User Visibility Settings', 'wp-notice-manager'),
+			__('User Visibility Settings', 'notice-manager'),
 			array($this, 'render_visibility_section'),
 			self::PAGE_SLUG
 		);
@@ -108,7 +108,7 @@ class Settings_Page
 		// Advanced Settings Section.
 		add_settings_section(
 			'wpnm_advanced',
-			__('Advanced Settings', 'wp-notice-manager'),
+			__('Advanced Settings', 'notice-manager'),
 			array($this, 'render_advanced_section'),
 			self::PAGE_SLUG
 		);
@@ -127,12 +127,12 @@ class Settings_Page
 	{
 		// Notice type fields.
 		$notice_types = array(
-			'success' => __('Success Notices', 'wp-notice-manager'),
-			'error' => __('Error Notices', 'wp-notice-manager'),
-			'warning' => __('Warning Notices', 'wp-notice-manager'),
-			'info' => __('Info Notices', 'wp-notice-manager'),
-			'other' => __('Non-standard Notices', 'wp-notice-manager'),
-			'system' => __('WordPress System Notices', 'wp-notice-manager'),
+			'success' => __('Success Notices', 'notice-manager'),
+			'error' => __('Error Notices', 'notice-manager'),
+			'warning' => __('Warning Notices', 'notice-manager'),
+			'info' => __('Info Notices', 'notice-manager'),
+			'other' => __('Non-standard Notices', 'notice-manager'),
+			'system' => __('WordPress System Notices', 'notice-manager'),
 		);
 
 		foreach ($notice_types as $type => $label) {
@@ -149,7 +149,7 @@ class Settings_Page
 		// Popup style field.
 		add_settings_field(
 			'popup_style',
-			__('Popup Style', 'wp-notice-manager'),
+			__('Popup Style', 'notice-manager'),
 			array($this, 'render_popup_style_field'),
 			self::PAGE_SLUG,
 			'wpnm_popup_settings'
@@ -158,7 +158,7 @@ class Settings_Page
 		// Visibility mode field.
 		add_settings_field(
 			'visibility_mode',
-			__('Visibility Mode', 'wp-notice-manager'),
+			__('Visibility Mode', 'notice-manager'),
 			array($this, 'render_visibility_mode_field'),
 			self::PAGE_SLUG,
 			'wpnm_visibility'
@@ -167,7 +167,7 @@ class Settings_Page
 		// Visibility users field.
 		add_settings_field(
 			'visibility_users',
-			__('Select Users', 'wp-notice-manager'),
+			__('Select Users', 'notice-manager'),
 			array($this, 'render_visibility_users_field'),
 			self::PAGE_SLUG,
 			'wpnm_visibility'
@@ -176,7 +176,7 @@ class Settings_Page
 		// Auto expire days field.
 		add_settings_field(
 			'auto_expire_days',
-			__('Auto-expire Notices After', 'wp-notice-manager'),
+			__('Auto-expire Notices After', 'notice-manager'),
 			array($this, 'render_auto_expire_field'),
 			self::PAGE_SLUG,
 			'wpnm_advanced'
@@ -192,7 +192,7 @@ class Settings_Page
 	public function render_settings_page()
 	{
 		if (!current_user_can('manage_options')) {
-			wp_die(esc_html__('Unauthorized access', 'wp-notice-manager'));
+			wp_die(esc_html__('Unauthorized access', 'notice-manager'));
 		}
 
 		include WPNM_PLUGIN_DIR . 'templates/settings-page.php';
@@ -206,7 +206,7 @@ class Settings_Page
 	 */
 	public function render_notice_types_section()
 	{
-		echo '<p>' . esc_html__('Configure how each notice type should be handled.', 'wp-notice-manager') . '</p>';
+		echo '<p>' . esc_html__('Configure how each notice type should be handled.', 'notice-manager') . '</p>';
 	}
 
 	/**
@@ -217,7 +217,7 @@ class Settings_Page
 	 */
 	public function render_popup_section()
 	{
-		echo '<p>' . esc_html__('Customize the popup appearance and behavior.', 'wp-notice-manager') . '</p>';
+		echo '<p>' . esc_html__('Customize the popup appearance and behavior.', 'notice-manager') . '</p>';
 	}
 
 	/**
@@ -228,7 +228,7 @@ class Settings_Page
 	 */
 	public function render_visibility_section()
 	{
-		echo '<p>' . esc_html__('Control which users can see the notice manager.', 'wp-notice-manager') . '</p>';
+		echo '<p>' . esc_html__('Control which users can see the notice manager.', 'notice-manager') . '</p>';
 	}
 
 	/**
@@ -239,7 +239,7 @@ class Settings_Page
 	 */
 	public function render_advanced_section()
 	{
-		echo '<p>' . esc_html__('Advanced plugin settings.', 'wp-notice-manager') . '</p>';
+		echo '<p>' . esc_html__('Advanced plugin settings.', 'notice-manager') . '</p>';
 	}
 
 	/**
@@ -256,9 +256,9 @@ class Settings_Page
 		$value = isset($settings['notice_' . $type]) ? $settings['notice_' . $type] : 'popup';
 
 		$options = array(
-			'popup' => __('Show in popup & hide from dashboard', 'wp-notice-manager'),
-			'hide' => __('Hide completely', 'wp-notice-manager'),
-			'nothing' => __('Do nothing (leave in dashboard)', 'wp-notice-manager'),
+			'popup' => __('Show in popup & hide from dashboard', 'notice-manager'),
+			'hide' => __('Hide completely', 'notice-manager'),
+			'nothing' => __('Do nothing (leave in dashboard)', 'notice-manager'),
 		);
 
 		// System notices only have popup or nothing.
@@ -290,9 +290,9 @@ class Settings_Page
 		$value = isset($settings['popup_style']) ? $settings['popup_style'] : 'slide-right';
 
 		$options = array(
-			'slide-right' => __('Slide from Right', 'wp-notice-manager'),
-			'modal' => __('Modal Popup (Centered)', 'wp-notice-manager'),
-			'panel' => __('Slide Background Panel', 'wp-notice-manager'),
+			'slide-right' => __('Slide from Right', 'notice-manager'),
+			'modal' => __('Modal Popup (Centered)', 'notice-manager'),
+			'panel' => __('Slide Background Panel', 'notice-manager'),
 		);
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[popup_style]') . '" class="regular-text">';
@@ -319,10 +319,10 @@ class Settings_Page
 		$value = isset($settings['visibility_mode']) ? $settings['visibility_mode'] : 'show-all';
 
 		$options = array(
-			'show-all' => __('Show to all users', 'wp-notice-manager'),
-			'hide-all' => __('Hide from all users', 'wp-notice-manager'),
-			'hide-selected' => __('Hide from selected users only', 'wp-notice-manager'),
-			'show-selected' => __('Show to selected users only', 'wp-notice-manager'),
+			'show-all' => __('Show to all users', 'notice-manager'),
+			'hide-all' => __('Hide from all users', 'notice-manager'),
+			'hide-selected' => __('Hide from selected users only', 'notice-manager'),
+			'show-selected' => __('Show to selected users only', 'notice-manager'),
 		);
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[visibility_mode]') . '" id="wpnm-visibility-mode" class="regular-text">';
@@ -361,7 +361,7 @@ class Settings_Page
 			}
 		}
 		echo '</select>';
-		echo '<p class="description">' . esc_html__('Search and select users.', 'wp-notice-manager') . '</p>';
+		echo '<p class="description">' . esc_html__('Search and select users.', 'notice-manager') . '</p>';
 	}
 
 	/**
@@ -379,9 +379,9 @@ class Settings_Page
 			'<input type="number" name="%s" value="%s" min="1" max="365" class="small-text"> %s',
 			esc_attr(self::OPTION_NAME . '[auto_expire_days]'),
 			esc_attr($value),
-			esc_html__('days', 'wp-notice-manager')
+			esc_html__('days', 'notice-manager')
 		);
-		echo '<p class="description">' . esc_html__('Notices older than this will be automatically deleted.', 'wp-notice-manager') . '</p>';
+		echo '<p class="description">' . esc_html__('Notices older than this will be automatically deleted.', 'notice-manager') . '</p>';
 	}
 
 	/**
@@ -495,7 +495,7 @@ class Settings_Page
 	 */
 	public function add_plugin_action_links($links)
 	{
-		$settings_link = '<a href="' . admin_url('admin.php?page=' . self::PAGE_SLUG) . '">' . __('Settings', 'wp-notice-manager') . '</a>';
+		$settings_link = '<a href="' . admin_url('admin.php?page=' . self::PAGE_SLUG) . '">' . __('Settings', 'notice-manager') . '</a>';
 		array_unshift($links, $settings_link);
 		return $links;
 	}
@@ -511,7 +511,7 @@ class Settings_Page
 		check_ajax_referer('wpnm_admin_nonce', 'nonce');
 
 		if (!current_user_can('manage_options')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-manager')));
 		}
 
 		$search = isset($_POST['q']) ? sanitize_text_field(wp_unslash($_POST['q'])) : '';

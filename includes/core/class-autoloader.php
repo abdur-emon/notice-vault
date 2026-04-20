@@ -4,11 +4,11 @@
  *
  * PSR-4 compliant autoloader for the plugin.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Core
  */
 
-namespace WP_Notice_Manager\Core;
+namespace Notice_Manager\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,7 +29,7 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	private static $prefix = 'WP_Notice_Manager\\';
+	private static $prefix = 'Notice_Manager\\';
 
 	/**
 	 * Base directory for the namespace prefix.
@@ -67,7 +67,7 @@ class Autoloader {
 		$relative_class = substr( $class, $len );
 
 		// Convert namespace to directory structure.
-		// WP_Notice_Manager\Core\Plugin -> core/class-plugin.php
+		// Notice_Manager\Core\Plugin -> core/class-plugin.php
 		$parts = explode( '\\', $relative_class );
 
 		// Last part is the class name.

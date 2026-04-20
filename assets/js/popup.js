@@ -1,7 +1,7 @@
 /**
- * WP Notice Manager - Popup JavaScript
+ * Notice Manager - Popup JavaScript
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  */
 
 (function ($) {
