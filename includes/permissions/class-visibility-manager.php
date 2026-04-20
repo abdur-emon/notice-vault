@@ -4,11 +4,11 @@
  *
  * Manages user visibility permissions.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Permissions
  */
 
-namespace WP_Notice_Manager\Permissions;
+namespace Notice_Manager\Permissions;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -70,10 +70,10 @@ class Visibility_Manager {
 	 */
 	public static function get_mode_label( $mode ) {
 		$labels = array(
-			'show-all'      => __( 'Show to all users', 'wp-notice-manager' ),
-			'hide-all'      => __( 'Hide from all users', 'wp-notice-manager' ),
-			'hide-selected' => __( 'Hide from selected users', 'wp-notice-manager' ),
-			'show-selected' => __( 'Show to selected users', 'wp-notice-manager' ),
+			'show-all'      => __( 'Show to all users', 'notice-manager' ),
+			'hide-all'      => __( 'Hide from all users', 'notice-manager' ),
+			'hide-selected' => __( 'Hide from selected users', 'notice-manager' ),
+			'show-selected' => __( 'Show to selected users', 'notice-manager' ),
 		);
 
 		return isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['show-all'];

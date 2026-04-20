@@ -1,7 +1,7 @@
 /**
- * WP Notice Manager - Admin JavaScript
+ * Notice Manager - Admin JavaScript
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  */
 
 (function ($) {

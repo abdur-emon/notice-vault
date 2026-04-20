@@ -4,14 +4,14 @@
  *
  * Handles popup UI rendering and AJAX operations.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Admin
  */
 
-namespace WP_Notice_Manager\Admin;
+namespace Notice_Manager\Admin;
 
-use WP_Notice_Manager\Notices\Notice_Storage;
-use WP_Notice_Manager\Notices\Notice_Classifier;
+use Notice_Manager\Notices\Notice_Storage;
+use Notice_Manager\Notices\Notice_Classifier;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -62,12 +62,12 @@ class Notice_Popup
 				'nonce' => wp_create_nonce('wpnm_ajax_nonce'),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n' => array(
-					'noNotices' => __('No notices to display', 'wp-notice-manager'),
-					'markAllRead' => __('Mark All as Read', 'wp-notice-manager'),
-					'clearAll' => __('Clear All', 'wp-notice-manager'),
-					'confirmClearAll' => __('Are you sure you want to clear all notices?', 'wp-notice-manager'),
-					'loading' => __('Loading...', 'wp-notice-manager'),
-					'error' => __('An error occurred', 'wp-notice-manager'),
+					'noNotices' => __('No notices to display', 'notice-manager'),
+					'markAllRead' => __('Mark All as Read', 'notice-manager'),
+					'clearAll' => __('Clear All', 'notice-manager'),
+					'confirmClearAll' => __('Are you sure you want to clear all notices?', 'notice-manager'),
+					'loading' => __('Loading...', 'notice-manager'),
+					'error' => __('An error occurred', 'notice-manager'),
 				),
 			)
 		);
@@ -110,7 +110,7 @@ class Notice_Popup
 
 		// Check capability.
 		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-manager')));
 		}
 
 		// Get filter parameters.
@@ -157,14 +157,14 @@ class Notice_Popup
 
 		// Check capability.
 		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-manager')));
 		}
 
 		// Get notice ID.
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if (empty($notice_id)) {
-			wp_send_json_error(array('message' => __('Invalid notice ID', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Invalid notice ID', 'notice-manager')));
 		}
 
 		// Mark as read.
@@ -173,12 +173,12 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('Notice marked as read', 'wp-notice-manager'),
+					'message' => __('Notice marked as read', 'notice-manager'),
 					'count' => Notice_Storage::get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to mark notice as read', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Failed to mark notice as read', 'notice-manager')));
 		}
 	}
 
@@ -195,14 +195,14 @@ class Notice_Popup
 
 		// Check capability.
 		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-manager')));
 		}
 
 		// Get notice ID.
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if (empty($notice_id)) {
-			wp_send_json_error(array('message' => __('Invalid notice ID', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Invalid notice ID', 'notice-manager')));
 		}
 
 		// Delete notice.
@@ -211,12 +211,12 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('Notice dismissed', 'wp-notice-manager'),
+					'message' => __('Notice dismissed', 'notice-manager'),
 					'count' => Notice_Storage::get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to dismiss notice', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Failed to dismiss notice', 'notice-manager')));
 		}
 	}
 
@@ -231,7 +231,7 @@ class Notice_Popup
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
 		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-manager')));
 		}
 
 		$result = Notice_Storage::mark_all_read();
@@ -239,12 +239,12 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('All notices marked as read', 'wp-notice-manager'),
+					'message' => __('All notices marked as read', 'notice-manager'),
 					'count' => 0,
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to mark notices as read', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Failed to mark notices as read', 'notice-manager')));
 		}
 	}
 
@@ -259,7 +259,7 @@ class Notice_Popup
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
 		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-manager')));
 		}
 
 		$result = Notice_Storage::delete_all();
@@ -267,12 +267,12 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('All notices cleared', 'wp-notice-manager'),
+					'message' => __('All notices cleared', 'notice-manager'),
 					'count' => 0,
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to clear notices', 'wp-notice-manager')));
+			wp_send_json_error(array('message' => __('Failed to clear notices', 'notice-manager')));
 		}
 	}
 

@@ -50,11 +50,11 @@ Notice Manager
 ├── index.php
 ├── languages
 │   ├── index.php
-│   └── wp-notice-manager.pot
+│   └── notice-manager.pot
 ├── readme.txt
 ├── templates
 │   ├── index.php
 │   ├── popup-template.php
 │   └── settings-page.php
 ├── uninstall.php
-└── wp-notice-manager.php
+└── notice-manager.php

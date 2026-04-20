@@ -1,17 +1,17 @@
-# WP Notice Manager - Architecture Documentation
+# Notice Manager - Architecture Documentation
 
 ## 🏗️ Architecture Overview
 
-WP Notice Manager follows a **modular, object-oriented architecture** based on SOLID principles and WordPress coding standards.
+Notice Manager follows a **modular, object-oriented architecture** based on SOLID principles and WordPress coding standards.
 
 ---
 
 ## 📁 Directory Structure
 
 ```
-wp-notice-manager/
+notice-manager/
 │
-├── wp-notice-manager.php          # Main plugin file (bootstrap)
+├── notice-manager.php          # Main plugin file (bootstrap)
 │
 ├── includes/
 │   ├── core/
@@ -51,7 +51,7 @@ wp-notice-manager/
 │   └── settings-page.php          # Settings page template
 │
 ├── languages/
-│   └── wp-notice-manager.pot      # Translation template
+│   └── notice-manager.pot      # Translation template
 │
 ├── docs/
 │   ├── ARCHITECTURE.md            # This file
@@ -65,7 +65,7 @@ wp-notice-manager/
 
 ## 🔧 Core Components
 
-### 1. Plugin Bootstrap (`wp-notice-manager.php`)
+### 1. Plugin Bootstrap (`notice-manager.php`)
 - Entry point for WordPress
 - Defines constants
 - Loads autoloader
@@ -272,7 +272,7 @@ do_action('wpnm_notice_stored', $notice_id);
 ## 📝 Naming Conventions
 
 - **Classes:** `class-{name}.php`
-- **Namespace:** `WP_Notice_Manager\`
+- **Namespace:** `Notice_Manager\`
 - **Prefix:** `wpnm_` (functions, options)
 - **Constants:** `WPNM_` (uppercase)
 

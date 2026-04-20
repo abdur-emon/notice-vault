@@ -1,4 +1,4 @@
-# WP Notice Manager - Security
+# Notice Manager - Security
 # Prevent direct access to plugin files
 
 <IfModule mod_rewrite.c>

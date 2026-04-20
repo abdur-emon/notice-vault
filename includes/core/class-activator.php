@@ -4,11 +4,11 @@
  *
  * Handles plugin activation tasks.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Core
  */
 
-namespace WP_Notice_Manager\Core;
+namespace Notice_Manager\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,8 +34,8 @@ class Activator {
 		// Check WordPress version.
 		if ( version_compare( get_bloginfo( 'version' ), '5.0', '<' ) ) {
 			wp_die(
-				esc_html__( 'WP Notice Manager requires WordPress 5.0 or higher.', 'wp-notice-manager' ),
-				esc_html__( 'Plugin Activation Error', 'wp-notice-manager' ),
+				esc_html__( 'Notice Manager requires WordPress 5.0 or higher.', 'notice-manager' ),
+				esc_html__( 'Plugin Activation Error', 'notice-manager' ),
 				array( 'back_link' => true )
 			);
 		}
@@ -43,8 +43,8 @@ class Activator {
 		// Check PHP version.
 		if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
 			wp_die(
-				esc_html__( 'WP Notice Manager requires PHP 7.2 or higher.', 'wp-notice-manager' ),
-				esc_html__( 'Plugin Activation Error', 'wp-notice-manager' ),
+				esc_html__( 'Notice Manager requires PHP 7.2 or higher.', 'notice-manager' ),
+				esc_html__( 'Plugin Activation Error', 'notice-manager' ),
 				array( 'back_link' => true )
 			);
 		}

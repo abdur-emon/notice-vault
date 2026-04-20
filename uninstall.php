@@ -4,7 +4,7 @@
  *
  * Runs when the plugin is uninstalled (deleted).
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  */
 
 // Exit if accessed directly.

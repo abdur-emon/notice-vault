@@ -4,13 +4,13 @@
  *
  * Handles scheduled cleanup tasks.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Core
  */
 
-namespace WP_Notice_Manager\Core;
+namespace Notice_Manager\Core;
 
-use WP_Notice_Manager\Notices\Notice_Storage;
+use Notice_Manager\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

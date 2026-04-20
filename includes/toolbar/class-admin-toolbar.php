@@ -4,13 +4,13 @@
  *
  * Adds notice counter to WordPress admin bar.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  * @subpackage Toolbar
  */
 
-namespace WP_Notice_Manager\Toolbar;
+namespace Notice_Manager\Toolbar;
 
-use WP_Notice_Manager\Notices\Notice_Storage;
+use Notice_Manager\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -55,7 +55,7 @@ class Admin_Toolbar
 				'href' => '#',
 				'meta' => array(
 					'class' => 'wpnm-toolbar-item',
-					'title' => __('View Notices', 'wp-notice-manager'),
+					'title' => __('View Notices', 'notice-manager'),
 				),
 			)
 		);
@@ -82,11 +82,11 @@ class Admin_Toolbar
 				'<span class="wpnm-count-badge">%s</span>',
 				esc_html($count)
 			);
-			$text = esc_html__('Notices', 'wp-notice-manager');
+			$text = esc_html__('Notices', 'notice-manager');
 			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 		}
 
-		return $icon . '<span class="ab-label">' . esc_html__('Notices', 'wp-notice-manager') . '</span>';
+		return $icon . '<span class="ab-label">' . esc_html__('Notices', 'notice-manager') . '</span>';
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Admin_Toolbar
 			array(
 				'parent' => 'wpnm-notices',
 				'id' => 'wpnm-view-all',
-				'title' => esc_html__('View All Notices', 'wp-notice-manager'),
+				'title' => esc_html__('View All Notices', 'notice-manager'),
 				'href' => '#',
 				'meta' => array(
 					'class' => 'wpnm-view-all',
@@ -156,7 +156,7 @@ class Admin_Toolbar
 		}
 
 		// Get icon.
-		$icon_class = \WP_Notice_Manager\Notices\Notice_Classifier::get_icon($notice['type']);
+		$icon_class = \Notice_Manager\Notices\Notice_Classifier::get_icon($notice['type']);
 
 		return sprintf(
 			'<span class="dashicons %s"></span> %s',

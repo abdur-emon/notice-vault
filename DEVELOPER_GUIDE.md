@@ -1,8 +1,8 @@
-# WP Notice Manager - Developer Guide
+# Notice Manager - Developer Guide
 
 ## 🎯 For Developers
 
-This guide is for developers who want to understand, extend, or contribute to WP Notice Manager.
+This guide is for developers who want to understand, extend, or contribute to Notice Manager.
 
 ---
 
@@ -10,7 +10,7 @@ This guide is for developers who want to understand, extend, or contribute to WP
 
 ### Understanding the Architecture
 
-WP Notice Manager follows a **modular, object-oriented architecture**:
+Notice Manager follows a **modular, object-oriented architecture**:
 
 1. **Core System** - Plugin bootstrap, autoloading, activation/deactivation
 2. **Notice System** - Capture, classify, and store notices
@@ -99,7 +99,7 @@ add_filter('wpnm_get_notices', function($notices) {
 ### Namespace Convention
 
 ```
-WP_Notice_Manager\
+Notice_Manager\
 ├── Core\
 │   ├── Plugin
 │   ├── Loader
@@ -211,7 +211,7 @@ composer install
 vendor/bin/phpunit
 
 # WordPress coding standards
-phpcs --standard=WordPress wp-notice-manager.php
+phpcs --standard=WordPress notice-manager.php
 ```
 
 ---

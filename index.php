@@ -4,7 +4,7 @@
  *
  * Prevents directory browsing.
  *
- * @package WP_Notice_Manager
+ * @package Notice_Manager
  */
 
 // Silence is golden.
