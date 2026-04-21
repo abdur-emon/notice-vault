@@ -87,9 +87,9 @@ No, you have full control. You can configure each notice type separately to eith
 
 No! Notices are captured and stored in the pop-up. You'll see a counter in the admin toolbar showing how many unread notices you have.
 
-= Can I control who sees the notice manager? =
+= Can I control who sees the notice tracker? =
 
-Yes! You can configure visibility settings to show/hide the notice manager for specific users or user roles.
+Yes! You can configure visibility settings to show/hide the notice tracker for specific users or user roles.
 
 = Does this work with multisite? =
 

@@ -228,7 +228,7 @@ class Settings_Page
 	 */
 	public function render_visibility_section()
 	{
-		echo '<p>' . esc_html__('Control which users can see the notice manager.', 'notice-tracker') . '</p>';
+		echo '<p>' . esc_html__('Control which users can see the notice tracker.', 'notice-tracker') . '</p>';
 	}
 
 	/**
