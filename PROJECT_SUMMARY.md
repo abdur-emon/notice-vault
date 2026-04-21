@@ -88,8 +88,8 @@ A centralized notice management system that:
 ## 📁 File Structure
 
 ```
-notice-manager/
-├── notice-manager.php          # Main plugin file
+notice-tracker/
+├── notice-tracker.php          # Main plugin file
 ├── uninstall.php                  # Cleanup on deletion
 ├── index.php                      # Directory protection
 ├── .htaccess                      # Security rules
@@ -132,7 +132,7 @@ notice-manager/
 │   └── settings-page.php          # Settings HTML
 │
 ├── languages/
-│   └── notice-manager.pot      # Translation template
+│   └── notice-tracker.pot      # Translation template
 │
 └── Documentation/
     ├── README.md                  # Project overview

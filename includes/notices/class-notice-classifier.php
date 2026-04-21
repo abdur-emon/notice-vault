@@ -4,11 +4,11 @@
  *
  * Classifies admin notices by type.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Notices
  */
 
-namespace Notice_Manager\Notices;
+namespace Notice_Tracker\Notices;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

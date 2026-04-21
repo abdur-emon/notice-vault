@@ -4,11 +4,11 @@
  *
  * Manages user visibility permissions.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Permissions
  */
 
-namespace Notice_Manager\Permissions;
+namespace Notice_Tracker\Permissions;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -70,10 +70,10 @@ class Visibility_Manager {
 	 */
 	public static function get_mode_label( $mode ) {
 		$labels = array(
-			'show-all'      => __( 'Show to all users', 'notice-manager' ),
-			'hide-all'      => __( 'Hide from all users', 'notice-manager' ),
-			'hide-selected' => __( 'Hide from selected users', 'notice-manager' ),
-			'show-selected' => __( 'Show to selected users', 'notice-manager' ),
+			'show-all'      => __( 'Show to all users', 'notice-tracker' ),
+			'hide-all'      => __( 'Hide from all users', 'notice-tracker' ),
+			'hide-selected' => __( 'Hide from selected users', 'notice-tracker' ),
+			'show-selected' => __( 'Show to selected users', 'notice-tracker' ),
 		);
 
 		return isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['show-all'];

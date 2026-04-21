@@ -19,7 +19,7 @@
 **Progress:** 6/6 tasks
 
 ### Tasks
-- [x] Create main plugin file (notice-manager.php)
+- [x] Create main plugin file (notice-tracker.php)
 - [x] Build Plugin class (core bootstrap)
 - [x] Build Loader class (hooks management)
 - [x] Implement PSR-4 Autoloader
@@ -27,7 +27,7 @@
 - [x] Create Deactivator class
 
 ### Files to Create
-- `notice-manager.php`
+- `notice-tracker.php`
 - `includes/core/class-plugin.php`
 - `includes/core/class-loader.php`
 - `includes/core/class-autoloader.php`
@@ -288,7 +288,7 @@ None.
 ## �📦 Deliverables
 
 ### Core Files
-- ✅ notice-manager.php (main plugin file)
+- ✅ notice-tracker.php (main plugin file)
 - ✅ uninstall.php (cleanup on deletion)
 - ✅ .htaccess (security)
 - ✅ index.php (directory protection)
@@ -335,7 +335,7 @@ None.
 - ✅ DEVELOPER_GUIDE.md (developer extension guide)
 
 ### Translation
-- ✅ notice-manager.pot (translation template)
+- ✅ notice-tracker.pot (translation template)
 
 ### Security
 - ✅ index.php files in all directories

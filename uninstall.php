@@ -4,7 +4,7 @@
  *
  * Runs when the plugin is uninstalled (deleted).
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  */
 
 // Exit if accessed directly.

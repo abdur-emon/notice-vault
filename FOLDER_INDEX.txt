@@ -50,11 +50,11 @@ Notice Tracker
 ├── index.php
 ├── languages
 │   ├── index.php
-│   └── notice-manager.pot
+│   └── notice-tracker.pot
 ├── readme.txt
 ├── templates
 │   ├── index.php
 │   ├── popup-template.php
 │   └── settings-page.php
 ├── uninstall.php
-└── notice-manager.php
+└── notice-tracker.php

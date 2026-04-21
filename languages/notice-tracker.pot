@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Notice Tracker 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/notice-manager\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/notice-tracker\n"
 "POT-Creation-Date: 2026-03-05 00:00:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: notice-manager.php
+#: notice-tracker.php
 msgid "Notice Tracker"
 msgstr ""
 

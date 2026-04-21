@@ -4,13 +4,13 @@
  *
  * Captures admin notices using output buffering.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Notices
  */
 
-namespace Notice_Manager\Notices;
+namespace Notice_Tracker\Notices;
 
-use Notice_Manager\Permissions\Visibility_Manager;
+use Notice_Tracker\Permissions\Visibility_Manager;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

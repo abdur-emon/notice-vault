@@ -1,7 +1,7 @@
 /**
  * Notice Tracker - Popup JavaScript
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  */
 
 (function ($) {

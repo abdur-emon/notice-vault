@@ -1,7 +1,7 @@
 /**
  * Notice Tracker - Admin JavaScript
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  */
 
 (function ($) {
