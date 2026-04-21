@@ -1,8 +1,8 @@
-# Notice Manager - Developer Guide
+# Notice Tracker - Developer Guide
 
 ## 🎯 For Developers
 
-This guide is for developers who want to understand, extend, or contribute to Notice Manager.
+This guide is for developers who want to understand, extend, or contribute to Notice Tracker.
 
 ---
 
@@ -10,7 +10,7 @@ This guide is for developers who want to understand, extend, or contribute to No
 
 ### Understanding the Architecture
 
-Notice Manager follows a **modular, object-oriented architecture**:
+Notice Tracker follows a **modular, object-oriented architecture**:
 
 1. **Core System** - Plugin bootstrap, autoloading, activation/deactivation
 2. **Notice System** - Capture, classify, and store notices

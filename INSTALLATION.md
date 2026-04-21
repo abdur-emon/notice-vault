@@ -1,4 +1,4 @@
-# Notice Manager - Installation & Testing Guide
+# Notice Tracker - Installation & Testing Guide
 
 ## 📋 Table of Contents
 
@@ -49,7 +49,7 @@
 2. **Upload** the `notice-manager` folder to `/wp-content/plugins/`
 3. **Log in** to WordPress admin panel
 4. Navigate to **Plugins**
-5. Find **Notice Manager** and click **Activate**
+5. Find **Notice Tracker** and click **Activate**
 
 ### Method 3: WP-CLI
 
@@ -71,7 +71,7 @@ wp plugin activate notice-manager
 ### Step 1: Access Settings
 
 After activation:
-1. Navigate to **Settings → Notice Manager**
+1. Navigate to **Settings → Notice Tracker**
 2. You'll see the settings page with 4 sections
 
 ### Step 2: Configure Notice Types
@@ -140,7 +140,7 @@ Click **Save Changes** at the bottom of the page.
 
 1. Check that the plugin is activated
 2. Look for **"Notices"** in the admin toolbar (top-right)
-3. Navigate to **Settings → Notice Manager**
+3. Navigate to **Settings → Notice Tracker**
 4. Verify settings page loads correctly
 
 ### Test 2: Test Notice Capture
@@ -298,7 +298,7 @@ If you encounter issues:
 
 ## ✅ Success!
 
-If all tests pass, your Notice Manager installation is complete and working correctly!
+If all tests pass, your Notice Tracker installation is complete and working correctly!
 
 You can now enjoy a cleaner WordPress dashboard with all notices organized in one place.
 

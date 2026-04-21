@@ -1,8 +1,8 @@
-# Notice Manager - Security Documentation
+# Notice Tracker - Security Documentation
 
 ## 🔒 Security Overview
 
-This document outlines all security measures implemented in Notice Manager to ensure the plugin meets WordPress.org security standards and protects against common vulnerabilities.
+This document outlines all security measures implemented in Notice Tracker to ensure the plugin meets WordPress.org security standards and protects against common vulnerabilities.
 
 ---
 

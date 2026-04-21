@@ -34,7 +34,7 @@ class Activator {
 		// Check WordPress version.
 		if ( version_compare( get_bloginfo( 'version' ), '5.0', '<' ) ) {
 			wp_die(
-				esc_html__( 'Notice Manager requires WordPress 5.0 or higher.', 'notice-manager' ),
+				esc_html__( 'Notice Tracker requires WordPress 5.0 or higher.', 'notice-manager' ),
 				esc_html__( 'Plugin Activation Error', 'notice-manager' ),
 				array( 'back_link' => true )
 			);
@@ -43,7 +43,7 @@ class Activator {
 		// Check PHP version.
 		if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
 			wp_die(
-				esc_html__( 'Notice Manager requires PHP 7.2 or higher.', 'notice-manager' ),
+				esc_html__( 'Notice Tracker requires PHP 7.2 or higher.', 'notice-manager' ),
 				esc_html__( 'Plugin Activation Error', 'notice-manager' ),
 				array( 'back_link' => true )
 			);

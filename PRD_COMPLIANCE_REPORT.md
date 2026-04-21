@@ -1,4 +1,4 @@
-# Notice Manager - PRD Compliance Report
+# Notice Tracker - PRD Compliance Report
 
 **Report Date:** 2026-03-05  
 **Plugin Version:** 1.0.0  
@@ -8,7 +8,7 @@
 
 ## 📋 Executive Summary
 
-The **Notice Manager** plugin has been developed and verified to be **100% compliant** with all requirements specified in the Product Requirements Document (PRD).
+The **Notice Tracker** plugin has been developed and verified to be **100% compliant** with all requirements specified in the Product Requirements Document (PRD).
 
 - **Total PRD Requirements:** 45+
 - **Requirements Met:** 45+ (100%)
@@ -288,7 +288,7 @@ The following features were implemented beyond the PRD requirements:
 
 ## 🎯 Conclusion
 
-The **Notice Manager** plugin is **100% compliant** with the Product Requirements Document.
+The **Notice Tracker** plugin is **100% compliant** with the Product Requirements Document.
 
 All functional and non-functional requirements have been implemented, tested, and verified. The plugin exceeds PRD expectations by including 7 additional features that enhance usability and performance.
 

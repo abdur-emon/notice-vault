@@ -1,4 +1,4 @@
-# Notice Manager - Project Summary
+# Notice Tracker - Project Summary
 
 ## 🎉 Project Status: COMPLETE ✅
 
@@ -11,7 +11,7 @@
 
 ## 📊 Project Overview
 
-**Notice Manager** is a production-ready WordPress plugin that captures and manages admin notices, reducing dashboard clutter while ensuring users never miss important notifications.
+**Notice Tracker** is a production-ready WordPress plugin that captures and manages admin notices, reducing dashboard clutter while ensuring users never miss important notifications.
 
 ### Core Problem Solved
 WordPress dashboards are often flooded with admin notices from core, plugins, and themes, causing:
@@ -284,7 +284,7 @@ Future versions could include:
 
 ## 🎓 Conclusion
 
-**Notice Manager** is a fully functional, production-ready WordPress plugin that successfully solves the problem of admin notice clutter. The plugin is:
+**Notice Tracker** is a fully functional, production-ready WordPress plugin that successfully solves the problem of admin notice clutter. The plugin is:
 
 - **Secure** - All security best practices implemented
 - **Performant** - Optimized for speed and efficiency

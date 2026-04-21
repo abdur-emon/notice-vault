@@ -55,8 +55,8 @@ class Settings_Page
 	public function add_settings_page()
 	{
 		add_menu_page(
-			__('Notice Manager Settings', 'notice-manager'),
-			__('Notice Manager', 'notice-manager'),
+			__('Notice Tracker Settings', 'notice-manager'),
+			__('Notice Tracker', 'notice-manager'),
 			'manage_options',
 			self::PAGE_SLUG,
 			array($this, 'render_settings_page'),

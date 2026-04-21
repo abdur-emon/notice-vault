@@ -1,5 +1,5 @@
 /**
- * Notice Manager - Popup JavaScript
+ * Notice Tracker - Popup JavaScript
  *
  * @package Notice_Manager
  */

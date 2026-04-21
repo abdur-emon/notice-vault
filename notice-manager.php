@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Notice Manager
+ * Plugin Name:       Notice Tracker
  * Plugin URI:        https://example.com/notice-manager
  * Description:       Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.
  * Version:           1.0.0

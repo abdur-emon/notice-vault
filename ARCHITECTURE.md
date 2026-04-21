@@ -1,8 +1,8 @@
-# Notice Manager - Architecture Documentation
+# Notice Tracker - Architecture Documentation
 
 ## 🏗️ Architecture Overview
 
-Notice Manager follows a **modular, object-oriented architecture** based on SOLID principles and WordPress coding standards.
+Notice Tracker follows a **modular, object-oriented architecture** based on SOLID principles and WordPress coding standards.
 
 ---
 
@@ -196,7 +196,7 @@ Three display modes:
 ```
 1. User clicks toolbar icon
 2. AJAX request to load notices
-3. Notice Manager retrieves from storage
+3. Notice Tracker retrieves from storage
 4. Popup renders notices
 5. User marks as read
 6. AJAX updates read status
