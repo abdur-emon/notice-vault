@@ -99,7 +99,7 @@ add_filter('wpnm_get_notices', function($notices) {
 ### Namespace Convention
 
 ```
-Notice_Manager\
+Notice_Tracker\
 ├── Core\
 │   ├── Plugin
 │   ├── Loader
@@ -211,7 +211,7 @@ composer install
 vendor/bin/phpunit
 
 # WordPress coding standards
-phpcs --standard=WordPress notice-manager.php
+phpcs --standard=WordPress notice-tracker.php
 ```
 
 ---

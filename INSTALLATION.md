@@ -39,14 +39,14 @@
 1. **Log in** to your WordPress admin panel
 2. Navigate to **Plugins → Add New**
 3. Click **Upload Plugin**
-4. Choose the `notice-manager.zip` file
+4. Choose the `notice-tracker.zip` file
 5. Click **Install Now**
 6. Click **Activate Plugin**
 
 ### Method 2: FTP Upload
 
-1. **Extract** the `notice-manager.zip` file
-2. **Upload** the `notice-manager` folder to `/wp-content/plugins/`
+1. **Extract** the `notice-tracker.zip` file
+2. **Upload** the `notice-tracker` folder to `/wp-content/plugins/`
 3. **Log in** to WordPress admin panel
 4. Navigate to **Plugins**
 5. Find **Notice Tracker** and click **Activate**
@@ -58,10 +58,10 @@
 cd /path/to/wordpress
 
 # Install the plugin
-wp plugin install notice-manager.zip
+wp plugin install notice-tracker.zip
 
 # Activate the plugin
-wp plugin activate notice-manager
+wp plugin activate notice-tracker
 ```
 
 ---

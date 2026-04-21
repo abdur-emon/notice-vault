@@ -9,9 +9,9 @@ Notice Tracker follows a **modular, object-oriented architecture** based on SOLI
 ## 📁 Directory Structure
 
 ```
-notice-manager/
+notice-tracker/
 │
-├── notice-manager.php          # Main plugin file (bootstrap)
+├── notice-tracker.php          # Main plugin file (bootstrap)
 │
 ├── includes/
 │   ├── core/
@@ -25,7 +25,7 @@ notice-manager/
 │   │   ├── class-notice-capture.php    # Captures admin notices
 │   │   ├── class-notice-classifier.php # Classifies notice types
 │   │   ├── class-notice-storage.php    # Stores notices
-│   │   └── class-notice-manager.php    # Manages notice lifecycle
+│   │   └── class-notice-tracker.php    # Manages notice lifecycle
 │   │
 │   ├── admin/
 │   │   ├── class-settings-page.php     # Settings page UI
@@ -51,7 +51,7 @@ notice-manager/
 │   └── settings-page.php          # Settings page template
 │
 ├── languages/
-│   └── notice-manager.pot      # Translation template
+│   └── notice-tracker.pot      # Translation template
 │
 ├── docs/
 │   ├── ARCHITECTURE.md            # This file
@@ -65,7 +65,7 @@ notice-manager/
 
 ## 🔧 Core Components
 
-### 1. Plugin Bootstrap (`notice-manager.php`)
+### 1. Plugin Bootstrap (`notice-tracker.php`)
 - Entry point for WordPress
 - Defines constants
 - Loads autoloader
@@ -237,7 +237,7 @@ Three display modes:
 If using custom table:
 
 ```sql
-CREATE TABLE {prefix}_notice_manager (
+CREATE TABLE {prefix}_notice_tracker (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     notice_type VARCHAR(20) NOT NULL,
     notice_content TEXT NOT NULL,
@@ -272,7 +272,7 @@ do_action('wpnm_notice_stored', $notice_id);
 ## 📝 Naming Conventions
 
 - **Classes:** `class-{name}.php`
-- **Namespace:** `Notice_Manager\`
+- **Namespace:** `Notice_Tracker\`
 - **Prefix:** `wpnm_` (functions, options)
 - **Constants:** `WPNM_` (uppercase)
 

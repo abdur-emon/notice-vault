@@ -4,11 +4,11 @@
  *
  * Handles plugin deactivation tasks.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Core
  */
 
-namespace Notice_Manager\Core;
+namespace Notice_Tracker\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

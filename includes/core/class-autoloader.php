@@ -4,11 +4,11 @@
  *
  * PSR-4 compliant autoloader for the plugin.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Core
  */
 
-namespace Notice_Manager\Core;
+namespace Notice_Tracker\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,7 +29,7 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	private static $prefix = 'Notice_Manager\\';
+	private static $prefix = 'Notice_Tracker\\';
 
 	/**
 	 * Base directory for the namespace prefix.
@@ -67,7 +67,7 @@ class Autoloader {
 		$relative_class = substr( $class, $len );
 
 		// Convert namespace to directory structure.
-		// Notice_Manager\Core\Plugin -> core/class-plugin.php
+		// Notice_Tracker\Core\Plugin -> core/class-plugin.php
 		$parts = explode( '\\', $relative_class );
 
 		// Last part is the class name.

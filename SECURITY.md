@@ -135,7 +135,7 @@ global $wpdb;
 // Use prepared statements
 $results = $wpdb->get_results( 
     $wpdb->prepare( 
-        "SELECT * FROM {$wpdb->prefix}notice_manager WHERE notice_type = %s AND is_read = %d",
+        "SELECT * FROM {$wpdb->prefix}notice_tracker WHERE notice_type = %s AND is_read = %d",
         $notice_type,
         $is_read
     )

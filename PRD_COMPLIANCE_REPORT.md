@@ -78,7 +78,7 @@ The **Notice Tracker** plugin has been developed and verified to be **100% compl
 
 **Implementation Details:**
 - File: `includes/admin/class-settings-page.php`
-- Line 128: `'other' => __( 'Non-standard Notices', 'notice-manager' )`
+- Line 128: `'other' => __( 'Non-standard Notices', 'notice-tracker' )`
 - Captures notices without standard CSS classes
 
 ---
@@ -93,7 +93,7 @@ The **Notice Tracker** plugin has been developed and verified to be **100% compl
 
 **Implementation Details:**
 - File: `includes/admin/class-settings-page.php`
-- Line 129: `'system' => __( 'WordPress System Notices', 'notice-manager' )`
+- Line 129: `'system' => __( 'WordPress System Notices', 'notice-tracker' )`
 - Special handling for WordPress core notices
 
 ---
@@ -158,7 +158,7 @@ The **Notice Tracker** plugin has been developed and verified to be **100% compl
 | Clean database tables | ✅ Complete | Uses WordPress Options API |
 
 **Implementation Details:**
-- File: `notice-manager.php` (Lines 15-16: Version requirements)
+- File: `notice-tracker.php` (Lines 15-16: Version requirements)
 - Performance: Transient caching in `includes/notices/class-notice-storage.php`
 - Database: Options API usage, no custom tables
 

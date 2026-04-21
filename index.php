@@ -4,7 +4,7 @@
  *
  * Prevents directory browsing.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  */
 
 // Silence is golden.

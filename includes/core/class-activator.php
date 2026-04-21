@@ -4,11 +4,11 @@
  *
  * Handles plugin activation tasks.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Core
  */
 
-namespace Notice_Manager\Core;
+namespace Notice_Tracker\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,8 +34,8 @@ class Activator {
 		// Check WordPress version.
 		if ( version_compare( get_bloginfo( 'version' ), '5.0', '<' ) ) {
 			wp_die(
-				esc_html__( 'Notice Tracker requires WordPress 5.0 or higher.', 'notice-manager' ),
-				esc_html__( 'Plugin Activation Error', 'notice-manager' ),
+				esc_html__( 'Notice Tracker requires WordPress 5.0 or higher.', 'notice-tracker' ),
+				esc_html__( 'Plugin Activation Error', 'notice-tracker' ),
 				array( 'back_link' => true )
 			);
 		}
@@ -43,8 +43,8 @@ class Activator {
 		// Check PHP version.
 		if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
 			wp_die(
-				esc_html__( 'Notice Tracker requires PHP 7.2 or higher.', 'notice-manager' ),
-				esc_html__( 'Plugin Activation Error', 'notice-manager' ),
+				esc_html__( 'Notice Tracker requires PHP 7.2 or higher.', 'notice-tracker' ),
+				esc_html__( 'Plugin Activation Error', 'notice-tracker' ),
 				array( 'back_link' => true )
 			);
 		}

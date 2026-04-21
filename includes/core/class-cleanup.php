@@ -4,13 +4,13 @@
  *
  * Handles scheduled cleanup tasks.
  *
- * @package Notice_Manager
+ * @package Notice_Tracker
  * @subpackage Core
  */
 
-namespace Notice_Manager\Core;
+namespace Notice_Tracker\Core;
 
-use Notice_Manager\Notices\Notice_Storage;
+use Notice_Tracker\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
