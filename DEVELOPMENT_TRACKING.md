@@ -1,4 +1,4 @@
-# Notice Manager - Development Tracker
+# Notice Tracker - Development Tracker
 
 **Plugin Version:** 1.0.0
 **WordPress Minimum:** 5.0

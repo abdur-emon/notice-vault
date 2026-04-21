@@ -1,4 +1,4 @@
-Notice Manager
+Notice Tracker
 ├── .htaccess
 ├── ARCHITECTURE.md
 ├── CHANGELOG.md

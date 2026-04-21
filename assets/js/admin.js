@@ -1,5 +1,5 @@
 /**
- * Notice Manager - Admin JavaScript
+ * Notice Tracker - Admin JavaScript
  *
  * @package Notice_Manager
  */

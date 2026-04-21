@@ -1,4 +1,4 @@
-# Notice Manager - Security
+# Notice Tracker - Security
 # Prevent direct access to plugin files
 
 <IfModule mod_rewrite.c>

@@ -1,16 +1,16 @@
-# Notice Manager - Manage Notices & Work Smarter
+# Notice Tracker - Manage Notices & Work Smarter
 
 [![Requires at least](https://img.shields.io/badge/Requires_at_least-5.0-blue.svg)]()
 [![Tested up to](https://img.shields.io/badge/Tested_up_to-6.4-blue.svg)]()
 [![Requires PHP](https://img.shields.io/badge/Requires_PHP-7.2-blue.svg)]()
 [![License](https://img.shields.io/badge/License-GPLv2_or_later-success.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-Control your WordPress dashboard with Notice Manager - hide, manage, and organize admin alerts for a clean, distraction-free site.
+Control your WordPress dashboard with Notice Tracker - hide, manage, and organize admin alerts for a clean, distraction-free site.
 
 ## Description
 
 ### Take Control of Your Dashboard with Disable Admin Notices
-Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and promotional pop-ups? **Notice Manager** is the ultimate solution for users who want to reclaim their workspace.
+Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and promotional pop-ups? **Notice Tracker** is the ultimate solution for users who want to reclaim their workspace.
 
 WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Our plugin gives you full control over your admin environment, allowing you to hide, remove, or manage notifications with just a few clicks. Whether you want to silence all alerts or simply organize them into a cleaner view, we’ve got you covered.
 
@@ -30,13 +30,13 @@ WordPress admin notices can be helpful, but they often become overwhelming, taki
 * **One-Click Restore:** Made a mistake? Reset your settings or restore hidden notices instantly.
 
 ### Experience a Distraction-Free WordPress Workflow
-Whether you are managing multiple sites or a blogger tired of constant upselling, **Notice Manager** helps you maintain a professional, organized, and distraction-free environment.
+Whether you are managing multiple sites or a blogger tired of constant upselling, **Notice Tracker** helps you maintain a professional, organized, and distraction-free environment.
 
 **Stop the clutter and start focusing on what matters: Your Website.**
 
 ## Privacy Policy
 
-**Notice Manager does not:**
+**Notice Tracker does not:**
 * Collect any user data
 * Send data to external servers
 * Use cookies or tracking
@@ -45,14 +45,14 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 *All notices are stored locally in your WordPress database and are automatically deleted after the configured expiration period.*
 
 ### Built with Trust, Backed by Us 🚀
-**Notice Manager** is developed by **Dotnix**, a trusted WordPress marketplace known for building high-performance and reliable tools that simplify website management for thousands of users worldwide. 
+**Notice Tracker** is developed by **Dotnix**, a trusted WordPress marketplace known for building high-performance and reliable tools that simplify website management for thousands of users worldwide. 
 
 ## Installation
 
 ### Automatic Installation
 1. Log in to your WordPress admin panel
 2. Navigate to **Plugins → Add New**
-3. Search for "Notice Manager"
+3. Search for "Notice Tracker"
 4. Click **Install Now**
 5. Activate the plugin
 
@@ -75,7 +75,7 @@ No! Notices are captured and stored in the pop-up. You'll see a counter in the a
 Yes! You can configure visibility settings to show/hide the notice manager for specific users or user roles.
 
 **Does this work with multisite?**  
-Yes, Notice Manager is fully compatible with WordPress multisite installations.
+Yes, Notice Tracker is fully compatible with WordPress multisite installations.
 
 **Will this slow down my site?**  
 No! The plugin uses lazy loading, transient caching, and minimal database queries. It has zero impact on frontend performance.
@@ -87,7 +87,7 @@ Yes! You can choose from 3 popup styles: Slide from Right, Modal Popup, or Slide
 By default, notices are automatically deleted after 30 days. You can customize this in the settings.
 
 **Is this plugin translation-ready?**  
-Yes! Notice Manager is fully translation-ready with a .pot file included.
+Yes! Notice Tracker is fully translation-ready with a .pot file included.
 
 ## Screenshots
 1. Admin toolbar with notice counter

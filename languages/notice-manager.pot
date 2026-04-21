@@ -1,8 +1,8 @@
-# Copyright (C) 2026 Notice Manager
-# This file is distributed under the same license as the Notice Manager package.
+# Copyright (C) 2026 Notice Tracker
+# This file is distributed under the same license as the Notice Tracker package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Notice Manager 1.0.0\n"
+"Project-Id-Version: Notice Tracker 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/notice-manager\n"
 "POT-Creation-Date: 2026-03-05 00:00:00+00:00\n"
 "MIME-Version: 1.0\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: notice-manager.php
-msgid "Notice Manager"
+msgid "Notice Tracker"
 msgstr ""
 
 msgid "Manage and organize WordPress admin notices."
@@ -55,10 +55,10 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-msgid "Notice Manager Settings"
+msgid "Notice Tracker Settings"
 msgstr ""
 
-msgid "Notice Manager"
+msgid "Notice Tracker"
 msgstr ""
 
 msgid "Notice Type Settings"
