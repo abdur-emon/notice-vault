@@ -116,7 +116,7 @@ Select your preferred popup style:
 
 ### Step 4: Configure User Visibility
 
-Choose who can see the notice manager:
+Choose who can see the notice tracker:
 - **Show to all users** (Default)
 - Hide from all users
 - Hide from selected users only
@@ -190,7 +190,7 @@ Click **Save Changes** at the bottom of the page.
 1. Set visibility to "Hide from selected users"
 2. Select a test user
 3. Log in as that user
-4. Verify notice manager is hidden
+4. Verify notice tracker is hidden
 
 ### Test 7: Test AJAX Functionality
 

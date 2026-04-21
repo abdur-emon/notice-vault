@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Visibility Manager Class
  *
- * Controls which users can see the notice manager.
+ * Controls which users can see the notice tracker.
  *
  * @since 1.0.0
  */
