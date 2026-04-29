@@ -1,5 +1,5 @@
 === Notice Tracker - Manage Notices & Work Smarter ===
-Contributors: abduremon, mdismail-cse
+Contributors: abduremon
 Tags: Admin notices, hide admin notices, hide admin notifications, dashboard notices, notices
 Requires at least: 5.0
 Tested up to: 6.4
