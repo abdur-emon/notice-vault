@@ -454,7 +454,7 @@ class Settings_Page
 	public function enqueue_assets($hook)
 	{
 		// Only load on our settings page.
-		if ('settings_page_' . self::PAGE_SLUG !== $hook) {
+		if ('toplevel_page_' . self::PAGE_SLUG !== $hook) {
 			return;
 		}
 
