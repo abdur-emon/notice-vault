@@ -55,7 +55,7 @@ class Admin_Toolbar
 				'href' => '#',
 				'meta' => array(
 					'class' => 'wpnm-toolbar-item',
-					'title' => __('View Notices', 'notice-tracker'),
+					'title' => __('View Notices', 'Notice-Tracker'),
 				),
 			)
 		);
@@ -82,11 +82,11 @@ class Admin_Toolbar
 				'<span class="wpnm-count-badge">%s</span>',
 				esc_html($count)
 			);
-			$text = esc_html__('Notices', 'notice-tracker');
+			$text = esc_html__('Notices', 'Notice-Tracker');
 			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 		}
 
-		return $icon . '<span class="ab-label">' . esc_html__('Notices', 'notice-tracker') . '</span>';
+		return $icon . '<span class="ab-label">' . esc_html__('Notices', 'Notice-Tracker') . '</span>';
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Admin_Toolbar
 			array(
 				'parent' => 'wpnm-notices',
 				'id' => 'wpnm-view-all',
-				'title' => esc_html__('View All Notices', 'notice-tracker'),
+				'title' => esc_html__('View All Notices', 'Notice-Tracker'),
 				'href' => '#',
 				'meta' => array(
 					'class' => 'wpnm-view-all',

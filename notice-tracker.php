@@ -1,16 +1,16 @@
 <?php
 /**
  * Plugin Name:       Notice Tracker
- * Plugin URI:        https://example.com/notice-tracker
+ * Plugin URI:        https://github.com/abdur-emon/Notice-Tracker
  * Description:       Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.
  * Version:           1.0.0
  * Requires at least: 5.0
  * Requires PHP:      7.2
- * Author:            Your Name
- * Author URI:        https://example.com
+ * Author:            Abdur Rahman Emon
+ * Author URI:        https://github.com/abdur-emon
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       notice-tracker
+ * Text Domain:       Notice-Tracker
  * Domain Path:       /languages
  *
  * @package Notice_Tracker

@@ -70,10 +70,10 @@ class Visibility_Manager {
 	 */
 	public static function get_mode_label( $mode ) {
 		$labels = array(
-			'show-all'      => __( 'Show to all users', 'notice-tracker' ),
-			'hide-all'      => __( 'Hide from all users', 'notice-tracker' ),
-			'hide-selected' => __( 'Hide from selected users', 'notice-tracker' ),
-			'show-selected' => __( 'Show to selected users', 'notice-tracker' ),
+			'show-all'      => __( 'Show to all users', 'Notice-Tracker' ),
+			'hide-all'      => __( 'Hide from all users', 'Notice-Tracker' ),
+			'hide-selected' => __( 'Hide from selected users', 'Notice-Tracker' ),
+			'show-selected' => __( 'Show to selected users', 'Notice-Tracker' ),
 		);
 
 		return isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['show-all'];

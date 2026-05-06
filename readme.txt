@@ -1,8 +1,8 @@
-=== Notice Tracker - Manage Notices & Work Smarter ===
+=== Notice Tracker ===
 Contributors: abduremon
 Tags: Admin notices, hide admin notices, hide admin notifications, dashboard notices, notices
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 6.9
 Requires PHP: 7.2
 Stable tag: 1.0.0
 License: GPLv2 or later
