@@ -54,6 +54,7 @@ class Notice_Storage {
 
 		// Add metadata.
 		$notice['id']         = $notice_id;
+		$notice['user_id']    = get_current_user_id();
 		$notice['is_read']    = false;
 		$notice['created_at'] = current_time( 'mysql' );
 		$notice['expires_at'] = self::get_expiration_date();
@@ -127,6 +128,15 @@ class Notice_Storage {
 			);
 		}
 
+		// Apply user filter.
+		$user_id = get_current_user_id();
+		$notices = array_filter(
+			$notices,
+			function ( $notice ) use ( $user_id ) {
+				return ! isset( $notice['user_id'] ) || (int) $notice['user_id'] === $user_id;
+			}
+		);
+
 		// Sort by created_at (newest first).
 		uasort(
 			$notices,
@@ -171,6 +181,10 @@ class Notice_Storage {
 			return false;
 		}
 
+		if ( isset( $notices[ $notice_id ]['user_id'] ) && (int) $notices[ $notice_id ]['user_id'] !== get_current_user_id() ) {
+			return false;
+		}
+
 		$notices[ $notice_id ]['is_read'] = true;
 
 		delete_transient( 'wpnm_notice_count' );
@@ -189,6 +203,10 @@ class Notice_Storage {
 		$notices = get_option( self::OPTION_NAME, array() );
 
 		if ( ! isset( $notices[ $notice_id ] ) ) {
+			return false;
+		}
+
+		if ( isset( $notices[ $notice_id ]['user_id'] ) && (int) $notices[ $notice_id ]['user_id'] !== get_current_user_id() ) {
 			return false;
 		}
 

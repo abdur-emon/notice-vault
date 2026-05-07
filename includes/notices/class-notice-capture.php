@@ -208,7 +208,7 @@ class Notice_Capture {
 		// Check if we should handle this notice type.
 		if ( ! isset( $settings[ $key ] ) ) {
 			// Output the notice normally.
-			echo $notice_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo wp_kses_post( $notice_html );
 			return;
 		}
 
@@ -217,7 +217,7 @@ class Notice_Capture {
 
 		if ( 'nothing' === $action ) {
 			// Do nothing - output normally.
-			echo $notice_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo wp_kses_post( $notice_html );
 			return;
 		}
 
@@ -279,7 +279,7 @@ class Notice_Capture {
 		$notice = array(
 			'type'    => $type,
 			'content' => $content,
-			'html'    => $html,
+			'html'    => wp_kses_post( $html ),
 			'hash'    => $hash,
 		);
 

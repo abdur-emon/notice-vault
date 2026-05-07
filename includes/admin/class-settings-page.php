@@ -512,6 +512,7 @@ class Settings_Page
 
 		if (!current_user_can('manage_options')) {
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
 		}
 
 		$search = isset($_POST['q']) ? sanitize_text_field(wp_unslash($_POST['q'])) : '';

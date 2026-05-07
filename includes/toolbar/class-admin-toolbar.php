@@ -36,8 +36,8 @@ class Admin_Toolbar
 	 */
 	public function add_toolbar_item($wp_admin_bar)
 	{
-		// Only show to users who can read.
-		if (!current_user_can('read')) {
+		// Only show to users who can see notices.
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 

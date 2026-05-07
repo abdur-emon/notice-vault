@@ -36,6 +36,10 @@ class Notice_Popup
 	 */
 	public function enqueue_assets()
 	{
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			return;
+		}
+
 		// Enqueue CSS.
 		wp_enqueue_style(
 			'wpnm-popup',
@@ -81,6 +85,10 @@ class Notice_Popup
 	 */
 	public function render_popup()
 	{
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			return;
+		}
+
 		$popup_style = $this->get_popup_style();
 		include WPNM_PLUGIN_DIR . 'templates/popup-template.php';
 	}
@@ -108,9 +116,15 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
+		}
+
 		// Check capability.
 		if (!current_user_can('read')) {
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
 		}
 
 		// Get filter parameters.
@@ -155,9 +169,15 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
+		}
+
 		// Check capability.
 		if (!current_user_can('read')) {
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
 		}
 
 		// Get notice ID.
@@ -193,9 +213,15 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
+		}
+
 		// Check capability.
 		if (!current_user_can('read')) {
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
 		}
 
 		// Get notice ID.
@@ -230,8 +256,14 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if (!current_user_can('read')) {
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
+		}
+
+		if (!current_user_can('manage_options')) {
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
 		}
 
 		$result = Notice_Storage::mark_all_read();
@@ -258,8 +290,14 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if (!current_user_can('read')) {
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
+		}
+
+		if (!current_user_can('manage_options')) {
+			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+			return;
 		}
 
 		$result = Notice_Storage::delete_all();
