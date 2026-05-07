@@ -11,7 +11,8 @@
 namespace Notice_Tracker\Admin;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH'))
+{
 	exit;
 }
 
@@ -24,7 +25,6 @@ if (!defined('ABSPATH')) {
  */
 class Settings_Page
 {
-
 	/**
 	 * Settings page slug.
 	 *
@@ -135,7 +135,8 @@ class Settings_Page
 			'system' => __('WordPress System Notices', 'notice-tracker'),
 		);
 
-		foreach ($notice_types as $type => $label) {
+		foreach ($notice_types as $type => $label)
+		{
 			add_settings_field(
 				'notice_' . $type,
 				$label,
@@ -191,7 +192,8 @@ class Settings_Page
 	 */
 	public function render_settings_page()
 	{
-		if (!current_user_can('manage_options')) {
+		if (!current_user_can('manage_options'))
+		{
 			wp_die(esc_html__('Unauthorized access', 'notice-tracker'));
 		}
 
@@ -262,12 +264,14 @@ class Settings_Page
 		);
 
 		// System notices only have popup or nothing.
-		if ('system' === $type) {
+		if ('system' === $type)
+		{
 			unset($options['hide']);
 		}
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[notice_' . $type . ']') . '" class="regular-text">';
-		foreach ($options as $option_value => $option_label) {
+		foreach ($options as $option_value => $option_label)
+		{
 			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr($option_value),
@@ -296,7 +300,8 @@ class Settings_Page
 		);
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[popup_style]') . '" class="regular-text">';
-		foreach ($options as $option_value => $option_label) {
+		foreach ($options as $option_value => $option_label)
+		{
 			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr($option_value),
@@ -326,7 +331,8 @@ class Settings_Page
 		);
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[visibility_mode]') . '" id="wpnm-visibility-mode" class="regular-text">';
-		foreach ($options as $option_value => $option_label) {
+		foreach ($options as $option_value => $option_label)
+		{
 			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr($option_value),
@@ -349,9 +355,11 @@ class Settings_Page
 		$selected_users = isset($settings['visibility_users']) ? $settings['visibility_users'] : array();
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[visibility_users][]') . '" id="wpnm-visibility-users" class="regular-text wpnm-select2-users" multiple="multiple" style="width:100%; max-width:400px;">';
-		foreach ($selected_users as $user_id) {
+		foreach ($selected_users as $user_id)
+		{
 			$user = get_userdata($user_id);
-			if ($user) {
+			if ($user)
+			{
 				printf(
 					'<option value="%d" selected="selected">%s (%s)</option>',
 					esc_attr($user->ID),
@@ -397,11 +405,14 @@ class Settings_Page
 
 		// Sanitize notice type settings.
 		$notice_types = array('success', 'error', 'warning', 'info', 'other', 'system');
-		foreach ($notice_types as $type) {
+		foreach ($notice_types as $type)
+		{
 			$key = 'notice_' . $type;
-			if (isset($input[$key])) {
+			if (isset($input[$key]))
+			{
 				$allowed = array('popup', 'hide', 'nothing');
-				if ('system' === $type) {
+				if ('system' === $type)
+				{
 					$allowed = array('popup', 'nothing');
 				}
 				$sanitized[$key] = in_array($input[$key], $allowed, true) ? $input[$key] : 'popup';
@@ -409,31 +420,38 @@ class Settings_Page
 		}
 
 		// Sanitize popup style.
-		if (isset($input['popup_style'])) {
+		if (isset($input['popup_style']))
+		{
 			$allowed_styles = array('slide-right', 'modal', 'panel');
 			$sanitized['popup_style'] = in_array($input['popup_style'], $allowed_styles, true) ? $input['popup_style'] : 'slide-right';
 		}
 
 		// Sanitize visibility mode.
-		if (isset($input['visibility_mode'])) {
+		if (isset($input['visibility_mode']))
+		{
 			$allowed_modes = array('show-all', 'hide-all', 'hide-selected', 'show-selected');
 			$sanitized['visibility_mode'] = in_array($input['visibility_mode'], $allowed_modes, true) ? $input['visibility_mode'] : 'show-all';
 		}
 
 		// Sanitize visibility users.
-		if (isset($input['visibility_users']) && is_array($input['visibility_users'])) {
+		if (isset($input['visibility_users']) && is_array($input['visibility_users']))
+		{
 			$sanitized['visibility_users'] = array_map('absint', $input['visibility_users']);
-		} else {
+		} else
+		{
 			$sanitized['visibility_users'] = array();
 		}
 
 		// Sanitize auto expire days.
-		if (isset($input['auto_expire_days'])) {
+		if (isset($input['auto_expire_days']))
+		{
 			$sanitized['auto_expire_days'] = absint($input['auto_expire_days']);
-			if ($sanitized['auto_expire_days'] < 1) {
+			if ($sanitized['auto_expire_days'] < 1)
+			{
 				$sanitized['auto_expire_days'] = 1;
 			}
-			if ($sanitized['auto_expire_days'] > 365) {
+			if ($sanitized['auto_expire_days'] > 365)
+			{
 				$sanitized['auto_expire_days'] = 365;
 			}
 		}
@@ -454,7 +472,8 @@ class Settings_Page
 	public function enqueue_assets($hook)
 	{
 		// Only load on our settings page.
-		if ('toplevel_page_' . self::PAGE_SLUG !== $hook) {
+		if ('toplevel_page_' . self::PAGE_SLUG !== $hook)
+		{
 			return;
 		}
 
@@ -510,7 +529,8 @@ class Settings_Page
 	{
 		check_ajax_referer('wpnm_admin_nonce', 'nonce');
 
-		if (!current_user_can('manage_options')) {
+		if (!current_user_can('manage_options'))
+		{
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
 		}
 
@@ -526,7 +546,8 @@ class Settings_Page
 		$users = get_users($args);
 
 		$results = array();
-		foreach ($users as $user) {
+		foreach ($users as $user)
+		{
 			$results[] = array(
 				'id' => $user->ID,
 				'text' => $user->display_name . ' (' . $user->user_login . ')',

@@ -11,7 +11,8 @@
 namespace Notice_Tracker\Core;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH'))
+{
 	exit;
 }
 
@@ -24,7 +25,6 @@ if (!defined('ABSPATH')) {
  */
 class Plugin
 {
-
 	/**
 	 * Plugin instance.
 	 *
@@ -47,6 +47,13 @@ class Plugin
 	protected $version;
 
 	/**
+	 * Notice Storage instance.
+	 *
+	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 */
+	protected $storage;
+
+	/**
 	 * Get plugin instance (Singleton).
 	 *
 	 * @since 1.0.0
@@ -54,7 +61,8 @@ class Plugin
 	 */
 	public static function get_instance()
 	{
-		if (null === self::$instance) {
+		if (null === self::$instance)
+		{
 			self::$instance = new self();
 		}
 		return self::$instance;
@@ -69,13 +77,15 @@ class Plugin
 	{
 		$this->version = WPNM_VERSION;
 		$this->loader = new Loader();
+		$this->storage = new \Notice_Tracker\Notices\Notice_Storage();
 
 		$this->load_dependencies();
 		$this->define_admin_hooks();
 		$this->define_notice_hooks();
 
 		// Initialize cleanup cron (admin only to avoid frontend overhead).
-		if (is_admin()) {
+		if (is_admin())
+		{
 			Cleanup::init();
 		}
 	}
@@ -101,7 +111,8 @@ class Plugin
 	private function define_admin_hooks()
 	{
 		// Only load admin components in admin area.
-		if (!is_admin()) {
+		if (!is_admin())
+		{
 			return;
 		}
 
@@ -114,7 +125,7 @@ class Plugin
 		$this->loader->add_filter('plugin_action_links_' . WPNM_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links');
 
 		// Initialize Notice Popup.
-		$notice_popup = new \Notice_Tracker\Admin\Notice_Popup();
+		$notice_popup = new \Notice_Tracker\Admin\Notice_Popup($this->storage);
 		$this->loader->add_action('admin_enqueue_scripts', $notice_popup, 'enqueue_assets');
 		$this->loader->add_action('admin_footer', $notice_popup, 'render_popup');
 		$this->loader->add_action('wp_ajax_wpnm_get_notices', $notice_popup, 'ajax_get_notices');
@@ -124,7 +135,7 @@ class Plugin
 		$this->loader->add_action('wp_ajax_wpnm_clear_all', $notice_popup, 'ajax_clear_all');
 
 		// Initialize Admin Toolbar.
-		$admin_toolbar = new \Notice_Tracker\Toolbar\Admin_Toolbar();
+		$admin_toolbar = new \Notice_Tracker\Toolbar\Admin_Toolbar($this->storage);
 		$this->loader->add_action('admin_bar_menu', $admin_toolbar, 'add_toolbar_item', 999);
 	}
 
@@ -137,20 +148,19 @@ class Plugin
 	private function define_notice_hooks()
 	{
 		// Only capture notices in admin area.
-		if (!is_admin()) {
+		if (!is_admin())
+		{
 			return;
 		}
 
 		// Initialize Notice Capture.
-		$notice_capture = new \Notice_Tracker\Notices\Notice_Capture();
+		$notice_capture = new \Notice_Tracker\Notices\Notice_Capture($this->storage);
 		$this->loader->add_action('admin_notices', $notice_capture, 'start_capture', 0);
 		$this->loader->add_action('admin_notices', $notice_capture, 'end_capture', 9999);
 		$this->loader->add_action('network_admin_notices', $notice_capture, 'start_capture', 0);
 		$this->loader->add_action('network_admin_notices', $notice_capture, 'end_capture', 9999);
 		$this->loader->add_action('user_admin_notices', $notice_capture, 'start_capture', 0);
 		$this->loader->add_action('user_admin_notices', $notice_capture, 'end_capture', 9999);
-		$this->loader->add_action('all_admin_notices', $notice_capture, 'start_capture', 0);
-		$this->loader->add_action('all_admin_notices', $notice_capture, 'end_capture', 9999);
 	}
 
 	/**

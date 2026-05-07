@@ -14,7 +14,8 @@ use Notice_Tracker\Notices\Notice_Storage;
 use Notice_Tracker\Notices\Notice_Classifier;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH'))
+{
 	exit;
 }
 
@@ -27,6 +28,22 @@ if (!defined('ABSPATH')) {
  */
 class Notice_Popup
 {
+	/**
+	 * Notice Storage instance.
+	 *
+	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 */
+	protected $storage;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 */
+	public function __construct( $storage )
+	{
+		$this->storage = $storage;
+	}
 
 	/**
 	 * Enqueue popup assets.
@@ -109,7 +126,8 @@ class Notice_Popup
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
 		// Check capability.
-		if (!current_user_can('read')) {
+		if (!current_user_can('read'))
+		{
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
 		}
 
@@ -117,10 +135,18 @@ class Notice_Popup
 		$filter_type = isset($_POST['filter_type']) ? sanitize_text_field(wp_unslash($_POST['filter_type'])) : '';
 		$show_read = isset($_POST['show_read']) && 'true' === $_POST['show_read'];
 
-		// Build query args.
-		$args = array();
+		// Pagination parameters.
+		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$per_page = 20;
 
-		if (!empty($filter_type) && 'all' !== $filter_type) {
+		// Build query args.
+		$args = array(
+			'limit'  => $per_page,
+			'offset' => ( $page - 1 ) * $per_page,
+		);
+
+		if (!empty($filter_type) && 'all' !== $filter_type)
+		{
 			$args['type'] = $filter_type;
 		}
 
@@ -128,11 +154,18 @@ class Notice_Popup
 		$args['is_read'] = $show_read;
 
 		// Get notices.
-		$notices = Notice_Storage::get_all($args);
+		$notices = $this->storage->get_all($args);
+
+		// Get total count for pagination.
+		$total_args = $args;
+		$total_args['limit'] = 0;
+		$total_args['offset'] = 0;
+		$total_count = count( $this->storage->get_all($total_args) );
 
 		// Format notices for output.
 		$formatted_notices = array();
-		foreach ($notices as $notice) {
+		foreach ($notices as $notice)
+		{
 			$formatted_notices[] = $this->format_notice($notice);
 		}
 
@@ -140,6 +173,7 @@ class Notice_Popup
 			array(
 				'notices' => $formatted_notices,
 				'count' => count($formatted_notices),
+				'total_count' => $total_count,
 			)
 		);
 	}
@@ -156,28 +190,32 @@ class Notice_Popup
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
 		// Check capability.
-		if (!current_user_can('read')) {
+		if (!current_user_can('read'))
+		{
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
 		}
 
 		// Get notice ID.
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
-		if (empty($notice_id)) {
+		if (empty($notice_id))
+		{
 			wp_send_json_error(array('message' => __('Invalid notice ID', 'notice-tracker')));
 		}
 
 		// Mark as read.
-		$result = Notice_Storage::mark_read($notice_id);
+		$result = $this->storage->mark_read($notice_id);
 
-		if ($result) {
+		if ($result)
+		{
 			wp_send_json_success(
 				array(
 					'message' => __('Notice marked as read', 'notice-tracker'),
-					'count' => Notice_Storage::get_unread_count(),
+					'count' => $this->storage->get_unread_count(),
 				)
 			);
-		} else {
+		} else
+		{
 			wp_send_json_error(array('message' => __('Failed to mark notice as read', 'notice-tracker')));
 		}
 	}
@@ -194,28 +232,32 @@ class Notice_Popup
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
 		// Check capability.
-		if (!current_user_can('read')) {
+		if (!current_user_can('read'))
+		{
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
 		}
 
 		// Get notice ID.
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
-		if (empty($notice_id)) {
+		if (empty($notice_id))
+		{
 			wp_send_json_error(array('message' => __('Invalid notice ID', 'notice-tracker')));
 		}
 
 		// Delete notice.
-		$result = Notice_Storage::delete($notice_id);
+		$result = $this->storage->delete($notice_id);
 
-		if ($result) {
+		if ($result)
+		{
 			wp_send_json_success(
 				array(
 					'message' => __('Notice dismissed', 'notice-tracker'),
-					'count' => Notice_Storage::get_unread_count(),
+					'count' => $this->storage->get_unread_count(),
 				)
 			);
-		} else {
+		} else
+		{
 			wp_send_json_error(array('message' => __('Failed to dismiss notice', 'notice-tracker')));
 		}
 	}
@@ -230,20 +272,23 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if (!current_user_can('read')) {
+		if (!current_user_can('read'))
+		{
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
 		}
 
-		$result = Notice_Storage::mark_all_read();
+		$result = $this->storage->mark_all_read();
 
-		if ($result) {
+		if ($result)
+		{
 			wp_send_json_success(
 				array(
 					'message' => __('All notices marked as read', 'notice-tracker'),
 					'count' => 0,
 				)
 			);
-		} else {
+		} else
+		{
 			wp_send_json_error(array('message' => __('Failed to mark notices as read', 'notice-tracker')));
 		}
 	}
@@ -258,20 +303,23 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if (!current_user_can('read')) {
+		if (!current_user_can('read'))
+		{
 			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
 		}
 
-		$result = Notice_Storage::delete_all();
+		$result = $this->storage->delete_all();
 
-		if ($result) {
+		if ($result)
+		{
 			wp_send_json_success(
 				array(
 					'message' => __('All notices cleared', 'notice-tracker'),
 					'count' => 0,
 				)
 			);
-		} else {
+		} else
+		{
 			wp_send_json_error(array('message' => __('Failed to clear notices', 'notice-tracker')));
 		}
 	}

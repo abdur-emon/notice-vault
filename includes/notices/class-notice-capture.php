@@ -27,6 +27,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Notice_Capture {
 
 	/**
+	 * Notice Storage instance.
+	 *
+	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 */
+	protected $storage;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 */
+	public function __construct( $storage ) {
+		$this->storage = $storage;
+	}
+
+	/**
 	 * Whether capture is active.
 	 *
 	 * @var bool
@@ -246,7 +262,7 @@ class Notice_Capture {
 		}
 
 		$this->hash_index = array();
-		$notices          = Notice_Storage::get_all();
+		$notices          = $this->storage->get_all();
 
 		foreach ( $notices as $notice ) {
 			if ( isset( $notice['hash'] ) ) {
@@ -284,7 +300,7 @@ class Notice_Capture {
 		);
 
 		// Store the notice.
-		Notice_Storage::store( $notice );
+		$this->storage->store( $notice );
 
 		// Update hash index.
 		$this->hash_index[ $hash ] = true;

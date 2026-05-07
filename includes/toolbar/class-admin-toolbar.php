@@ -13,7 +13,8 @@ namespace Notice_Tracker\Toolbar;
 use Notice_Tracker\Notices\Notice_Storage;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH'))
+{
 	exit;
 }
 
@@ -26,6 +27,22 @@ if (!defined('ABSPATH')) {
  */
 class Admin_Toolbar
 {
+	/**
+	 * Notice Storage instance.
+	 *
+	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 */
+	protected $storage;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 */
+	public function __construct( $storage )
+	{
+		$this->storage = $storage;
+	}
 
 	/**
 	 * Add toolbar item to admin bar.
@@ -37,12 +54,13 @@ class Admin_Toolbar
 	public function add_toolbar_item($wp_admin_bar)
 	{
 		// Only show to users who can read.
-		if (!current_user_can('read')) {
+		if (!current_user_can('read'))
+		{
 			return;
 		}
 
 		// Get unread notice count.
-		$count = Notice_Storage::get_unread_count();
+		$count = $this->storage->get_unread_count();
 
 		// Build title with count.
 		$title = $this->get_toolbar_title($count);
@@ -61,7 +79,8 @@ class Admin_Toolbar
 		);
 
 		// Add submenu items if there are notices.
-		if ($count > 0) {
+		if ($count > 0)
+		{
 			$this->add_submenu_items($wp_admin_bar);
 		}
 	}
@@ -77,7 +96,8 @@ class Admin_Toolbar
 	{
 		$icon = '<span class="ab-icon dashicons dashicons-bell"></span>';
 
-		if ($count > 0) {
+		if ($count > 0)
+		{
 			$badge = sprintf(
 				'<span class="wpnm-count-badge">%s</span>',
 				esc_html($count)
@@ -99,14 +119,15 @@ class Admin_Toolbar
 	private function add_submenu_items($wp_admin_bar)
 	{
 		// Get recent notices (limit to 5).
-		$notices = Notice_Storage::get_all(
+		$notices = $this->storage->get_all(
 			array(
 				'is_read' => false,
 				'limit' => 5,
 			)
 		);
 
-		foreach ($notices as $notice) {
+		foreach ($notices as $notice)
+		{
 			$wp_admin_bar->add_node(
 				array(
 					'parent' => 'wpnm-notices',
@@ -151,7 +172,8 @@ class Admin_Toolbar
 		$content = wp_strip_all_tags($content);
 
 		// Truncate to 50 characters.
-		if (strlen($content) > 50) {
+		if (strlen($content) > 50)
+		{
 			$content = substr($content, 0, 50) . '...';
 		}
 
