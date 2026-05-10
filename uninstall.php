@@ -28,14 +28,7 @@ function wpnm_delete_transients() {
 	delete_transient( 'wpnm_notice_count' );
 }
 
-/**
- * Delete custom database table (if exists).
- */
-function wpnm_delete_table() {
-	global $wpdb;
-	$table_name = $wpdb->prefix . 'wpnm_notices';
-	$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter
-}
+
 
 /**
  * Clear scheduled events.
@@ -50,6 +43,5 @@ function wpnm_clear_scheduled_events() {
 // Run cleanup.
 wpnm_delete_options();
 wpnm_delete_transients();
-wpnm_delete_table();
 wpnm_clear_scheduled_events();
 

@@ -47,6 +47,13 @@ class Plugin
 	protected $version;
 
 	/**
+	 * Notice Storage instance.
+	 *
+	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 */
+	protected $storage;
+
+	/**
 	 * Get plugin instance (Singleton).
 	 *
 	 * @since 1.0.0
@@ -68,7 +75,8 @@ class Plugin
 	private function __construct()
 	{
 		$this->version = WPNM_VERSION;
-		$this->loader = new Loader();
+		$this->loader  = new Loader();
+		$this->storage = new \Notice_Tracker\Notices\Notice_Storage();
 
 		$this->load_dependencies();
 		$this->define_admin_hooks();
@@ -107,25 +115,25 @@ class Plugin
 
 		// Initialize Settings Page.
 		$settings_page = new \Notice_Tracker\Admin\Settings_Page();
-		$this->loader->add_action('admin_menu', $settings_page, 'add_settings_page');
-		$this->loader->add_action('admin_init', $settings_page, 'register_settings');
-		$this->loader->add_action('admin_enqueue_scripts', $settings_page, 'enqueue_assets');
-		$this->loader->add_action('wp_ajax_wpnm_search_users', $settings_page, 'ajax_search_users');
-		$this->loader->add_filter('plugin_action_links_' . WPNM_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links');
+		$this->loader->add_action( 'admin_menu', $settings_page, 'add_settings_page' );
+		$this->loader->add_action( 'admin_init', $settings_page, 'register_settings' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $settings_page, 'enqueue_assets' );
+		$this->loader->add_action( 'wp_ajax_wpnm_search_users', $settings_page, 'ajax_search_users' );
+		$this->loader->add_filter( 'plugin_action_links_' . WPNM_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links' );
 
 		// Initialize Notice Popup.
-		$notice_popup = new \Notice_Tracker\Admin\Notice_Popup();
-		$this->loader->add_action('admin_enqueue_scripts', $notice_popup, 'enqueue_assets');
-		$this->loader->add_action('admin_footer', $notice_popup, 'render_popup');
-		$this->loader->add_action('wp_ajax_wpnm_get_notices', $notice_popup, 'ajax_get_notices');
-		$this->loader->add_action('wp_ajax_wpnm_mark_read', $notice_popup, 'ajax_mark_read');
-		$this->loader->add_action('wp_ajax_wpnm_dismiss_notice', $notice_popup, 'ajax_dismiss_notice');
-		$this->loader->add_action('wp_ajax_wpnm_mark_all_read', $notice_popup, 'ajax_mark_all_read');
-		$this->loader->add_action('wp_ajax_wpnm_clear_all', $notice_popup, 'ajax_clear_all');
+		$notice_popup = new \Notice_Tracker\Admin\Notice_Popup( $this->storage );
+		$this->loader->add_action( 'admin_enqueue_scripts', $notice_popup, 'enqueue_assets' );
+		$this->loader->add_action( 'admin_footer', $notice_popup, 'render_popup' );
+		$this->loader->add_action( 'wp_ajax_wpnm_get_notices', $notice_popup, 'ajax_get_notices' );
+		$this->loader->add_action( 'wp_ajax_wpnm_mark_read', $notice_popup, 'ajax_mark_read' );
+		$this->loader->add_action( 'wp_ajax_wpnm_dismiss_notice', $notice_popup, 'ajax_dismiss_notice' );
+		$this->loader->add_action( 'wp_ajax_wpnm_mark_all_read', $notice_popup, 'ajax_mark_all_read' );
+		$this->loader->add_action( 'wp_ajax_wpnm_clear_all', $notice_popup, 'ajax_clear_all' );
 
 		// Initialize Admin Toolbar.
-		$admin_toolbar = new \Notice_Tracker\Toolbar\Admin_Toolbar();
-		$this->loader->add_action('admin_bar_menu', $admin_toolbar, 'add_toolbar_item', 999);
+		$admin_toolbar = new \Notice_Tracker\Toolbar\Admin_Toolbar( $this->storage );
+		$this->loader->add_action( 'admin_bar_menu', $admin_toolbar, 'add_toolbar_item', 999 );
 	}
 
 	/**
@@ -142,15 +150,13 @@ class Plugin
 		}
 
 		// Initialize Notice Capture.
-		$notice_capture = new \Notice_Tracker\Notices\Notice_Capture();
-		$this->loader->add_action('admin_notices', $notice_capture, 'start_capture', 0);
-		$this->loader->add_action('admin_notices', $notice_capture, 'end_capture', 9999);
-		$this->loader->add_action('network_admin_notices', $notice_capture, 'start_capture', 0);
-		$this->loader->add_action('network_admin_notices', $notice_capture, 'end_capture', 9999);
-		$this->loader->add_action('user_admin_notices', $notice_capture, 'start_capture', 0);
-		$this->loader->add_action('user_admin_notices', $notice_capture, 'end_capture', 9999);
-		$this->loader->add_action('all_admin_notices', $notice_capture, 'start_capture', 0);
-		$this->loader->add_action('all_admin_notices', $notice_capture, 'end_capture', 9999);
+		$notice_capture = new \Notice_Tracker\Notices\Notice_Capture( $this->storage );
+		$this->loader->add_action( 'admin_notices', $notice_capture, 'start_capture', 0 );
+		$this->loader->add_action( 'admin_notices', $notice_capture, 'end_capture', 9999 );
+		$this->loader->add_action( 'network_admin_notices', $notice_capture, 'start_capture', 0 );
+		$this->loader->add_action( 'network_admin_notices', $notice_capture, 'end_capture', 9999 );
+		$this->loader->add_action( 'user_admin_notices', $notice_capture, 'start_capture', 0 );
+		$this->loader->add_action( 'user_admin_notices', $notice_capture, 'end_capture', 9999 );
 	}
 
 	/**
@@ -186,4 +192,3 @@ class Plugin
 		return $this->version;
 	}
 }
-

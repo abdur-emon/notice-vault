@@ -29,7 +29,16 @@ class Notice_Storage {
 	 *
 	 * @var string
 	 */
-	const OPTION_NAME = 'wpnm_notices';
+	private $option_name;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $option_name Option name to store notices.
+	 */
+	public function __construct( $option_name = 'wpnm_notices' ) {
+		$this->option_name = $option_name;
+	}
 
 	/**
 	 * Maximum number of notices to store.
@@ -45,29 +54,30 @@ class Notice_Storage {
 	 * @param array $notice Notice data.
 	 * @return bool|int Notice ID on success, false on failure.
 	 */
-	public static function store( $notice ) {
+	public function store( $notice ) {
 		// Get current notices.
-		$notices = self::get_all();
+		$notices = $this->get_all();
 
 		// Generate unique ID.
-		$notice_id = self::generate_id();
+		$notice_id = $this->generate_id();
 
 		// Add metadata.
 		$notice['id']         = $notice_id;
+		$notice['user_id']    = get_current_user_id();
 		$notice['is_read']    = false;
 		$notice['created_at'] = current_time( 'mysql' );
-		$notice['expires_at'] = self::get_expiration_date();
+		$notice['expires_at'] = $this->get_expiration_date();
 
 		// Add to notices array.
 		$notices[ $notice_id ] = $notice;
 
 		// Limit to max notices (FIFO).
-		if ( count( $notices ) > self::MAX_NOTICES ) {
-			$notices = array_slice( $notices, -self::MAX_NOTICES, null, true );
+		if ( count( $notices ) > $this->MAX_NOTICES ) {
+			$notices = array_slice( $notices, -$this->MAX_NOTICES, null, true );
 		}
 
 		// Save to database.
-		$saved = update_option( self::OPTION_NAME, $notices, false );
+		$saved = update_option( $this->option_name, $notices, false );
 
 		// Clear notice count cache.
 		delete_transient( 'wpnm_notice_count' );
@@ -82,7 +92,7 @@ class Notice_Storage {
 	 * @param array $args Query arguments.
 	 * @return array Notices array.
 	 */
-	public static function get_all( $args = array() ) {
+	public function get_all( $args = array() ) {
 		$defaults = array(
 			'type'    => '', // Filter by type.
 			'is_read' => null, // Filter by read status.
@@ -92,7 +102,7 @@ class Notice_Storage {
 		$args = wp_parse_args( $args, $defaults );
 
 		// Get notices from database.
-		$notices = get_option( self::OPTION_NAME, array() );
+		$notices = get_option( $this->option_name, array() );
 
 		if ( ! is_array( $notices ) ) {
 			$notices = array();
@@ -127,6 +137,15 @@ class Notice_Storage {
 			);
 		}
 
+		// Apply user filter.
+		$user_id = get_current_user_id();
+		$notices = array_filter(
+			$notices,
+			function ( $notice ) use ( $user_id ) {
+				return ! isset( $notice['user_id'] ) || (int) $notice['user_id'] === $user_id;
+			}
+		);
+
 		// Sort by created_at (newest first).
 		uasort(
 			$notices,
@@ -136,6 +155,11 @@ class Notice_Storage {
 				return $time_b - $time_a;
 			}
 		);
+
+		// Apply offset.
+		if ( isset( $args['offset'] ) && $args['offset'] > 0 ) {
+			$notices = array_slice( $notices, $args['offset'], null, true );
+		}
 
 		// Apply limit.
 		if ( $args['limit'] > 0 ) {
@@ -152,8 +176,8 @@ class Notice_Storage {
 	 * @param int $notice_id Notice ID.
 	 * @return array|false Notice data or false.
 	 */
-	public static function get( $notice_id ) {
-		$notices = self::get_all();
+	public function get( $notice_id ) {
+		$notices = $this->get_all();
 		return isset( $notices[ $notice_id ] ) ? $notices[ $notice_id ] : false;
 	}
 
@@ -164,10 +188,14 @@ class Notice_Storage {
 	 * @param int $notice_id Notice ID.
 	 * @return bool Success.
 	 */
-	public static function mark_read( $notice_id ) {
-		$notices = get_option( self::OPTION_NAME, array() );
+	public function mark_read( $notice_id ) {
+		$notices = get_option( $this->option_name, array() );
 
 		if ( ! isset( $notices[ $notice_id ] ) ) {
+			return false;
+		}
+
+		if ( isset( $notices[ $notice_id ]['user_id'] ) && (int) $notices[ $notice_id ]['user_id'] !== get_current_user_id() ) {
 			return false;
 		}
 
@@ -175,7 +203,7 @@ class Notice_Storage {
 
 		delete_transient( 'wpnm_notice_count' );
 
-		return update_option( self::OPTION_NAME, $notices, false );
+		return update_option( $this->option_name, $notices, false );
 	}
 
 	/**
@@ -185,10 +213,14 @@ class Notice_Storage {
 	 * @param int $notice_id Notice ID.
 	 * @return bool Success.
 	 */
-	public static function delete( $notice_id ) {
-		$notices = get_option( self::OPTION_NAME, array() );
+	public function delete( $notice_id ) {
+		$notices = get_option( $this->option_name, array() );
 
 		if ( ! isset( $notices[ $notice_id ] ) ) {
+			return false;
+		}
+
+		if ( isset( $notices[ $notice_id ]['user_id'] ) && (int) $notices[ $notice_id ]['user_id'] !== get_current_user_id() ) {
 			return false;
 		}
 
@@ -196,7 +228,7 @@ class Notice_Storage {
 
 		delete_transient( 'wpnm_notice_count' );
 
-		return update_option( self::OPTION_NAME, $notices, false );
+		return update_option( $this->option_name, $notices, false );
 	}
 
 	/**
@@ -205,12 +237,12 @@ class Notice_Storage {
 	 * @since 1.0.0
 	 * @return int Count.
 	 */
-	public static function get_unread_count() {
+	public function get_unread_count() {
 		// Try to get from cache.
 		$count = get_transient( 'wpnm_notice_count' );
 
 		if ( false === $count ) {
-			$notices = self::get_all( array( 'is_read' => false ) );
+			$notices = $this->get_all( array( 'is_read' => false ) );
 			$count   = count( $notices );
 			set_transient( 'wpnm_notice_count', $count, HOUR_IN_SECONDS );
 		}
@@ -224,8 +256,8 @@ class Notice_Storage {
 	 * @since 1.0.0
 	 * @return string Unique ID.
 	 */
-	private static function generate_id() {
-		return uniqid( 'notice_', true );
+	private function generate_id() {
+		return 'notice_' . wp_generate_uuid4();
 	}
 
 	/**
@@ -234,7 +266,7 @@ class Notice_Storage {
 	 * @since 1.0.0
 	 * @return string MySQL datetime.
 	 */
-	private static function get_expiration_date() {
+	private function get_expiration_date() {
 		$settings = get_option( 'wpnm_settings', array() );
 		$days     = isset( $settings['auto_expire_days'] ) ? absint( $settings['auto_expire_days'] ) : 30;
 
@@ -247,8 +279,8 @@ class Notice_Storage {
 	 * @since 1.0.0
 	 * @return bool Success.
 	 */
-	public static function mark_all_read() {
-		$notices = get_option( self::OPTION_NAME, array() );
+	public function mark_all_read() {
+		$notices = get_option( $this->option_name, array() );
 
 		if ( ! is_array( $notices ) || empty( $notices ) ) {
 			return false;
@@ -260,7 +292,7 @@ class Notice_Storage {
 
 		delete_transient( 'wpnm_notice_count' );
 
-		return update_option( self::OPTION_NAME, $notices, false );
+		return update_option( $this->option_name, $notices, false );
 	}
 
 	/**
@@ -269,9 +301,9 @@ class Notice_Storage {
 	 * @since 1.0.0
 	 * @return bool Success.
 	 */
-	public static function delete_all() {
+	public function delete_all() {
 		delete_transient( 'wpnm_notice_count' );
-		return update_option( self::OPTION_NAME, array(), false );
+		return update_option( $this->option_name, array(), false );
 	}
 
 	/**
@@ -280,8 +312,8 @@ class Notice_Storage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function clean_expired() {
-		$notices = get_option( self::OPTION_NAME, array() );
+	public function clean_expired() {
+		$notices = get_option( $this->option_name, array() );
 
 		if ( ! is_array( $notices ) || empty( $notices ) ) {
 			return;
@@ -296,7 +328,7 @@ class Notice_Storage {
 		);
 
 		if ( count( $cleaned ) !== count( $notices ) ) {
-			update_option( self::OPTION_NAME, $cleaned, false );
+			update_option( $this->option_name, $cleaned, false );
 			delete_transient( 'wpnm_notice_count' );
 		}
 	}

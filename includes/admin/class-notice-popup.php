@@ -29,13 +29,32 @@ class Notice_Popup
 {
 
 	/**
+	 * Notice Storage instance.
+	 *
+	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 */
+	protected $storage;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 */
+	public function __construct( $storage ) {
+		$this->storage = $storage;
+	}
+
+	/**
 	 * Enqueue popup assets.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function enqueue_assets()
-	{
+	public function enqueue_assets() {
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			return;
+		}
+
 		// Enqueue CSS.
 		wp_enqueue_style(
 			'wpnm-popup',
@@ -58,16 +77,16 @@ class Notice_Popup
 			'wpnm-popup',
 			'wpnmPopup',
 			array(
-				'ajaxUrl' => admin_url('admin-ajax.php'),
-				'nonce' => wp_create_nonce('wpnm_ajax_nonce'),
+				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+				'nonce'      => wp_create_nonce( 'wpnm_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
-				'i18n' => array(
-					'noNotices' => __('No notices to display', 'notice-tracker'),
-					'markAllRead' => __('Mark All as Read', 'notice-tracker'),
-					'clearAll' => __('Clear All', 'notice-tracker'),
-					'confirmClearAll' => __('Are you sure you want to clear all notices?', 'notice-tracker'),
-					'loading' => __('Loading...', 'notice-tracker'),
-					'error' => __('An error occurred', 'notice-tracker'),
+				'i18n'       => array(
+					'noNotices'      => __( 'No notices to display', 'notice-tracker' ),
+					'markAllRead'    => __( 'Mark All as Read', 'notice-tracker' ),
+					'clearAll'       => __( 'Clear All', 'notice-tracker' ),
+					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'notice-tracker' ),
+					'loading'        => __( 'Loading...', 'notice-tracker' ),
+					'error'          => __( 'An error occurred', 'notice-tracker' ),
 				),
 			)
 		);
@@ -79,8 +98,11 @@ class Notice_Popup
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function render_popup()
-	{
+	public function render_popup() {
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			return;
+		}
+
 		$popup_style = $this->get_popup_style();
 		include WPNM_PLUGIN_DIR . 'templates/popup-template.php';
 	}
@@ -108,17 +130,30 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
+		}
+
 		// Check capability.
-		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+		if ( ! current_user_can( 'read' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
 		}
 
 		// Get filter parameters.
-		$filter_type = isset($_POST['filter_type']) ? sanitize_text_field(wp_unslash($_POST['filter_type'])) : '';
-		$show_read = isset($_POST['show_read']) && 'true' === $_POST['show_read'];
+		$filter_type = isset( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : '';
+		$show_read   = isset( $_POST['show_read'] ) && 'true' === $_POST['show_read'];
+
+		// Pagination parameters.
+		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+		$per_page = 20;
 
 		// Build query args.
-		$args = array();
+		$args = array(
+			'limit'  => $per_page,
+			'offset' => ( $page - 1 ) * $per_page,
+		);
 
 		if (!empty($filter_type) && 'all' !== $filter_type) {
 			$args['type'] = $filter_type;
@@ -128,7 +163,13 @@ class Notice_Popup
 		$args['is_read'] = $show_read;
 
 		// Get notices.
-		$notices = Notice_Storage::get_all($args);
+		$notices = $this->storage->get_all( $args );
+
+		// Get total count for pagination.
+		$total_args           = $args;
+		$total_args['limit']  = 0;
+		$total_args['offset'] = 0;
+		$total_count          = count( $this->storage->get_all( $total_args ) );
 
 		// Format notices for output.
 		$formatted_notices = array();
@@ -138,8 +179,9 @@ class Notice_Popup
 
 		wp_send_json_success(
 			array(
-				'notices' => $formatted_notices,
-				'count' => count($formatted_notices),
+				'notices'     => $formatted_notices,
+				'count'       => count( $formatted_notices ),
+				'total_count' => $total_count,
 			)
 		);
 	}
@@ -155,30 +197,37 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
+		}
+
 		// Check capability.
-		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+		if ( ! current_user_can( 'read' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
 		}
 
 		// Get notice ID.
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
-		if (empty($notice_id)) {
-			wp_send_json_error(array('message' => __('Invalid notice ID', 'notice-tracker')));
+		if ( empty( $notice_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'notice-tracker' ) ) );
+			return;
 		}
 
 		// Mark as read.
-		$result = Notice_Storage::mark_read($notice_id);
+		$result = $this->storage->mark_read( $notice_id );
 
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('Notice marked as read', 'notice-tracker'),
-					'count' => Notice_Storage::get_unread_count(),
+					'message' => __( 'Notice marked as read', 'notice-tracker' ),
+					'count'   => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to mark notice as read', 'notice-tracker')));
+			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'notice-tracker' ) ) );
 		}
 	}
 
@@ -193,30 +242,37 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
+		}
+
 		// Check capability.
-		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+		if ( ! current_user_can( 'read' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
 		}
 
 		// Get notice ID.
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
-		if (empty($notice_id)) {
-			wp_send_json_error(array('message' => __('Invalid notice ID', 'notice-tracker')));
+		if ( empty( $notice_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'notice-tracker' ) ) );
+			return;
 		}
 
 		// Delete notice.
-		$result = Notice_Storage::delete($notice_id);
+		$result = $this->storage->delete( $notice_id );
 
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('Notice dismissed', 'notice-tracker'),
-					'count' => Notice_Storage::get_unread_count(),
+					'message' => __( 'Notice dismissed', 'notice-tracker' ),
+					'count'   => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to dismiss notice', 'notice-tracker')));
+			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'notice-tracker' ) ) );
 		}
 	}
 
@@ -230,21 +286,27 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
 		}
 
-		$result = Notice_Storage::mark_all_read();
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
+		}
+
+		$result = $this->storage->mark_all_read();
 
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('All notices marked as read', 'notice-tracker'),
-					'count' => 0,
+					'message' => __( 'All notices marked as read', 'notice-tracker' ),
+					'count'   => 0,
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to mark notices as read', 'notice-tracker')));
+			wp_send_json_error( array( 'message' => __( 'Failed to mark notices as read', 'notice-tracker' ) ) );
 		}
 	}
 
@@ -258,21 +320,27 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if (!current_user_can('read')) {
-			wp_send_json_error(array('message' => __('Unauthorized', 'notice-tracker')));
+		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
 		}
 
-		$result = Notice_Storage::delete_all();
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			return;
+		}
+
+		$result = $this->storage->delete_all();
 
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __('All notices cleared', 'notice-tracker'),
-					'count' => 0,
+					'message' => __( 'All notices cleared', 'notice-tracker' ),
+					'count'   => 0,
 				)
 			);
 		} else {
-			wp_send_json_error(array('message' => __('Failed to clear notices', 'notice-tracker')));
+			wp_send_json_error( array( 'message' => __( 'Failed to clear notices', 'notice-tracker' ) ) );
 		}
 	}
 
@@ -297,4 +365,3 @@ class Notice_Popup
 		);
 	}
 }
-
