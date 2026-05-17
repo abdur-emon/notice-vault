@@ -81,12 +81,25 @@ class Notice_Popup
 				'nonce'      => wp_create_nonce( 'wpnm_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n'       => array(
-					'noNotices'      => __( 'No notices to display', 'notice-tracker' ),
-					'markAllRead'    => __( 'Mark All as Read', 'notice-tracker' ),
-					'clearAll'       => __( 'Clear All', 'notice-tracker' ),
+					'noNotices'       => __( 'No notices to display', 'notice-tracker' ),
+					'markAllRead'     => __( 'Mark All as Read', 'notice-tracker' ),
+					'clearAll'        => __( 'Clear All', 'notice-tracker' ),
 					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'notice-tracker' ),
-					'loading'        => __( 'Loading...', 'notice-tracker' ),
-					'error'          => __( 'An error occurred', 'notice-tracker' ),
+					'loading'         => __( 'Loading...', 'notice-tracker' ),
+					'error'           => __( 'An error occurred', 'notice-tracker' ),
+					'markAsRead'      => __( 'Mark as read', 'notice-tracker' ),
+					'dismiss'         => __( 'Dismiss', 'notice-tracker' ),
+					'dismissNotice'   => __( 'Dismiss notice', 'notice-tracker' ),
+					'notices'         => __( 'Notices', 'notice-tracker' ),
+					/* translators: %d: number of unread notices. */
+					'noticesWithCount' => __( 'Notices (%d)', 'notice-tracker' ),
+					'justNow'         => __( 'Just now', 'notice-tracker' ),
+					/* translators: %d: number of minutes ago. */
+					'minutesAgo'      => __( '%d minutes ago', 'notice-tracker' ),
+					/* translators: %d: number of hours ago. */
+					'hoursAgo'        => __( '%d hours ago', 'notice-tracker' ),
+					/* translators: %d: number of days ago. */
+					'daysAgo'         => __( '%d days ago', 'notice-tracker' ),
 				),
 			)
 		);
@@ -159,13 +172,15 @@ class Notice_Popup
 			$args['type'] = $filter_type;
 		}
 
-		// Set read status filter.
-		$args['is_read'] = $show_read;
+		// "Show Read" unchecked -> only unread. Checked -> include all (no read filter).
+		if ( ! $show_read ) {
+			$args['is_read'] = false;
+		}
 
 		// Get notices.
 		$notices = $this->storage->get_all( $args );
 
-		// Get total count for pagination.
+		// Get total count for pagination (same filters, no limit/offset).
 		$total_args           = $args;
 		$total_args['limit']  = 0;
 		$total_args['offset'] = 0;
@@ -179,9 +194,10 @@ class Notice_Popup
 
 		wp_send_json_success(
 			array(
-				'notices'     => $formatted_notices,
-				'count'       => count( $formatted_notices ),
-				'total_count' => $total_count,
+				'notices'      => $formatted_notices,
+				'count'        => count( $formatted_notices ),
+				'total_count'  => $total_count,
+				'unread_total' => $this->storage->get_unread_count(),
 			)
 		);
 	}
@@ -222,8 +238,9 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __( 'Notice marked as read', 'notice-tracker' ),
-					'count'   => $this->storage->get_unread_count(),
+					'message'      => __( 'Notice marked as read', 'notice-tracker' ),
+					'count'        => $this->storage->get_unread_count(),
+					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
@@ -267,8 +284,9 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message' => __( 'Notice dismissed', 'notice-tracker' ),
-					'count'   => $this->storage->get_unread_count(),
+					'message'      => __( 'Notice dismissed', 'notice-tracker' ),
+					'count'        => $this->storage->get_unread_count(),
+					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
@@ -291,23 +309,22 @@ class Notice_Popup
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		// Notices are user-scoped in storage, so 'read' is sufficient.
+		if ( ! current_user_can( 'read' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
 			return;
 		}
 
 		$result = $this->storage->mark_all_read();
 
-		if ($result) {
-			wp_send_json_success(
-				array(
-					'message' => __( 'All notices marked as read', 'notice-tracker' ),
-					'count'   => 0,
-				)
-			);
-		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to mark notices as read', 'notice-tracker' ) ) );
-		}
+		// mark_all_read returns false when there is nothing to mark; treat that as success.
+		wp_send_json_success(
+			array(
+				'message'      => __( 'All notices marked as read', 'notice-tracker' ),
+				'count'        => 0,
+				'unread_total' => $this->storage->get_unread_count(),
+			)
+		);
 	}
 
 	/**
@@ -325,23 +342,22 @@ class Notice_Popup
 			return;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		// Notices are user-scoped in storage, so 'read' is sufficient.
+		if ( ! current_user_can( 'read' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
 			return;
 		}
 
-		$result = $this->storage->delete_all();
+		$this->storage->delete_all();
 
-		if ($result) {
-			wp_send_json_success(
-				array(
-					'message' => __( 'All notices cleared', 'notice-tracker' ),
-					'count'   => 0,
-				)
-			);
-		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to clear notices', 'notice-tracker' ) ) );
-		}
+		// delete_all returns false when nothing changed; treat that as success.
+		wp_send_json_success(
+			array(
+				'message'      => __( 'All notices cleared', 'notice-tracker' ),
+				'count'        => 0,
+				'unread_total' => $this->storage->get_unread_count(),
+			)
+		);
 	}
 
 	/**
@@ -353,15 +369,17 @@ class Notice_Popup
 	 */
 	private function format_notice($notice)
 	{
+		// 'html' intentionally omitted from the AJAX payload. The popup only renders
+		// the stripped 'content' field; shipping the full HTML wastes bandwidth and
+		// widens the trust surface if a future UI ever decides to render it.
 		return array(
-			'id' => $notice['id'],
-			'type' => $notice['type'],
-			'content' => $notice['content'],
-			'html' => $notice['html'],
-			'is_read' => $notice['is_read'],
-			'created_at' => $notice['created_at'],
-			'icon' => Notice_Classifier::get_icon($notice['type']),
-			'color' => Notice_Classifier::get_color($notice['type']),
+			'id'         => $notice['id'],
+			'type'       => $notice['type'],
+			'content'    => $notice['content'],
+			'is_read'    => ! empty( $notice['is_read'] ),
+			'created_at' => isset( $notice['created_at'] ) ? $notice['created_at'] : '',
+			'icon'       => Notice_Classifier::get_icon( $notice['type'] ),
+			'color'      => Notice_Classifier::get_color( $notice['type'] ),
 		);
 	}
 }

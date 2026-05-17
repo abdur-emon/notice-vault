@@ -11,12 +11,12 @@ if (!defined('ABSPATH')) {
 }
 ?>
 
-<div id="wpnm-popup-overlay" class="wpnm-popup-overlay" style="display: none;">
-	<div id="wpnm-popup" class="wpnm-popup wpnm-popup-<?php echo esc_attr($popup_style); ?>">
+<div id="wpnm-popup-overlay" class="wpnm-popup-overlay" style="display: none;" role="presentation">
+	<div id="wpnm-popup" class="wpnm-popup wpnm-popup-<?php echo esc_attr($popup_style); ?>" role="dialog" aria-modal="true" aria-labelledby="wpnm-popup-title" tabindex="-1">
 		<!-- Popup Header -->
 		<div class="wpnm-popup-header">
-			<h2 class="wpnm-popup-title">
-				<span class="dashicons dashicons-bell"></span>
+			<h2 class="wpnm-popup-title" id="wpnm-popup-title">
+				<span class="dashicons dashicons-bell" aria-hidden="true"></span>
 				<?php esc_html_e('Notices', 'notice-tracker'); ?>
 				<span class="wpnm-notice-count-badge" aria-live="polite" aria-atomic="true">0</span>
 			</h2>
@@ -74,20 +74,20 @@ if (!defined('ABSPATH')) {
 
 		<!-- Popup Footer -->
 		<div class="wpnm-popup-footer">
-			<a href="<?php echo esc_url(admin_url('options-general.php?page=notice-tracker')); ?>"
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . \Notice_Tracker\Admin\Settings_Page::PAGE_SLUG ) ); ?>"
 				class="wpnm-settings-link">
-				<span class="dashicons dashicons-admin-settings"></span>
+				<span class="dashicons dashicons-admin-settings" aria-hidden="true"></span>
 				<?php esc_html_e('Settings', 'notice-tracker'); ?>
 			</a>
 		</div>
 
 		<!-- Toast Container -->
-		<div id="wpnm-toast-container" class="wpnm-toast-container"></div>
+		<div id="wpnm-toast-container" class="wpnm-toast-container" aria-live="polite" aria-atomic="true"></div>
 
 		<!-- Custom Confirm Modal -->
-		<div class="wpnm-confirm-modal" id="wpnm-confirm-modal" style="display: none;">
+		<div class="wpnm-confirm-modal" id="wpnm-confirm-modal" style="display: none;" role="alertdialog" aria-labelledby="wpnm-confirm-title" aria-describedby="wpnm-confirm-message">
 			<div class="wpnm-confirm-content">
-				<h3><?php esc_html_e('Confirm Action', 'notice-tracker'); ?></h3>
+				<h3 id="wpnm-confirm-title"><?php esc_html_e('Confirm Action', 'notice-tracker'); ?></h3>
 				<p id="wpnm-confirm-message"><?php esc_html_e('Are you sure?', 'notice-tracker'); ?></p>
 				<div class="wpnm-confirm-actions">
 					<button type="button" class="wpnm-btn wpnm-btn-secondary"
