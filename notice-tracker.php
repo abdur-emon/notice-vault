@@ -57,23 +57,13 @@ function wpnm_deactivate_plugin() {
 register_deactivation_hook( __FILE__, 'wpnm_deactivate_plugin' );
 
 /**
- * Load plugin textdomain.
+ * Initialize Plugin.
  *
- * WordPress 4.6+ auto-loads translations for plugins hosted on WordPress.org,
- * but we still register explicitly so self-hosted copies and bundled .mo files
- * in /languages/ resolve correctly.
- */
-function wpnm_load_textdomain() {
-	load_plugin_textdomain(
-		'notice-tracker',
-		false,
-		dirname( WPNM_PLUGIN_BASENAME ) . '/languages'
-	);
-}
-add_action( 'init', 'wpnm_load_textdomain' );
-
-/**
- * Initialize Plugin
+ * Translations are loaded automatically by WordPress 4.6+ for plugins hosted
+ * on WordPress.org whose text domain matches the slug (which is the case here:
+ * `notice-tracker`). A manual call to load_plugin_textdomain() is no longer
+ * necessary and is flagged as a discouraged function by Plugin Check, so we
+ * rely on the auto-loader.
  */
 function wpnm_init_plugin() {
 	$plugin = Notice_Tracker\Core\Plugin::get_instance();
