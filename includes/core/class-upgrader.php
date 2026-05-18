@@ -187,7 +187,8 @@ class Upgrader {
 			// INSERT IGNORE so re-running this migration on the same data is harmless.
 			// $table is built from $wpdb->prefix + a class constant (see notices_table()), so it is safe to interpolate.
 			// One-shot migration write — caching not applicable.
-			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$wpdb->query(
 				$wpdb->prepare(
 					"INSERT IGNORE INTO {$table}
 						(notice_id, user_id, notice_type, content, hash, is_read, created_at, expires_at)
@@ -202,6 +203,7 @@ class Upgrader {
 					$expires
 				)
 			);
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		}
 
 		delete_option( self::LEGACY_NOTICES_OPTION );
