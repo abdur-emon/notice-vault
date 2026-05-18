@@ -78,6 +78,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 3. Navigate to **Plugins → Add New → Upload Plugin**
 4. Choose the ZIP file and click **Install Now**
 5. Activate the plugin
+
 == Frequently Asked Questions ==
 
 = Does this plugin hide all admin notices? =
@@ -115,18 +116,6 @@ Yes! Notice Tracker is fully translation-ready with a .pot file included.
 = What happens immediately after I activate the plugin? =
 
 By default, every captured notice category (success, error, warning, info, system, non-standard) is set to **"Show in popup & hide from dashboard"**. The moment the plugin is active, admin notices from every plugin and theme will move from your dashboard into the Notices popup instead of appearing inline. You can change this per category at **Notice Tracker → Settings** — choose **"Hide completely"** to drop the notice entirely, or **"Do nothing"** to let it render on the dashboard as it normally would.
-
-= Why can't I "Hide completely" WordPress system notices? =
-
-WordPress system notices (the update nag, plugin/theme update messages, core update alerts) are intentionally restricted to **"Show in popup"** or **"Do nothing"**. Hiding them outright would risk masking critical security or compatibility messages from WordPress itself. If you want them gone from your dashboard, the popup option keeps them accessible without cluttering the screen.
-
-= Are there developer hooks I can use to extend Notice Tracker? =
-
-Yes. The plugin fires the following extension points:
-
-* `wpnm_notice_types` (filter) — register custom notice categories.
-* `wpnm_before_store_notice` (filter) — mutate or veto a notice before it is persisted.
-* `wpnm_notice_stored` (action) — react after a notice has been stored, e.g. for logging.
 
 
 == Screenshots ==
