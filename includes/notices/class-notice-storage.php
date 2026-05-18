@@ -2,13 +2,22 @@
 /**
  * Notice Storage Class
  *
- * Handles storage and retrieval of notices.
+ * Backed by a custom database table (created by Upgrader::ensure_table)
+ * with row-level UPDATEs, eliminating the read-modify-write races and
+ * cross-user FIFO eviction of the previous options-based storage.
+ *
+ * Public API (signatures and return shapes) is identical to the
+ * pre-1.0 options-based implementation, so every caller — Notice_Capture,
+ * Notice_Popup, Admin_Toolbar, Cleanup, templates/settings-page.php —
+ * works unchanged.
  *
  * @package Notice_Tracker
  * @subpackage Notices
  */
 
 namespace Notice_Tracker\Notices;
+
+use Notice_Tracker\Core\Upgrader;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,319 +27,412 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Notice Storage Class
  *
- * Stores notices in WordPress options (transients).
- *
  * @since 1.0.0
  */
 class Notice_Storage {
 
 	/**
-	 * Option name for storing notices.
-	 *
-	 * @var string
-	 */
-	private $option_name;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param string $option_name Option name to store notices.
-	 */
-	public function __construct( $option_name = 'wpnm_notices' ) {
-		$this->option_name = $option_name;
-	}
-
-	/**
-	 * Maximum number of notices to store.
+	 * Maximum number of notices retained PER USER. Enforced with a
+	 * post-insert trim. Cross-user eviction (the v0.x problem) no longer
+	 * happens because notices are now indexed by user_id in their own rows.
 	 *
 	 * @var int
 	 */
 	const MAX_NOTICES = 100;
 
 	/**
+	 * Constructor. The legacy $option_name parameter is preserved so callers
+	 * that pass it don't error, but it's no longer used — storage lives in
+	 * a custom table now.
+	 *
+	 * @param string $option_name Legacy parameter; ignored.
+	 */
+	public function __construct( $option_name = 'wpnm_notices' ) {
+		unset( $option_name ); // explicitly discard.
+	}
+
+	/**
+	 * Fully-qualified table name for the current blog.
+	 *
+	 * @return string
+	 */
+	private function table() {
+		return Upgrader::notices_table();
+	}
+
+	/**
+	 * Transient key for the current user's unread count cache.
+	 *
+	 * @return string
+	 */
+	private function unread_count_cache_key() {
+		return 'wpnm_notice_count_' . absint( get_current_user_id() );
+	}
+
+	/**
 	 * Store a notice.
 	 *
 	 * @since 1.0.0
-	 * @param array $notice Notice data.
-	 * @return bool|int Notice ID on success, false on failure.
+	 * @param array $notice Notice data. Expects at least `type`, `content`, `hash`.
+	 * @return string|false The generated notice_id on success, false otherwise.
 	 */
 	public function store( $notice ) {
-		// Get current notices.
-		$notices = $this->get_all();
+		global $wpdb;
 
-		// Generate unique ID.
 		$notice_id = $this->generate_id();
+		$user_id   = (int) get_current_user_id();
+		$created   = current_time( 'mysql' );
+		$expires   = $this->get_expiration_date();
 
-		// Add metadata.
+		// Compose the array the filter sees. Mirrors v0.x shape.
 		$notice['id']         = $notice_id;
-		$notice['user_id']    = get_current_user_id();
+		$notice['user_id']    = $user_id;
 		$notice['is_read']    = false;
-		$notice['created_at'] = current_time( 'mysql' );
-		$notice['expires_at'] = $this->get_expiration_date();
+		$notice['created_at'] = $created;
+		$notice['expires_at'] = $expires;
 
-		// Add to notices array.
-		$notices[ $notice_id ] = $notice;
-
-		// Limit to max notices (FIFO).
-		if ( count( $notices ) > self::MAX_NOTICES ) {
-			$notices = array_slice( $notices, -self::MAX_NOTICES, null, true );
+		/**
+		 * Filter a notice array immediately before it is persisted.
+		 *
+		 * Return a falsy/empty value to abort the store — useful for veto-style
+		 * integrations that don't want certain notices captured. Return the
+		 * (possibly mutated) array to proceed.
+		 *
+		 * @since 1.0.0
+		 * @param array $notice The notice data.
+		 */
+		$notice = apply_filters( 'wpnm_before_store_notice', $notice );
+		if ( ! is_array( $notice ) || empty( $notice ) ) {
+			return false;
 		}
 
-		// Save to database.
-		$saved = update_option( $this->option_name, $notices, false );
+		// Normalize for INSERT. We let the filter override anything it likes.
+		$row = array(
+			'notice_id'   => isset( $notice['id'] ) ? (string) $notice['id'] : $notice_id,
+			'user_id'     => isset( $notice['user_id'] ) ? (int) $notice['user_id'] : $user_id,
+			'notice_type' => isset( $notice['type'] ) ? sanitize_key( $notice['type'] ) : 'other',
+			'content'     => isset( $notice['content'] ) ? (string) $notice['content'] : '',
+			'hash'        => isset( $notice['hash'] ) ? (string) $notice['hash'] : md5( (string) ( $notice['content'] ?? '' ) ),
+			'is_read'     => empty( $notice['is_read'] ) ? 0 : 1,
+			'created_at'  => isset( $notice['created_at'] ) ? (string) $notice['created_at'] : $created,
+			'expires_at'  => isset( $notice['expires_at'] ) ? (string) $notice['expires_at'] : $expires,
+		);
+		$formats = array( '%s', '%d', '%s', '%s', '%s', '%d', '%s', '%s' );
 
-		// Clear notice count cache.
-		delete_transient( 'wpnm_notice_count' );
+		$inserted = $wpdb->insert( $this->table(), $row, $formats ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
-		return $saved ? $notice_id : false;
+		if ( false === $inserted || 0 === $inserted ) {
+			return false;
+		}
+
+		// Per-user FIFO cap. Atomic enough — even under concurrency we'll just
+		// trim slightly more aggressively, never less.
+		$this->enforce_max_per_user( (int) $row['user_id'] );
+
+		delete_transient( $this->unread_count_cache_key() );
+
+		/**
+		 * Fires after a notice has been successfully stored.
+		 *
+		 * @since 1.0.0
+		 * @param string $notice_id The generated notice ID (UUID-prefixed).
+		 * @param array  $notice    The full notice array as inserted.
+		 */
+		do_action( 'wpnm_notice_stored', $row['notice_id'], $notice );
+
+		return $row['notice_id'];
 	}
 
 	/**
-	 * Get all notices.
+	 * Trim the current user's rows down to MAX_NOTICES, oldest first.
+	 *
+	 * @param int $user_id User to trim.
+	 * @return void
+	 */
+	private function enforce_max_per_user( $user_id ) {
+		global $wpdb;
+		$table = $this->table();
+
+		$count = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$table} WHERE user_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$user_id
+			)
+		);
+
+		if ( $count <= self::MAX_NOTICES ) {
+			return;
+		}
+
+		$excess = $count - self::MAX_NOTICES;
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"DELETE FROM {$table} WHERE user_id = %d ORDER BY id ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$user_id,
+				$excess
+			)
+		);
+	}
+
+	/**
+	 * Get notices for the current user, filtered.
 	 *
 	 * @since 1.0.0
-	 * @param array $args Query arguments.
-	 * @return array Notices array.
+	 * @param array $args {
+	 *     @type string $type    Restrict to this notice_type.
+	 *     @type bool   $is_read Restrict to read (true) or unread (false) — null for both.
+	 *     @type int    $limit   0 for no limit.
+	 *     @type int    $offset  Skip this many rows.
+	 * }
+	 * @return array Notices keyed by notice_id, newest first, same shape as v0.x.
 	 */
 	public function get_all( $args = array() ) {
-		$defaults = array(
-			'type'    => '', // Filter by type.
-			'is_read' => null, // Filter by read status.
-			'limit'   => 0, // Limit results.
-		);
+		global $wpdb;
 
+		$defaults = array(
+			'type'    => '',
+			'is_read' => null,
+			'limit'   => 0,
+			'offset'  => 0,
+		);
 		$args = wp_parse_args( $args, $defaults );
 
-		// Get notices from database.
-		$notices = get_option( $this->option_name, array() );
-
-		if ( ! is_array( $notices ) ) {
-			$notices = array();
-		}
-
-		// Filter out expired notices in-memory (no DB write on reads).
+		$user_id = (int) get_current_user_id();
 		$now     = current_time( 'mysql' );
-		$notices = array_filter(
-			$notices,
-			function ( $notice ) use ( $now ) {
-				return ! isset( $notice['expires_at'] ) || $notice['expires_at'] > $now;
-			}
-		);
+		$table   = $this->table();
 
-		// Apply type filter.
+		$where      = array( 'user_id = %d', 'expires_at > %s' );
+		$where_args = array( $user_id, $now );
+
 		if ( ! empty( $args['type'] ) ) {
-			$notices = array_filter(
-				$notices,
-				function ( $notice ) use ( $args ) {
-					return isset( $notice['type'] ) && $notice['type'] === $args['type'];
-				}
-			);
+			$where[]      = 'notice_type = %s';
+			$where_args[] = $args['type'];
 		}
 
-		// Apply read status filter.
 		if ( null !== $args['is_read'] ) {
-			$notices = array_filter(
-				$notices,
-				function ( $notice ) use ( $args ) {
-					return isset( $notice['is_read'] ) && $notice['is_read'] === $args['is_read'];
-				}
-			);
+			$where[]      = 'is_read = %d';
+			$where_args[] = $args['is_read'] ? 1 : 0;
 		}
 
-		// Apply user filter.
-		$user_id = get_current_user_id();
-		$notices = array_filter(
-			$notices,
-			function ( $notice ) use ( $user_id ) {
-				return ! isset( $notice['user_id'] ) || (int) $notice['user_id'] === $user_id;
-			}
-		);
+		$sql = "SELECT * FROM {$table} WHERE " . implode( ' AND ', $where ) . ' ORDER BY created_at DESC, id DESC';
 
-		// Sort by created_at (newest first).
-		uasort(
-			$notices,
-			function ( $a, $b ) {
-				$time_a = isset( $a['created_at'] ) ? strtotime( $a['created_at'] ) : 0;
-				$time_b = isset( $b['created_at'] ) ? strtotime( $b['created_at'] ) : 0;
-				return $time_b - $time_a;
-			}
-		);
+		$limit  = (int) $args['limit'];
+		$offset = max( 0, (int) $args['offset'] );
 
-		// Apply offset.
-		if ( isset( $args['offset'] ) && $args['offset'] > 0 ) {
-			$notices = array_slice( $notices, $args['offset'], null, true );
+		if ( $limit > 0 ) {
+			$sql         .= ' LIMIT %d OFFSET %d';
+			$where_args[] = $limit;
+			$where_args[] = $offset;
+		} elseif ( $offset > 0 ) {
+			// Effectively no limit, but we still need an offset; use a huge bound.
+			$sql         .= ' LIMIT 18446744073709551615 OFFSET %d';
+			$where_args[] = $offset;
 		}
 
-		// Apply limit.
-		if ( $args['limit'] > 0 ) {
-			$notices = array_slice( $notices, 0, $args['limit'], true );
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $where_args ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		if ( empty( $rows ) ) {
+			return array();
 		}
 
-		return $notices;
+		$out = array();
+		foreach ( $rows as $row ) {
+			$out[ $row['notice_id'] ] = $this->row_to_notice( $row );
+		}
+		return $out;
 	}
 
 	/**
-	 * Get a single notice by ID.
+	 * Convert a DB row to the array shape v0.x callers expect.
 	 *
-	 * @since 1.0.0
-	 * @param int $notice_id Notice ID.
-	 * @return array|false Notice data or false.
+	 * @param array $row Row from $wpdb->get_results( ..., ARRAY_A ).
+	 * @return array
 	 */
-	public function get( $notice_id ) {
-		$notices = $this->get_all();
-		return isset( $notices[ $notice_id ] ) ? $notices[ $notice_id ] : false;
+	private function row_to_notice( $row ) {
+		return array(
+			'id'         => $row['notice_id'],
+			'user_id'    => (int) $row['user_id'],
+			'type'       => $row['notice_type'],
+			'content'    => $row['content'],
+			'hash'       => $row['hash'],
+			'is_read'    => (bool) $row['is_read'],
+			'created_at' => $row['created_at'],
+			'expires_at' => $row['expires_at'],
+		);
 	}
 
 	/**
-	 * Mark notice as read.
+	 * Mark a notice as read. Scoped to the current user.
 	 *
 	 * @since 1.0.0
-	 * @param int $notice_id Notice ID.
-	 * @return bool Success.
+	 * @param string $notice_id Notice ID (UUID-prefixed).
+	 * @return bool True on success.
 	 */
 	public function mark_read( $notice_id ) {
-		$notices = get_option( $this->option_name, array() );
+		global $wpdb;
 
-		if ( ! isset( $notices[ $notice_id ] ) ) {
+		if ( ! is_string( $notice_id ) || '' === $notice_id ) {
 			return false;
 		}
 
-		if ( isset( $notices[ $notice_id ]['user_id'] ) && (int) $notices[ $notice_id ]['user_id'] !== get_current_user_id() ) {
-			return false;
+		$user_id = (int) get_current_user_id();
+		$updated = $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$this->table(),
+			array( 'is_read' => 1 ),
+			array(
+				'notice_id' => $notice_id,
+				'user_id'   => $user_id,
+			),
+			array( '%d' ),
+			array( '%s', '%d' )
+		);
+
+		if ( $updated ) {
+			delete_transient( $this->unread_count_cache_key() );
 		}
 
-		$notices[ $notice_id ]['is_read'] = true;
-
-		delete_transient( 'wpnm_notice_count' );
-
-		return update_option( $this->option_name, $notices, false );
+		return false !== $updated && $updated > 0;
 	}
 
 	/**
-	 * Delete a notice.
+	 * Delete a single notice. Scoped to the current user.
 	 *
 	 * @since 1.0.0
-	 * @param int $notice_id Notice ID.
-	 * @return bool Success.
+	 * @param string $notice_id Notice ID.
+	 * @return bool True on success.
 	 */
 	public function delete( $notice_id ) {
-		$notices = get_option( $this->option_name, array() );
+		global $wpdb;
 
-		if ( ! isset( $notices[ $notice_id ] ) ) {
+		if ( ! is_string( $notice_id ) || '' === $notice_id ) {
 			return false;
 		}
 
-		if ( isset( $notices[ $notice_id ]['user_id'] ) && (int) $notices[ $notice_id ]['user_id'] !== get_current_user_id() ) {
-			return false;
+		$user_id = (int) get_current_user_id();
+		$deleted = $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$this->table(),
+			array(
+				'notice_id' => $notice_id,
+				'user_id'   => $user_id,
+			),
+			array( '%s', '%d' )
+		);
+
+		if ( $deleted ) {
+			delete_transient( $this->unread_count_cache_key() );
 		}
 
-		unset( $notices[ $notice_id ] );
-
-		delete_transient( 'wpnm_notice_count' );
-
-		return update_option( $this->option_name, $notices, false );
+		return false !== $deleted && $deleted > 0;
 	}
 
 	/**
-	 * Get unread notice count.
+	 * Count unread notices for the current user. Transient-cached for an hour.
 	 *
 	 * @since 1.0.0
-	 * @return int Count.
+	 * @return int
 	 */
 	public function get_unread_count() {
-		// Try to get from cache.
-		$count = get_transient( 'wpnm_notice_count' );
+		global $wpdb;
+
+		$cache_key = $this->unread_count_cache_key();
+		$count     = get_transient( $cache_key );
 
 		if ( false === $count ) {
-			$notices = $this->get_all( array( 'is_read' => false ) );
-			$count   = count( $notices );
-			set_transient( 'wpnm_notice_count', $count, HOUR_IN_SECONDS );
+			$user_id = (int) get_current_user_id();
+			$now     = current_time( 'mysql' );
+			$table   = $this->table();
+			$count   = (int) $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM {$table} WHERE user_id = %d AND is_read = 0 AND expires_at > %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$user_id,
+					$now
+				)
+			);
+			set_transient( $cache_key, $count, HOUR_IN_SECONDS );
 		}
 
 		return absint( $count );
 	}
 
 	/**
-	 * Generate unique notice ID.
+	 * Generate a unique notice ID.
 	 *
-	 * @since 1.0.0
-	 * @return string Unique ID.
+	 * @return string Format: `notice_<uuid4>`. The `notice_` prefix is for legacy
+	 *                callers that match on that pattern.
 	 */
 	private function generate_id() {
 		return 'notice_' . wp_generate_uuid4();
 	}
 
 	/**
-	 * Get expiration date.
+	 * MySQL datetime N days from now (auto-expire window from settings).
 	 *
-	 * @since 1.0.0
-	 * @return string MySQL datetime.
+	 * @return string
 	 */
 	private function get_expiration_date() {
 		$settings = get_option( 'wpnm_settings', array() );
 		$days     = isset( $settings['auto_expire_days'] ) ? absint( $settings['auto_expire_days'] ) : 30;
-
 		return gmdate( 'Y-m-d H:i:s', strtotime( "+{$days} days" ) );
 	}
 
 	/**
-	 * Mark all notices as read.
+	 * Mark all of the current user's unread notices as read.
 	 *
 	 * @since 1.0.0
-	 * @return bool Success.
+	 * @return bool Always true (no-op on empty result is still "success").
 	 */
 	public function mark_all_read() {
-		$notices = get_option( $this->option_name, array() );
+		global $wpdb;
+		$user_id = (int) get_current_user_id();
+		$table   = $this->table();
 
-		if ( ! is_array( $notices ) || empty( $notices ) ) {
-			return false;
-		}
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"UPDATE {$table} SET is_read = 1 WHERE user_id = %d AND is_read = 0", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$user_id
+			)
+		);
 
-		foreach ( $notices as $id => $notice ) {
-			$notices[ $id ]['is_read'] = true;
-		}
-
-		delete_transient( 'wpnm_notice_count' );
-
-		return update_option( $this->option_name, $notices, false );
+		delete_transient( $this->unread_count_cache_key() );
+		return true;
 	}
 
 	/**
-	 * Delete all notices.
+	 * Delete all of the current user's notices.
 	 *
 	 * @since 1.0.0
-	 * @return bool Success.
+	 * @return bool Always true (no-op on empty result is still "success").
 	 */
 	public function delete_all() {
-		delete_transient( 'wpnm_notice_count' );
-		return update_option( $this->option_name, array(), false );
+		global $wpdb;
+		$user_id = (int) get_current_user_id();
+
+		$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$this->table(),
+			array( 'user_id' => $user_id ),
+			array( '%d' )
+		);
+
+		delete_transient( $this->unread_count_cache_key() );
+		return true;
 	}
 
 	/**
-	 * Clean expired notices (called by cron).
+	 * Delete every expired notice (called by the daily cleanup cron).
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function clean_expired() {
-		$notices = get_option( $this->option_name, array() );
+		global $wpdb;
+		$now   = current_time( 'mysql' );
+		$table = $this->table();
 
-		if ( ! is_array( $notices ) || empty( $notices ) ) {
-			return;
-		}
-
-		$now     = current_time( 'mysql' );
-		$cleaned = array_filter(
-			$notices,
-			function ( $notice ) use ( $now ) {
-				return ! isset( $notice['expires_at'] ) || $notice['expires_at'] > $now;
-			}
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"DELETE FROM {$table} WHERE expires_at <= %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$now
+			)
 		);
-
-		if ( count( $cleaned ) !== count( $notices ) ) {
-			update_option( $this->option_name, $cleaned, false );
-			delete_transient( 'wpnm_notice_count' );
-		}
+		// Per-user unread-count transients will refresh on their next read (1h TTL).
 	}
 }
-

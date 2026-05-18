@@ -45,12 +45,17 @@ class Cleanup {
 	/**
 	 * Cleanup expired notices.
 	 *
-	 * Delegates to Notice_Storage for single source of truth.
+	 * Delegates to Notice_Storage for single source of truth. Also calls
+	 * Upgrader::maybe_upgrade() first so the cron is safe to run even if
+	 * it fires before any admin page has loaded after a plugin update
+	 * (e.g. wp.org auto-update). Each migration is gated by a flag,
+	 * so subsequent cron runs are no-ops.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public static function cleanup_expired_notices() {
+		Upgrader::maybe_upgrade();
 		( new Notice_Storage() )->clean_expired();
 	}
 

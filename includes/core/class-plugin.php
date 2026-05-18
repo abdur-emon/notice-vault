@@ -76,6 +76,13 @@ class Plugin
 	{
 		$this->version = WPNM_VERSION;
 		$this->loader  = new Loader();
+
+		// Run pending migrations BEFORE instantiating storage so the table
+		// definitely exists. Admin-only — front-end requests never need this.
+		if ( is_admin() ) {
+			Upgrader::maybe_upgrade();
+		}
+
 		$this->storage = new \Notice_Tracker\Notices\Notice_Storage();
 
 		$this->load_dependencies();
