@@ -82,9 +82,12 @@ class Plugin
 		$this->define_admin_hooks();
 		$this->define_notice_hooks();
 
-		// Initialize cleanup cron (admin only to avoid frontend overhead).
+		// Initialize cleanup cron and upgrader (admin only to avoid frontend overhead).
 		if (is_admin()) {
 			Cleanup::init();
+			// Register the one-shot migrator directly because the Loader expects
+			// instance-method callbacks and Upgrader::maybe_upgrade is static.
+			add_action( 'admin_init', array( Upgrader::class, 'maybe_upgrade' ) );
 		}
 	}
 

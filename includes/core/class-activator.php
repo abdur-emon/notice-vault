@@ -77,9 +77,10 @@ class Activator {
 			$defaults[ 'notice_' . $type ] = 'popup';
 		}
 
-		// Only set if not already exists.
+		// Only set if not already exists. autoload=no so the option is not
+		// loaded on front-end requests — this plugin is admin-only.
 		if ( ! get_option( 'wpnm_settings' ) ) {
-			add_option( 'wpnm_settings', $defaults );
+			add_option( 'wpnm_settings', $defaults, '', 'no' );
 		}
 	}
 
