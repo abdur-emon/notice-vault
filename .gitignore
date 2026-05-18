@@ -1,41 +1,162 @@
-# --- OS-generated junk ---
+# =============================================================================
+# OS-generated junk
+# =============================================================================
+
+# macOS
 .DS_Store
 .DS_Store?
 ._*
+.AppleDouble
+.LSOverride
 .Spotlight-V100
 .Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
+Icon?
+Network Trash Folder/
+Temporary Items/
+__MACOSX/
 
-# --- Editor / IDE settings (per-developer, not project-wide) ---
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.fuse_hidden*
+.nfs*
+
+# =============================================================================
+# Editor / IDE settings (per-developer, not project-wide)
+# =============================================================================
+
+# VS Code
 .vscode/
+*.code-workspace
+.history/
+
+# JetBrains (PhpStorm, IntelliJ, WebStorm)
 .idea/
-*.swp
-*.swo
-*~
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# TextMate
+*.tmproj
+*.tmproject
+
+# Eclipse / Netbeans
 .project
 .settings/
 nbproject/
 
-# --- Dependency / build directories (in case any tooling is added later) ---
+# Vim / Emacs
+*.swp
+*.swo
+*~
+.kate-swp
+
+# =============================================================================
+# Dependency directories (in case build tooling is added later)
+# =============================================================================
 node_modules/
 vendor/
 .composer/
 .npm/
+.yarn/
+bower_components/
 
-# --- Logs and debug output ---
+# =============================================================================
+# Build output (in case a bundler is added later)
+# =============================================================================
+dist/
+build/
+.cache/
+*.map
+*.min.js.LICENSE.txt
+
+# =============================================================================
+# WordPress / PHP plugin tooling caches & local config overrides
+# =============================================================================
+
+# PHP_CodeSniffer
+.phpcs-cache
+phpcs.xml
+
+# PHPStan
+.phpstan-cache/
+phpstan.neon
+
+# PHPUnit
+.phpunit.result.cache
+phpunit.xml
+
+# Codeception
+tests/_output/
+tests/_support/_generated/
+
+# Test coverage
+coverage/
+coverage.xml
+clover.xml
+.coveralls.yml
+
+# WP-CLI local config
+wp-cli.local.yml
+
+# Plugin Check / WP-CLI reports
+notice-tracker-*.md
+plugin-check-*.json
+
+# Composer artifacts
+composer.phar
+composer-setup.php
+auth.json
+
+# =============================================================================
+# Translation build artifacts
+# =============================================================================
+# .mo files are compiled from .po. wp.org generates them automatically from
+# translate.wordpress.org, so we don't ship them. Drop these lines if you
+# decide to bundle pre-compiled translations.
+*.mo
+languages/*.po~
+
+# =============================================================================
+# Git / merge residue
+# =============================================================================
+*.orig
+*.rej
+*.bak
+
+# =============================================================================
+# Logs and debug output
+# =============================================================================
 *.log
 debug.log
 error_log
 npm-debug.log*
+yarn-error.log
 
-# --- Local-only build artifacts and report files ---
+# =============================================================================
+# Local-only build artifacts and reports
+# =============================================================================
 *.zip
 *.tar.gz
+*.tar
 Notice-Tracker-QA-Audit-Issues.pdf
 
-# --- Environment / secrets (defense in depth — never commit these) ---
+# =============================================================================
+# Secrets / credentials (defense in depth — never commit these)
+# =============================================================================
 .env
 .env.local
 .env.*.local
+*.pem
+*.key
+*.cert
+*.crt
+id_rsa*
+id_ed25519*
