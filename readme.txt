@@ -113,6 +113,13 @@ By default, notices are automatically deleted after 30 days. You can customize t
 Yes! Notice Tracker is fully translation-ready with a .pot file included.
 
 
+== Screenshots ==
+
+1. Notice Type Setting panel
+2. Pop-up Setting panel
+3. User visibility panel
+4. Auto Expires panel
+
 
 == Changelog ==
 
