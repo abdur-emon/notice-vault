@@ -68,6 +68,23 @@ class Notice_Storage {
 		$notice['created_at'] = current_time( 'mysql' );
 		$notice['expires_at'] = $this->get_expiration_date();
 
+		/**
+		 * Filter a notice array immediately before it is persisted.
+		 *
+		 * Return a falsy value (false, null, empty array) to abort the store —
+		 * useful for veto-style integrations that don't want certain notices
+		 * captured. Return the (possibly mutated) array to proceed.
+		 *
+		 * @since 1.0.0
+		 * @param array $notice The notice data. Includes `id`, `user_id`,
+		 *                      `type`, `content`, `html`, `hash`, `is_read`,
+		 *                      `created_at`, `expires_at`.
+		 */
+		$notice = apply_filters( 'wpnm_before_store_notice', $notice );
+		if ( ! is_array( $notice ) || empty( $notice ) ) {
+			return false;
+		}
+
 		// Add to notices array.
 		$notices[ $notice_id ] = $notice;
 
@@ -81,6 +98,17 @@ class Notice_Storage {
 
 		// Clear notice count cache.
 		delete_transient( 'wpnm_notice_count' );
+
+		if ( $saved ) {
+			/**
+			 * Fires after a notice has been successfully stored.
+			 *
+			 * @since 1.0.0
+			 * @param string $notice_id The generated notice ID (UUID-prefixed).
+			 * @param array  $notice    The full stored notice array.
+			 */
+			do_action( 'wpnm_notice_stored', $notice_id, $notice );
+		}
 
 		return $saved ? $notice_id : false;
 	}
@@ -167,18 +195,6 @@ class Notice_Storage {
 		}
 
 		return $notices;
-	}
-
-	/**
-	 * Get a single notice by ID.
-	 *
-	 * @since 1.0.0
-	 * @param int $notice_id Notice ID.
-	 * @return array|false Notice data or false.
-	 */
-	public function get( $notice_id ) {
-		$notices = $this->get_all();
-		return isset( $notices[ $notice_id ] ) ? $notices[ $notice_id ] : false;
 	}
 
 	/**

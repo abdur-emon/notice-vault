@@ -124,15 +124,8 @@ class Settings_Page
 	 */
 	private function register_fields()
 	{
-		// Notice type fields.
-		$notice_types = array(
-			'success' => __( 'Success Notices', 'notice-tracker' ),
-			'error'   => __( 'Error Notices', 'notice-tracker' ),
-			'warning' => __( 'Warning Notices', 'notice-tracker' ),
-			'info'    => __( 'Info Notices', 'notice-tracker' ),
-			'other'   => __( 'Non-standard Notices', 'notice-tracker' ),
-			'system'  => __( 'WordPress System Notices', 'notice-tracker' ),
-		);
+		// Notice type fields — filtered list lets third parties register custom categories.
+		$notice_types = \Notice_Tracker\Notices\Notice_Classifier::get_types();
 
 		foreach ($notice_types as $type => $label) {
 			add_settings_field(
@@ -389,8 +382,9 @@ class Settings_Page
 	{
 		$sanitized = array();
 
-		// Sanitize notice type settings.
-		$notice_types = array('success', 'error', 'warning', 'info', 'other', 'system');
+		// Sanitize notice type settings — uses the filtered type list so custom buckets
+		// registered via `wpnm_notice_types` are validated too.
+		$notice_types = array_keys( \Notice_Tracker\Notices\Notice_Classifier::get_types() );
 		foreach ($notice_types as $type) {
 			$key = 'notice_' . $type;
 			if (isset($input[$key])) {

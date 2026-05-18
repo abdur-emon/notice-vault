@@ -54,9 +54,6 @@ class Activator {
 
 		// Create custom table if needed (optional - we'll use options for now).
 		// self::create_table();
-
-		// Set activation flag.
-		set_transient( 'wpnm_activation_redirect', true, 30 );
 	}
 
 	/**
@@ -67,18 +64,18 @@ class Activator {
 	 */
 	private static function set_default_options() {
 		$defaults = array(
-			'notice_success'     => 'popup', // popup, hide, nothing.
-			'notice_error'       => 'popup',
-			'notice_warning'     => 'popup',
-			'notice_info'        => 'popup',
-			'notice_other'       => 'popup',
-			'notice_system'      => 'popup', // popup, nothing.
-			'popup_style'        => 'slide-right', // slide-right, modal, panel.
-			'visibility_mode'    => 'show-all', // show-all, hide-all, hide-selected, show-selected.
-			'visibility_users'   => array(),
-			'auto_expire_days'   => 30,
-			'version'            => WPNM_VERSION,
+			'popup_style'      => 'slide-right', // slide-right, modal, panel.
+			'visibility_mode'  => 'show-all',    // show-all, hide-all, hide-selected, show-selected.
+			'visibility_users' => array(),
+			'auto_expire_days' => 30,
+			'version'          => WPNM_VERSION,
 		);
+
+		// Defaults for each registered notice category. Uses the filtered list so
+		// custom buckets registered via `wpnm_notice_types` get sensible defaults too.
+		foreach ( array_keys( \Notice_Tracker\Notices\Notice_Classifier::get_types() ) as $type ) {
+			$defaults[ 'notice_' . $type ] = 'popup';
+		}
 
 		// Only set if not already exists.
 		if ( ! get_option( 'wpnm_settings' ) ) {

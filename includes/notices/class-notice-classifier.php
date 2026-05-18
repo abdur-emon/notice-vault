@@ -25,11 +25,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Notice_Classifier {
 
 	/**
+	 * Get the canonical list of notice categories, filtered.
+	 *
+	 * Third-party code can register additional categories via the
+	 * `wpnm_notice_types` filter. The returned array maps a type key
+	 * (e.g. `success`) to a human label used by the settings UI.
+	 *
+	 * @since 1.0.0
+	 * @return array<string,string>
+	 */
+	public static function get_types() {
+		$types = array(
+			'success' => __( 'Success Notices', 'notice-tracker' ),
+			'error'   => __( 'Error Notices', 'notice-tracker' ),
+			'warning' => __( 'Warning Notices', 'notice-tracker' ),
+			'info'    => __( 'Info Notices', 'notice-tracker' ),
+			'other'   => __( 'Non-standard Notices', 'notice-tracker' ),
+			'system'  => __( 'WordPress System Notices', 'notice-tracker' ),
+		);
+
+		/**
+		 * Filter the canonical list of notice categories.
+		 *
+		 * Use this to add custom buckets so that the settings UI exposes
+		 * a configurable rule for them. Note that classify() will only
+		 * return a custom type if the captured HTML happens to carry a
+		 * matching CSS class (see contains_class()).
+		 *
+		 * @since 1.0.0
+		 * @param array<string,string> $types Type-key => translated label.
+		 */
+		return (array) apply_filters( 'wpnm_notice_types', $types );
+	}
+
+	/**
 	 * Classify notice type from HTML content.
 	 *
 	 * @since 1.0.0
 	 * @param string $html Notice HTML content.
-	 * @return string Notice type (success, error, warning, info, other).
+	 * @return string Notice type (success, error, warning, info, system, other).
 	 */
 	public static function classify( $html ) {
 		// Check for WordPress notice classes.
