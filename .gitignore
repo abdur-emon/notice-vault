@@ -1,0 +1,41 @@
+# --- OS-generated junk ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- Editor / IDE settings (per-developer, not project-wide) ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+nbproject/
+
+# --- Dependency / build directories (in case any tooling is added later) ---
+node_modules/
+vendor/
+.composer/
+.npm/
+
+# --- Logs and debug output ---
+*.log
+debug.log
+error_log
+npm-debug.log*
+
+# --- Local-only build artifacts and report files ---
+*.zip
+*.tar.gz
+Notice-Tracker-QA-Audit-Issues.pdf
+
+# --- Environment / secrets (defense in depth — never commit these) ---
+.env
+.env.local
+.env.*.local
