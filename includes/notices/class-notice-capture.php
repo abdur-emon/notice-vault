@@ -164,9 +164,23 @@ class Notice_Capture {
 	}
 
 	/**
-	 * Extract individual notices from HTML using DOM parsing.
+	 * Extract individual notices from the captured admin_notices buffer.
 	 *
-	 * Handles nested divs correctly unlike regex-only approach.
+	 * Iterates every top-level element child of the wrapper, regardless of
+	 * its CSS class. Standard WordPress notices (with `notice`/`updated`/
+	 * `update-nag` classes) AND non-standard ones (plain divs, custom
+	 * wrappers, etc.) are both returned.
+	 *
+	 * Why not filter by class: the readme advertises a "Non-standard Notices"
+	 * category, which a third-party plugin emitting a `<div>` without a
+	 * `notice` class is expected to hit. The old XPath-with-class-filter
+	 * approach silently dropped those notices whenever they were emitted in
+	 * the same buffer as a standard notice (because the class-matching
+	 * branch returned >0 results and the whole-buffer fallback never ran).
+	 *
+	 * Classification of each captured chunk happens downstream in
+	 * Notice_Classifier::classify(), which inspects the CSS classes and
+	 * routes a class-less notice to the `other` bucket.
 	 *
 	 * @since 1.0.0
 	 * @param string $html HTML content.
@@ -175,31 +189,45 @@ class Notice_Capture {
 	private function extract_notices( $html ) {
 		$notices = array();
 
-		// Use DOMDocument for reliable nested HTML parsing.
-		$doc = new \DOMDocument();
+		if ( '' === trim( $html ) ) {
+			return $notices;
+		}
 
-		// Suppress warnings for malformed HTML.
+		// Wrap in a known container so DOMDocument has a stable root we can
+		// walk. We prepend an XML prolog with explicit UTF-8 encoding so
+		// libxml does not silently fall back to ISO-8859-1 and mangle
+		// accented characters in admin notice text. This is the modern
+		// replacement for the deprecated `mb_convert_encoding(..., 'HTML-ENTITIES', ...)`
+		// pattern.
+		$doc             = new \DOMDocument();
 		$internal_errors = libxml_use_internal_errors( true );
-		$doc->loadHTML( '<div id="wpnm-wrapper">' . $html . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		$xml_prolog      = '<' . '?xml encoding="UTF-8"?' . '>';
+		$wrapped         = $xml_prolog . '<div id="wpnm-wrapper">' . $html . '</div>';
+		$doc->loadHTML( $wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $internal_errors );
 
-		$xpath = new \DOMXPath( $doc );
+		$wrapper = $doc->getElementById( 'wpnm-wrapper' );
 
-		// Find top-level divs with 'notice' or 'updated' or 'error' or 'update-nag' class.
-		$nodes = $xpath->query( '//div[@id="wpnm-wrapper"]/*[contains(concat(" ", normalize-space(@class), " "), " notice ") or contains(concat(" ", normalize-space(@class), " "), " updated ") or contains(concat(" ", normalize-space(@class), " "), " update-nag ")]' );
-
-		if ( $nodes && $nodes->length > 0 ) {
-			foreach ( $nodes as $node ) {
-				$notices[] = $doc->saveHTML( $node );
+		if ( $wrapper instanceof \DOMElement ) {
+			foreach ( $wrapper->childNodes as $child ) {
+				if ( XML_ELEMENT_NODE !== $child->nodeType ) {
+					continue;
+				}
+				$serialized = $doc->saveHTML( $child );
+				if ( ! is_string( $serialized ) || '' === trim( wp_strip_all_tags( $serialized ) ) ) {
+					continue;
+				}
+				$notices[] = $serialized;
 			}
 		}
 
-		// If DOM didn't find notices, output content as-is (non-standard markup).
-		if ( empty( $notices ) && ! empty( trim( $html ) ) ) {
-			// Check if there's any meaningful HTML content.
+		// Fallback for buffers that contain only text or extremely malformed
+		// markup (no element children at all) — treat the whole buffer as one
+		// notice so we don't silently lose the content.
+		if ( empty( $notices ) ) {
 			$stripped = wp_strip_all_tags( $html );
-			if ( ! empty( trim( $stripped ) ) ) {
+			if ( '' !== trim( $stripped ) ) {
 				$notices[] = $html;
 			}
 		}
