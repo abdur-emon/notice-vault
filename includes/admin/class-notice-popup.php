@@ -156,7 +156,8 @@ class Notice_Popup
 
 		// Get filter parameters.
 		$filter_type = isset( $_POST['filter_type'] ) ? sanitize_text_field( wp_unslash( $_POST['filter_type'] ) ) : '';
-		$show_read   = isset( $_POST['show_read'] ) && 'true' === $_POST['show_read'];
+		$show_read   = isset( $_POST['show_read'] )
+			&& 'true' === sanitize_text_field( wp_unslash( $_POST['show_read'] ) );
 
 		// Pagination parameters.
 		$page     = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
