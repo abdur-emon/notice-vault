@@ -185,7 +185,9 @@ class Upgrader {
 			$expires   = isset( $row['expires_at'] ) ? (string) $row['expires_at'] : gmdate( 'Y-m-d H:i:s', strtotime( '+30 days' ) );
 
 			// INSERT IGNORE so re-running this migration on the same data is harmless.
-			$wpdb->query(
+			// $table is built from $wpdb->prefix + a class constant (see notices_table()), so it is safe to interpolate.
+			// One-shot migration write — caching not applicable.
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 				$wpdb->prepare(
 					"INSERT IGNORE INTO {$table}
 						(notice_id, user_id, notice_type, content, hash, is_read, created_at, expires_at)
@@ -218,7 +220,8 @@ class Upgrader {
 	private static function flip_settings_autoload_to_no() {
 		global $wpdb;
 
-		$autoload = $wpdb->get_var(
+		// One-shot migration read against the options table — caching not applicable.
+		$autoload = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$wpdb->prepare(
 				"SELECT autoload FROM {$wpdb->options} WHERE option_name = %s LIMIT 1",
 				self::OPTION

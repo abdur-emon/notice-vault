@@ -153,7 +153,9 @@ class Notice_Storage {
 		global $wpdb;
 		$table = $this->table();
 
-		$count = (int) $wpdb->get_var(
+		// $table comes from $wpdb->prefix + a class constant — safe to interpolate.
+		// Per-insert count check; caching would be stale immediately.
+		$count = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$wpdb->prepare(
 				"SELECT COUNT(*) FROM {$table} WHERE user_id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$user_id
@@ -165,7 +167,7 @@ class Notice_Storage {
 		}
 
 		$excess = $count - self::MAX_NOTICES;
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$wpdb->prepare(
 				"DELETE FROM {$table} WHERE user_id = %d ORDER BY id ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$user_id,
@@ -229,7 +231,8 @@ class Notice_Storage {
 			$where_args[] = $offset;
 		}
 
-		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $where_args ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// $sql is composed from constant fragments + numeric placeholders; only $table (from $wpdb->prefix + class constant) is interpolated.
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $where_args ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		if ( empty( $rows ) ) {
 			return array();
 		}
@@ -340,7 +343,8 @@ class Notice_Storage {
 			$user_id = (int) get_current_user_id();
 			$now     = current_time( 'mysql' );
 			$table   = $this->table();
-			$count   = (int) $wpdb->get_var(
+			// Wrapped in a transient cache (set_transient below); $table is safe ($wpdb->prefix + class constant).
+			$count   = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 				$wpdb->prepare(
 					"SELECT COUNT(*) FROM {$table} WHERE user_id = %d AND is_read = 0 AND expires_at > %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$user_id,
@@ -385,7 +389,7 @@ class Notice_Storage {
 		$user_id = (int) get_current_user_id();
 		$table   = $this->table();
 
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$wpdb->prepare(
 				"UPDATE {$table} SET is_read = 1 WHERE user_id = %d AND is_read = 0", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$user_id
@@ -427,7 +431,7 @@ class Notice_Storage {
 		$now   = current_time( 'mysql' );
 		$table = $this->table();
 
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$wpdb->prepare(
 				"DELETE FROM {$table} WHERE expires_at <= %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$now

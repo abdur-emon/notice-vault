@@ -1,0 +1,40 @@
+# Files and directories listed here are excluded from the WordPress.org
+# plugin zip / SVN trunk by deployment tooling that respects .distignore
+# (e.g. 10up/action-wordpress-plugin-deploy, wp-deployer).
+#
+# Anything that should not ship to wp.org but is needed for local dev /
+# the GitHub repo goes here. The dev tree keeps these files; the build
+# does not.
+
+# Version control
+.git
+.gitignore
+.gitattributes
+.github
+
+# Build / deploy config
+.distignore
+.wp-env.json
+
+# wp.org assets directory — uploaded separately to /assets/, never bundled in the plugin zip
+.wordpress-org
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+# Dependency / build output
+node_modules
+vendor
+dist
+build
+
+# Dev docs that are not user-facing (readme.txt is the user-facing one)
+README.md
+CHANGELOG.md
+
+# Archives
+*.zip
+*.tar.gz

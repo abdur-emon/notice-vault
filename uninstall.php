@@ -30,7 +30,8 @@ function wpnm_delete_options() {
 function wpnm_drop_table() {
 	global $wpdb;
 	$table = $wpdb->prefix . 'wpnm_notices';
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	// $table is built from $wpdb->prefix + a constant; uninstall is a one-shot teardown so caching is irrelevant.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 }
 
