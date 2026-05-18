@@ -12,28 +12,29 @@ Control your WordPress dashboard with Notice Tracker - hide, manage, and organiz
 
 == Description ==
 
-= Take Control of Your Dashboard with Disable Admin Notices =
-Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and promotional pop-ups? **Notice Tracker** is the ultimate solution for users who want to reclaim their workspace.
+= Take Control of Your Dashboard with Notice Tracker =
+Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and update notices? **Notice Tracker** captures every admin notice as it fires and moves it into a tidy popup, so you can keep working without the visual noise — and read everything later at your convenience.
 
-WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Our plugin gives you full control over your admin environment, allowing you to hide, remove, or manage notifications with just a few clicks. Whether you want to silence all alerts or simply organize them into a cleaner view, we’ve got you covered.
+WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Notice Tracker gives you per-type rules, per-user visibility controls, and a single counter in the admin bar so nothing is ever missed.
 
 
 
-= Why Choose Disable Admin Notices? =
-* **Declutter Your Workspace:** Remove distracting "nag" screens and promotional banners.
+= Why Choose Notice Tracker? =
+* **Declutter Your Workspace:** Move noisy admin notices out of the dashboard and into a dedicated popup.
 * **Improve Productivity:** Focus on your content instead of closing endless alert boxes.
-* **Customizable Control:** Don’t just block everything - choose exactly what you see and where you see it.
-* **Lightweight & Fast:** Optimized code ensures your dashboard stays snappy while remaining distraction-free.
+* **Granular Control:** Configure every notice category separately — popup, hide, or leave alone.
+* **Lightweight & Fast:** Admin-only by design. Zero overhead on the front end.
 
 
-= Key Features for a Cleaner WordPress Admin =
-* **Global or Selective Hiding:** Disable all admin notices globally or pick and choose specific notifications to hide.
-* **Compact Notification Bar:** Instead of giant boxes, move all alerts into a single, clean, compact line at the top of your screen.
-* **Admin Bar Integration:** Keep your workspace 100% clear by moving all notifications into a dedicated menu in the WordPress admin bar.
-* **Disable Update Alerts:** Gain total control over your versioning by disabling WordPress core update notifications, as well as plugin and theme update alerts.
-* **Block Promotional Redirects:** Stop plugins from automatically redirecting you to "Welcome" or "Pro" sales pages after an update.
-* **Hidden Notice Archive:** Never miss a critical message. Access all hidden notifications at any time directly from the plugin dashboard.
-* **One-Click Restore:** Made a mistake? Reset your settings or restore hidden notices instantly.
+= Key Features =
+* **Capture & Centralize:** Admin notices fired through `admin_notices`, `network_admin_notices`, `user_admin_notices`, and `all_admin_notices` are captured into a single popup.
+* **Per-Type Rules:** Configure each of the six notice categories (success, error, warning, info, system, non-standard) to either show in the popup, hide completely, or leave on the dashboard as usual.
+* **Admin Bar Counter:** A "Notices" item appears in the WordPress admin bar with a live unread counter and a quick preview of your most recent notices.
+* **Three Popup Styles:** Pick between Slide from Right (default), Modal Popup (centered), or Slide Background Panel.
+* **Per-User Visibility:** Show the tracker to everyone, hide it from everyone, restrict it to a chosen list of users, or hide it from a chosen list.
+* **Mark as Read & Dismiss:** Mark notices read individually or in bulk, or dismiss them entirely. Read state is per-user, so each admin keeps their own view.
+* **Auto-Expire:** Notices older than a configurable number of days (default 30, range 1–365) are removed automatically by a daily cron job.
+* **Privacy-First:** All notices are stored locally in your WordPress database. No external services, no tracking, no phone-home.
 
 
 = Experience a Distraction-Free WordPress Workflow =
@@ -56,8 +57,8 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 
 
-= Built with Trust, Backed by Us 🚀 =
-**Notice Tracker** is developed by **Dotnix**, a trusted WordPress marketplace known for building high-performance and reliable tools that simplify website management for thousands of users worldwide. 
+= About =
+**Notice Tracker** is developed and maintained by Abdur Rahman Emon. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
 
 
 == Installation ==
