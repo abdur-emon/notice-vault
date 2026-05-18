@@ -78,21 +78,26 @@ class Notice_Classifier {
 	/**
 	 * Check if notice is a WordPress system notice.
 	 *
+	 * Matches only against known core CSS classes so that any third-party
+	 * notice text that happens to contain the word "WordPress" is not
+	 * mis-classified as a system notice (which would deny the user the
+	 * "Hide completely" option that other notice buckets get).
+	 *
 	 * @since 1.0.0
 	 * @param string $html HTML content.
 	 * @return bool
 	 */
 	private static function is_system_notice( $html ) {
-		// WordPress system notices often contain specific patterns.
-		$system_patterns = array(
-			'WordPress',
-			'wp-core-ui',
+		$system_classes = array(
 			'update-nag',
 			'update-message',
+			'update-core-notice',
+			'plugin-update-tr',
+			'theme-update-message',
 		);
 
-		foreach ( $system_patterns as $pattern ) {
-			if ( stripos( $html, $pattern ) !== false ) {
+		foreach ( $system_classes as $class ) {
+			if ( self::contains_class( $html, $class ) ) {
 				return true;
 			}
 		}

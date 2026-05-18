@@ -179,11 +179,15 @@
 						$('.wpnm-empty-state').show();
 					}
 
-					NoticePopup.updateCount(response.data.count);
+					if (response.success && response.data) {
+						// In-popup badge tracks unread total (independent of active filter).
+						NoticePopup.updateCount(response.data.unread_total);
+						NoticePopup.updateToolbarCount(response.data.unread_total);
+					}
 				},
 				error: function () {
 					$('.wpnm-loading').hide();
-					alert(wpnmPopup.i18n.error);
+					NoticePopup.showToast(wpnmPopup.i18n.error, 'error');
 				}
 			});
 		},
@@ -202,35 +206,58 @@
 		},
 
 		/**
-		 * Create notice item HTML
+		 * Create notice item HTML.
+		 *
+		 * Notice content is appended via .text() so any literal <, >, & in the
+		 * stripped notice copy can never be re-interpreted as HTML.
 		 */
 		createNoticeItem: function (notice) {
 			const readClass = notice.is_read ? 'wpnm-notice-read' : '';
 			const typeClass = 'wpnm-notice-' + notice.type;
 			const timeAgo = NoticePopup.timeAgo(notice.created_at);
+			const i18n = wpnmPopup.i18n || {};
 
-			return $('<div>')
+			const $item = $('<div>')
 				.addClass('wpnm-notice-item ' + typeClass + ' ' + readClass)
-				.attr('data-notice-id', notice.id)
-				.html(
-					'<div class="wpnm-notice-header">' +
-					'<div class="wpnm-notice-type">' +
-					'<span class="dashicons ' + notice.icon + '"></span>' +
-					notice.type +
-					'</div>' +
-					'<div class="wpnm-notice-actions">' +
-					(!notice.is_read ? '<button class="wpnm-notice-action wpnm-mark-read" data-notice-id="' + notice.id + '" title="Mark as read" aria-label="Mark as read"><span class="dashicons dashicons-yes"></span></button>' : '') +
-					'<button class="wpnm-notice-action wpnm-dismiss" data-notice-id="' + notice.id + '" title="Dismiss" aria-label="Dismiss notice"><span class="dashicons dashicons-no-alt"></span></button>' +
-					'</div>' +
-					'</div>' +
-					'<div class="wpnm-notice-content">' + notice.content + '</div>' +
-					'<div class="wpnm-notice-meta">' +
-					'<div class="wpnm-notice-time">' +
-					'<span class="dashicons dashicons-clock"></span>' +
-					timeAgo +
-					'</div>' +
-					'</div>'
+				.attr('data-notice-id', notice.id);
+
+			const $header = $('<div class="wpnm-notice-header">');
+			$header.append(
+				$('<div class="wpnm-notice-type">')
+					.append($('<span class="dashicons">').addClass(notice.icon).attr('aria-hidden', 'true'))
+					.append(document.createTextNode(' ' + notice.type))
+			);
+
+			const $actions = $('<div class="wpnm-notice-actions">');
+			if (!notice.is_read) {
+				$actions.append(
+					$('<button type="button" class="wpnm-notice-action wpnm-mark-read">')
+						.attr('data-notice-id', notice.id)
+						.attr('title', i18n.markAsRead || 'Mark as read')
+						.attr('aria-label', i18n.markAsRead || 'Mark as read')
+						.append('<span class="dashicons dashicons-yes" aria-hidden="true"></span>')
 				);
+			}
+			$actions.append(
+				$('<button type="button" class="wpnm-notice-action wpnm-dismiss">')
+					.attr('data-notice-id', notice.id)
+					.attr('title', i18n.dismiss || 'Dismiss')
+					.attr('aria-label', i18n.dismissNotice || 'Dismiss notice')
+					.append('<span class="dashicons dashicons-no-alt" aria-hidden="true"></span>')
+			);
+			$header.append($actions);
+
+			$item.append($header);
+			$item.append($('<div class="wpnm-notice-content">').text(notice.content || ''));
+			$item.append(
+				$('<div class="wpnm-notice-meta">').append(
+					$('<div class="wpnm-notice-time">')
+						.append('<span class="dashicons dashicons-clock" aria-hidden="true"></span>')
+						.append(document.createTextNode(' ' + timeAgo))
+				)
+			);
+
+			return $item;
 		},
 
 		/**
@@ -249,7 +276,7 @@
 					if (response.success) {
 						$('[data-notice-id="' + noticeId + '"]').addClass('wpnm-notice-read');
 						$('[data-notice-id="' + noticeId + '"] .wpnm-mark-read').remove();
-						NoticePopup.updateToolbarCount(response.data.count);
+						NoticePopup.updateToolbarCount(response.data.unread_total);
 					}
 				}
 			});
@@ -277,7 +304,7 @@
 								}
 							});
 						});
-						NoticePopup.updateToolbarCount(response.data.count);
+						NoticePopup.updateToolbarCount(response.data.unread_total);
 					}
 				}
 			});
@@ -298,7 +325,7 @@
 					if (response.success) {
 						$('.wpnm-notice-item').addClass('wpnm-notice-read');
 						$('.wpnm-mark-read').remove();
-						NoticePopup.updateToolbarCount(0);
+						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
 						NoticePopup.showToast(response.data.message || wpnmPopup.i18n.markAllRead);
 					}
 				}
@@ -321,7 +348,7 @@
 						$('#wpnm-notices-list').empty();
 						$('.wpnm-empty-state').show();
 						$('.wpnm-notices-list').hide();
-						NoticePopup.updateToolbarCount(0);
+						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
 						NoticePopup.showToast(response.data.message || wpnmPopup.i18n.clearAll);
 					}
 				}
@@ -339,28 +366,38 @@
 		 * Update toolbar count
 		 */
 		updateToolbarCount: function (count) {
-			if (count > 0) {
-				$('#wp-admin-bar-wpnm-notices .ab-label').html('Notices (' + count + ')');
-				$('.wpnm-count-badge').text(count).show();
+			const i18n = wpnmPopup.i18n || {};
+			const $label = $('#wp-admin-bar-wpnm-notices .ab-label');
+			const num = parseInt(count, 10) || 0;
+
+			if (num > 0) {
+				const tmpl = i18n.noticesWithCount || 'Notices (%d)';
+				$label.text(tmpl.replace('%d', num));
+				$('.wpnm-count-badge').text(num).show();
 			} else {
-				$('#wp-admin-bar-wpnm-notices .ab-label').text('Notices');
+				$label.text(i18n.notices || 'Notices');
 				$('.wpnm-count-badge').hide();
 			}
-			this.updateCount(count);
+			this.updateCount(num);
 		},
 
 		/**
-		 * Time ago helper
+		 * Time ago helper (translatable via wpnmPopup.i18n).
 		 */
 		timeAgo: function (datetime) {
+			const i18n = wpnmPopup.i18n || {};
 			const now = new Date();
 			const past = new Date(datetime);
 			const seconds = Math.floor((now - past) / 1000);
+			const sprintf = function (tmpl, n) {
+				return (tmpl || '').replace('%d', n);
+			};
 
-			if (seconds < 60) return 'Just now';
-			if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
-			if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
-			if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
+			if (isNaN(past.getTime())) return '';
+			if (seconds < 60) return i18n.justNow || 'Just now';
+			if (seconds < 3600) return sprintf(i18n.minutesAgo, Math.floor(seconds / 60));
+			if (seconds < 86400) return sprintf(i18n.hoursAgo, Math.floor(seconds / 3600));
+			if (seconds < 604800) return sprintf(i18n.daysAgo, Math.floor(seconds / 86400));
 			return past.toLocaleDateString();
 		},
 

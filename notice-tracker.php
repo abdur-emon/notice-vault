@@ -57,6 +57,22 @@ function wpnm_deactivate_plugin() {
 register_deactivation_hook( __FILE__, 'wpnm_deactivate_plugin' );
 
 /**
+ * Load plugin textdomain.
+ *
+ * WordPress 4.6+ auto-loads translations for plugins hosted on WordPress.org,
+ * but we still register explicitly so self-hosted copies and bundled .mo files
+ * in /languages/ resolve correctly.
+ */
+function wpnm_load_textdomain() {
+	load_plugin_textdomain(
+		'notice-tracker',
+		false,
+		dirname( WPNM_PLUGIN_BASENAME ) . '/languages'
+	);
+}
+add_action( 'init', 'wpnm_load_textdomain' );
+
+/**
  * Initialize Plugin
  */
 function wpnm_init_plugin() {

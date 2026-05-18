@@ -72,8 +72,8 @@ class Notice_Storage {
 		$notices[ $notice_id ] = $notice;
 
 		// Limit to max notices (FIFO).
-		if ( count( $notices ) > $this->MAX_NOTICES ) {
-			$notices = array_slice( $notices, -$this->MAX_NOTICES, null, true );
+		if ( count( $notices ) > self::MAX_NOTICES ) {
+			$notices = array_slice( $notices, -self::MAX_NOTICES, null, true );
 		}
 
 		// Save to database.

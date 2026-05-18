@@ -51,7 +51,7 @@ class Cleanup {
 	 * @return void
 	 */
 	public static function cleanup_expired_notices() {
-		Notice_Storage::clean_expired();
+		( new Notice_Storage() )->clean_expired();
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Cleanup {
 	 * @return bool Success.
 	 */
 	public static function clear_all_notices() {
-		return Notice_Storage::delete_all();
+		return ( new Notice_Storage() )->delete_all();
 	}
 }
 

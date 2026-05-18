@@ -93,7 +93,7 @@ Yes! You can configure visibility settings to show/hide the notice tracker for s
 
 = Does this work with multisite? =
 
-Yes, Notice Tracker is fully compatible with WordPress multisite installations.
+Notice Tracker runs per-site on a multisite network — activate it on each subsite you want to manage. Network-wide automatic activation and shared notice storage across the network are not supported in 1.0.0.
 
 = Will this slow down my site? =
 
@@ -111,15 +111,6 @@ By default, notices are automatically deleted after 30 days. You can customize t
 
 Yes! Notice Tracker is fully translation-ready with a .pot file included.
 
-
-
-== Screenshots ==
-
-1. Admin toolbar with notice counter
-2. Popup interface showing notices
-3. Settings page - Notice type configuration
-4. Settings page - User visibility controls
-5. Clean dashboard with notices hidden
 
 
 == Changelog ==

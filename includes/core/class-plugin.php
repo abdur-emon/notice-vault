@@ -150,6 +150,8 @@ class Plugin
 		}
 
 		// Initialize Notice Capture.
+		// NOTE: all_admin_notices fires *after* the three specialized hooks, so its
+		// buffer is independent and must be bracketed separately.
 		$notice_capture = new \Notice_Tracker\Notices\Notice_Capture( $this->storage );
 		$this->loader->add_action( 'admin_notices', $notice_capture, 'start_capture', 0 );
 		$this->loader->add_action( 'admin_notices', $notice_capture, 'end_capture', 9999 );
@@ -157,6 +159,8 @@ class Plugin
 		$this->loader->add_action( 'network_admin_notices', $notice_capture, 'end_capture', 9999 );
 		$this->loader->add_action( 'user_admin_notices', $notice_capture, 'start_capture', 0 );
 		$this->loader->add_action( 'user_admin_notices', $notice_capture, 'end_capture', 9999 );
+		$this->loader->add_action( 'all_admin_notices', $notice_capture, 'start_capture', 0 );
+		$this->loader->add_action( 'all_admin_notices', $notice_capture, 'end_capture', 9999 );
 	}
 
 	/**
@@ -190,5 +194,16 @@ class Plugin
 	public function get_version()
 	{
 		return $this->version;
+	}
+
+	/**
+	 * Get the shared Notice_Storage instance.
+	 *
+	 * @since 1.0.0
+	 * @return \Notice_Tracker\Notices\Notice_Storage
+	 */
+	public function get_storage()
+	{
+		return $this->storage;
 	}
 }

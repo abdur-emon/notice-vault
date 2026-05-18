@@ -44,8 +44,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="wpnm-stats-box">
 		<h3><?php esc_html_e( 'Statistics', 'notice-tracker' ); ?></h3>
 		<?php
-		$wpnm_total_notices  = count( \Notice_Tracker\Notices\Notice_Storage::get_all() );
-		$wpnm_unread_notices = \Notice_Tracker\Notices\Notice_Storage::get_unread_count();
+		$wpnm_storage        = \Notice_Tracker\Core\Plugin::get_instance()->get_storage();
+		$wpnm_total_notices  = count( $wpnm_storage->get_all() );
+		$wpnm_unread_notices = $wpnm_storage->get_unread_count();
 		?>
 		<p>
 			<strong><?php esc_html_e( 'Total Notices:', 'notice-tracker' ); ?></strong>
