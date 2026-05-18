@@ -76,18 +76,22 @@ class Plugin
 	{
 		$this->version = WPNM_VERSION;
 		$this->loader  = new Loader();
+
+		// Run pending migrations BEFORE instantiating storage so the table
+		// definitely exists. Admin-only — front-end requests never need this.
+		if ( is_admin() ) {
+			Upgrader::maybe_upgrade();
+		}
+
 		$this->storage = new \Notice_Tracker\Notices\Notice_Storage();
 
 		$this->load_dependencies();
 		$this->define_admin_hooks();
 		$this->define_notice_hooks();
 
-		// Initialize cleanup cron and upgrader (admin only to avoid frontend overhead).
+		// Initialize cleanup cron (admin only to avoid frontend overhead).
 		if (is_admin()) {
 			Cleanup::init();
-			// Register the one-shot migrator directly because the Loader expects
-			// instance-method callbacks and Upgrader::maybe_upgrade is static.
-			add_action( 'admin_init', array( Upgrader::class, 'maybe_upgrade' ) );
 		}
 	}
 
