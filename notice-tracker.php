@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Notice Tracker
- * Plugin URI:        https://github.com/abdur-emon/Notice-Tracker
+ * Plugin URI:        https://github.com/abdur-emon/notice-tracker
  * Description:       Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.
  * Version:           1.0.0
  * Requires at least: 5.0

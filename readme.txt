@@ -1,10 +1,10 @@
 === Notice Tracker ===
 Contributors: abduremon, mdismail-cse
-Tags: Admin notices, hide admin notices, hide admin notifications, dashboard notices, notices
+Tags: admin notices, dashboard, notifications, declutter, productivity
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 6.9.4
 Requires PHP: 7.2
-Stable tag: 1.0.0
+Stable tag: trunk
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,22 @@ By default, notices are automatically deleted after 30 days. You can customize t
 
 Yes! Notice Tracker is fully translation-ready with a .pot file included.
 
+= What happens immediately after I activate the plugin? =
+
+By default, every captured notice category (success, error, warning, info, system, non-standard) is set to **"Show in popup & hide from dashboard"**. The moment the plugin is active, admin notices from every plugin and theme will move from your dashboard into the Notices popup instead of appearing inline. You can change this per category at **Notice Tracker → Settings** — choose **"Hide completely"** to drop the notice entirely, or **"Do nothing"** to let it render on the dashboard as it normally would.
+
+= Why can't I "Hide completely" WordPress system notices? =
+
+WordPress system notices (the update nag, plugin/theme update messages, core update alerts) are intentionally restricted to **"Show in popup"** or **"Do nothing"**. Hiding them outright would risk masking critical security or compatibility messages from WordPress itself. If you want them gone from your dashboard, the popup option keeps them accessible without cluttering the screen.
+
+= Are there developer hooks I can use to extend Notice Tracker? =
+
+Yes. The plugin fires the following extension points:
+
+* `wpnm_notice_types` (filter) — register custom notice categories.
+* `wpnm_before_store_notice` (filter) — mutate or veto a notice before it is persisted.
+* `wpnm_notice_stored` (action) — react after a notice has been stored, e.g. for logging.
+
 
 == Screenshots ==
 
@@ -121,17 +137,18 @@ Yes! Notice Tracker is fully translation-ready with a .pot file included.
 
 == Changelog ==
 
-= 1.0.0 (2026-03-05) =
-* Initial release
-* Notice capture system
-* Admin toolbar integration
-* Popup interface with 3 styles
-* Settings page
-* User visibility controls
-* Auto-expire functionality
+= 1.0.0 - 2026-05-18 =
+* Initial release.
+* Notice capture system covering `admin_notices`, `network_admin_notices`, `user_admin_notices`, and `all_admin_notices`.
+* Admin toolbar counter with quick-preview submenu.
+* Popup interface with three display styles (Slide from Right, Modal, Slide Background Panel).
+* Settings page with per-type rules, per-user visibility controls, and configurable auto-expire window.
+* AJAX-powered mark-as-read and dismiss actions, per-user scoped.
+* Daily cleanup cron for expired notices.
+* Developer hooks: `wpnm_notice_types`, `wpnm_before_store_notice`, `wpnm_notice_stored`.
 
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-* [Major Update] Must Update.
+Initial release.
