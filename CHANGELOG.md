@@ -5,7 +5,7 @@ All notable changes to Quietboard Notice Manager will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-03-05
+## [1.0.0] - 2026-05-18
 
 ### Added
 - Initial release of Quietboard Notice Manager
@@ -38,11 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Output escaping
   - Direct file access prevention
 - Translation ready with .pot file
-- Comprehensive documentation:
-  - README.md
-  - ARCHITECTURE.md
-  - SECURITY.md
-  - DEVELOPMENT_TRACKING.md
+- README.md for GitHub browsers (the wp.org listing is rendered from `readme.txt`)
 - Uninstall script for clean removal
 - .htaccess for security
 - Index.php files in all directories
@@ -95,5 +91,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **1.0.0** - Initial Release (2026-03-05)
+- **1.0.0** - Initial Release (2026-05-18)
 
