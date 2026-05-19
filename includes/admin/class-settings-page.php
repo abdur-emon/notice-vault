@@ -4,11 +4,11 @@
  *
  * Handles plugin settings page.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Admin
  */
 
-namespace Notice_Tracker\Admin;
+namespace Quietboard_Notice_Manager\Admin;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -30,7 +30,7 @@ class Settings_Page
 	 *
 	 * @var string
 	 */
-	const PAGE_SLUG = 'notice-tracker';
+	const PAGE_SLUG = 'quietboard-notice-manager';
 
 	/**
 	 * Option group name.
@@ -53,14 +53,12 @@ class Settings_Page
 	 * @return void
 	 */
 	public function add_settings_page() {
-		add_menu_page(
-			__( 'Notice Tracker Settings', 'notice-tracker' ),
-			__( 'Notice Tracker', 'notice-tracker' ),
+		add_options_page(
+			__( 'Quietboard Notice Manager Settings', 'quietboard-notice-manager' ),
+			__( 'Quietboard Notice Manager', 'quietboard-notice-manager' ),
 			'manage_options',
 			self::PAGE_SLUG,
-			array( $this, 'render_settings_page' ),
-			'dashicons-bell',
-			25
+			array( $this, 'render_settings_page' )
 		);
 	}
 
@@ -83,7 +81,7 @@ class Settings_Page
 		// Notice Type Settings Section.
 		add_settings_section(
 			'wpnm_notice_types',
-			__( 'Notice Type Settings', 'notice-tracker' ),
+			__( 'Notice Type Settings', 'quietboard-notice-manager' ),
 			array( $this, 'render_notice_types_section' ),
 			self::PAGE_SLUG
 		);
@@ -91,7 +89,7 @@ class Settings_Page
 		// Popup Settings Section.
 		add_settings_section(
 			'wpnm_popup_settings',
-			__( 'Popup Settings', 'notice-tracker' ),
+			__( 'Popup Settings', 'quietboard-notice-manager' ),
 			array( $this, 'render_popup_section' ),
 			self::PAGE_SLUG
 		);
@@ -99,7 +97,7 @@ class Settings_Page
 		// User Visibility Section.
 		add_settings_section(
 			'wpnm_visibility',
-			__( 'User Visibility Settings', 'notice-tracker' ),
+			__( 'User Visibility Settings', 'quietboard-notice-manager' ),
 			array( $this, 'render_visibility_section' ),
 			self::PAGE_SLUG
 		);
@@ -107,7 +105,7 @@ class Settings_Page
 		// Advanced Settings Section.
 		add_settings_section(
 			'wpnm_advanced',
-			__( 'Advanced Settings', 'notice-tracker' ),
+			__( 'Advanced Settings', 'quietboard-notice-manager' ),
 			array( $this, 'render_advanced_section' ),
 			self::PAGE_SLUG
 		);
@@ -125,7 +123,7 @@ class Settings_Page
 	private function register_fields()
 	{
 		// Notice type fields — filtered list lets third parties register custom categories.
-		$notice_types = \Notice_Tracker\Notices\Notice_Classifier::get_types();
+		$notice_types = \Quietboard_Notice_Manager\Notices\Notice_Classifier::get_types();
 
 		foreach ($notice_types as $type => $label) {
 			add_settings_field(
@@ -141,7 +139,7 @@ class Settings_Page
 		// Popup style field.
 		add_settings_field(
 			'popup_style',
-			__( 'Popup Style', 'notice-tracker' ),
+			__( 'Popup Style', 'quietboard-notice-manager' ),
 			array( $this, 'render_popup_style_field' ),
 			self::PAGE_SLUG,
 			'wpnm_popup_settings'
@@ -150,7 +148,7 @@ class Settings_Page
 		// Visibility mode field.
 		add_settings_field(
 			'visibility_mode',
-			__( 'Visibility Mode', 'notice-tracker' ),
+			__( 'Visibility Mode', 'quietboard-notice-manager' ),
 			array( $this, 'render_visibility_mode_field' ),
 			self::PAGE_SLUG,
 			'wpnm_visibility'
@@ -159,7 +157,7 @@ class Settings_Page
 		// Visibility users field.
 		add_settings_field(
 			'visibility_users',
-			__( 'Select Users', 'notice-tracker' ),
+			__( 'Select Users', 'quietboard-notice-manager' ),
 			array( $this, 'render_visibility_users_field' ),
 			self::PAGE_SLUG,
 			'wpnm_visibility'
@@ -168,7 +166,7 @@ class Settings_Page
 		// Auto expire days field.
 		add_settings_field(
 			'auto_expire_days',
-			__( 'Auto-expire Notices After', 'notice-tracker' ),
+			__( 'Auto-expire Notices After', 'quietboard-notice-manager' ),
 			array( $this, 'render_auto_expire_field' ),
 			self::PAGE_SLUG,
 			'wpnm_advanced'
@@ -183,7 +181,7 @@ class Settings_Page
 	 */
 	public function render_settings_page() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Unauthorized access', 'notice-tracker' ) );
+			wp_die( esc_html__( 'Unauthorized access', 'quietboard-notice-manager' ) );
 		}
 
 		include WPNM_PLUGIN_DIR . 'templates/settings-page.php';
@@ -196,7 +194,7 @@ class Settings_Page
 	 * @return void
 	 */
 	public function render_notice_types_section() {
-		echo '<p>' . esc_html__( 'Configure how each notice type should be handled.', 'notice-tracker' ) . '</p>';
+		echo '<p>' . esc_html__( 'Configure how each notice type should be handled.', 'quietboard-notice-manager' ) . '</p>';
 	}
 
 	/**
@@ -206,7 +204,7 @@ class Settings_Page
 	 * @return void
 	 */
 	public function render_popup_section() {
-		echo '<p>' . esc_html__( 'Customize the popup appearance and behavior.', 'notice-tracker' ) . '</p>';
+		echo '<p>' . esc_html__( 'Customize the popup appearance and behavior.', 'quietboard-notice-manager' ) . '</p>';
 	}
 
 	/**
@@ -216,7 +214,7 @@ class Settings_Page
 	 * @return void
 	 */
 	public function render_visibility_section() {
-		echo '<p>' . esc_html__( 'Control which users can see the notice tracker.', 'notice-tracker' ) . '</p>';
+		echo '<p>' . esc_html__( 'Control which users can see Quietboard Notice Manager.', 'quietboard-notice-manager' ) . '</p>';
 	}
 
 	/**
@@ -226,7 +224,7 @@ class Settings_Page
 	 * @return void
 	 */
 	public function render_advanced_section() {
-		echo '<p>' . esc_html__( 'Advanced plugin settings.', 'notice-tracker' ) . '</p>';
+		echo '<p>' . esc_html__( 'Advanced plugin settings.', 'quietboard-notice-manager' ) . '</p>';
 	}
 
 	/**
@@ -243,9 +241,9 @@ class Settings_Page
 		$value = isset($settings['notice_' . $type]) ? $settings['notice_' . $type] : 'popup';
 
 		$options = array(
-			'popup'   => __( 'Show in popup & hide from dashboard', 'notice-tracker' ),
-			'hide'    => __( 'Hide completely', 'notice-tracker' ),
-			'nothing' => __( 'Do nothing (leave in dashboard)', 'notice-tracker' ),
+			'popup'   => __( 'Show in popup & hide from dashboard', 'quietboard-notice-manager' ),
+			'hide'    => __( 'Hide completely', 'quietboard-notice-manager' ),
+			'nothing' => __( 'Do nothing (leave in dashboard)', 'quietboard-notice-manager' ),
 		);
 
 		// System notices only have popup or nothing.
@@ -277,9 +275,9 @@ class Settings_Page
 		$value = isset($settings['popup_style']) ? $settings['popup_style'] : 'slide-right';
 
 		$options = array(
-			'slide-right' => __( 'Slide from Right', 'notice-tracker' ),
-			'modal'       => __( 'Modal Popup (Centered)', 'notice-tracker' ),
-			'panel'       => __( 'Slide Background Panel', 'notice-tracker' ),
+			'slide-right' => __( 'Slide from Right', 'quietboard-notice-manager' ),
+			'modal'       => __( 'Modal Popup (Centered)', 'quietboard-notice-manager' ),
+			'panel'       => __( 'Slide Background Panel', 'quietboard-notice-manager' ),
 		);
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[popup_style]') . '" class="regular-text">';
@@ -306,10 +304,10 @@ class Settings_Page
 		$value = isset($settings['visibility_mode']) ? $settings['visibility_mode'] : 'show-all';
 
 		$options = array(
-			'show-all'      => __( 'Show to all users', 'notice-tracker' ),
-			'hide-all'      => __( 'Hide from all users', 'notice-tracker' ),
-			'hide-selected' => __( 'Hide from selected users only', 'notice-tracker' ),
-			'show-selected' => __( 'Show to selected users only', 'notice-tracker' ),
+			'show-all'      => __( 'Show to all users', 'quietboard-notice-manager' ),
+			'hide-all'      => __( 'Hide from all users', 'quietboard-notice-manager' ),
+			'hide-selected' => __( 'Hide from selected users only', 'quietboard-notice-manager' ),
+			'show-selected' => __( 'Show to selected users only', 'quietboard-notice-manager' ),
 		);
 
 		echo '<select name="' . esc_attr(self::OPTION_NAME . '[visibility_mode]') . '" id="wpnm-visibility-mode" class="regular-text">';
@@ -348,7 +346,7 @@ class Settings_Page
 			}
 		}
 		echo '</select>';
-		echo '<p class="description">' . esc_html__( 'Search and select users.', 'notice-tracker' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Search and select users.', 'quietboard-notice-manager' ) . '</p>';
 	}
 
 	/**
@@ -366,9 +364,9 @@ class Settings_Page
 			'<input type="number" name="%s" value="%s" min="1" max="365" class="small-text"> %s',
 			esc_attr( self::OPTION_NAME . '[auto_expire_days]' ),
 			esc_attr( $value ),
-			esc_html__( 'days', 'notice-tracker' )
+			esc_html__( 'days', 'quietboard-notice-manager' )
 		);
-		echo '<p class="description">' . esc_html__( 'Notices older than this will be automatically deleted.', 'notice-tracker' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Notices older than this will be automatically deleted.', 'quietboard-notice-manager' ) . '</p>';
 	}
 
 	/**
@@ -384,7 +382,7 @@ class Settings_Page
 
 		// Sanitize notice type settings — uses the filtered type list so custom buckets
 		// registered via `wpnm_notice_types` are validated too.
-		$notice_types = array_keys( \Notice_Tracker\Notices\Notice_Classifier::get_types() );
+		$notice_types = array_keys( \Quietboard_Notice_Manager\Notices\Notice_Classifier::get_types() );
 		foreach ($notice_types as $type) {
 			$key = 'notice_' . $type;
 			if (isset($input[$key])) {
@@ -442,7 +440,7 @@ class Settings_Page
 	public function enqueue_assets($hook)
 	{
 		// Only load on our settings page.
-		if ( 'toplevel_page_' . self::PAGE_SLUG !== $hook ) {
+		if ( 'settings_page_' . self::PAGE_SLUG !== $hook ) {
 			return;
 		}
 
@@ -482,7 +480,7 @@ class Settings_Page
 	 * @return array Modified array of plugin action links.
 	 */
 	public function add_plugin_action_links( $links ) {
-		$settings_link = '<a href="' . admin_url( 'admin.php?page=' . self::PAGE_SLUG ) . '">' . __( 'Settings', 'notice-tracker' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( menu_page_url( self::PAGE_SLUG, false ) ) . '">' . __( 'Settings', 'quietboard-notice-manager' ) . '</a>';
 		array_unshift( $links, $settings_link );
 		return $links;
 	}
@@ -497,7 +495,7 @@ class Settings_Page
 		check_ajax_referer( 'wpnm_admin_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 

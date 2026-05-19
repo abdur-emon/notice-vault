@@ -4,11 +4,11 @@
  *
  * Manages all hooks (actions and filters) for the plugin.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Core
  */
 
-namespace Notice_Tracker\Core;
+namespace Quietboard_Notice_Manager\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

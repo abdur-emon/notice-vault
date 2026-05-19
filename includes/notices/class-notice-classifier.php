@@ -4,11 +4,11 @@
  *
  * Classifies admin notices by type.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Notices
  */
 
-namespace Notice_Tracker\Notices;
+namespace Quietboard_Notice_Manager\Notices;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -36,12 +36,12 @@ class Notice_Classifier {
 	 */
 	public static function get_types() {
 		$types = array(
-			'success' => __( 'Success Notices', 'notice-tracker' ),
-			'error'   => __( 'Error Notices', 'notice-tracker' ),
-			'warning' => __( 'Warning Notices', 'notice-tracker' ),
-			'info'    => __( 'Info Notices', 'notice-tracker' ),
-			'other'   => __( 'Non-standard Notices', 'notice-tracker' ),
-			'system'  => __( 'WordPress System Notices', 'notice-tracker' ),
+			'success' => __( 'Success Notices', 'quietboard-notice-manager' ),
+			'error'   => __( 'Error Notices', 'quietboard-notice-manager' ),
+			'warning' => __( 'Warning Notices', 'quietboard-notice-manager' ),
+			'info'    => __( 'Info Notices', 'quietboard-notice-manager' ),
+			'other'   => __( 'Non-standard Notices', 'quietboard-notice-manager' ),
+			'system'  => __( 'WordPress System Notices', 'quietboard-notice-manager' ),
 		);
 
 		/**

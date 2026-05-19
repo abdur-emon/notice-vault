@@ -11,13 +11,13 @@
  * Notice_Popup, Admin_Toolbar, Cleanup, templates/settings-page.php —
  * works unchanged.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Notices
  */
 
-namespace Notice_Tracker\Notices;
+namespace Quietboard_Notice_Manager\Notices;
 
-use Notice_Tracker\Core\Upgrader;
+use Quietboard_Notice_Manager\Core\Upgrader;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

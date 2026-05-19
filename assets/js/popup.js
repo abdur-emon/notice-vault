@@ -1,7 +1,7 @@
 /**
- * Notice Tracker - Popup JavaScript
+ * Quietboard Notice Manager - Popup JavaScript
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  */
 
 (function ($) {

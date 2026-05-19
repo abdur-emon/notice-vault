@@ -4,14 +4,14 @@
  *
  * Handles popup UI rendering and AJAX operations.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Admin
  */
 
-namespace Notice_Tracker\Admin;
+namespace Quietboard_Notice_Manager\Admin;
 
-use Notice_Tracker\Notices\Notice_Storage;
-use Notice_Tracker\Notices\Notice_Classifier;
+use Quietboard_Notice_Manager\Notices\Notice_Storage;
+use Quietboard_Notice_Manager\Notices\Notice_Classifier;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -31,14 +31,14 @@ class Notice_Popup
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Quietboard_Notice_Manager\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -51,7 +51,7 @@ class Notice_Popup
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
@@ -81,25 +81,25 @@ class Notice_Popup
 				'nonce'      => wp_create_nonce( 'wpnm_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n'       => array(
-					'noNotices'       => __( 'No notices to display', 'notice-tracker' ),
-					'markAllRead'     => __( 'Mark All as Read', 'notice-tracker' ),
-					'clearAll'        => __( 'Clear All', 'notice-tracker' ),
-					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'notice-tracker' ),
-					'loading'         => __( 'Loading...', 'notice-tracker' ),
-					'error'           => __( 'An error occurred', 'notice-tracker' ),
-					'markAsRead'      => __( 'Mark as read', 'notice-tracker' ),
-					'dismiss'         => __( 'Dismiss', 'notice-tracker' ),
-					'dismissNotice'   => __( 'Dismiss notice', 'notice-tracker' ),
-					'notices'         => __( 'Notices', 'notice-tracker' ),
+					'noNotices'       => __( 'No notices to display', 'quietboard-notice-manager' ),
+					'markAllRead'     => __( 'Mark All as Read', 'quietboard-notice-manager' ),
+					'clearAll'        => __( 'Clear All', 'quietboard-notice-manager' ),
+					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'quietboard-notice-manager' ),
+					'loading'         => __( 'Loading...', 'quietboard-notice-manager' ),
+					'error'           => __( 'An error occurred', 'quietboard-notice-manager' ),
+					'markAsRead'      => __( 'Mark as read', 'quietboard-notice-manager' ),
+					'dismiss'         => __( 'Dismiss', 'quietboard-notice-manager' ),
+					'dismissNotice'   => __( 'Dismiss notice', 'quietboard-notice-manager' ),
+					'notices'         => __( 'Notices', 'quietboard-notice-manager' ),
 					/* translators: %d: number of unread notices. */
-					'noticesWithCount' => __( 'Notices (%d)', 'notice-tracker' ),
-					'justNow'         => __( 'Just now', 'notice-tracker' ),
+					'noticesWithCount' => __( 'Notices (%d)', 'quietboard-notice-manager' ),
+					'justNow'         => __( 'Just now', 'quietboard-notice-manager' ),
 					/* translators: %d: number of minutes ago. */
-					'minutesAgo'      => __( '%d minutes ago', 'notice-tracker' ),
+					'minutesAgo'      => __( '%d minutes ago', 'quietboard-notice-manager' ),
 					/* translators: %d: number of hours ago. */
-					'hoursAgo'        => __( '%d hours ago', 'notice-tracker' ),
+					'hoursAgo'        => __( '%d hours ago', 'quietboard-notice-manager' ),
 					/* translators: %d: number of days ago. */
-					'daysAgo'         => __( '%d days ago', 'notice-tracker' ),
+					'daysAgo'         => __( '%d days ago', 'quietboard-notice-manager' ),
 				),
 			)
 		);
@@ -112,7 +112,7 @@ class Notice_Popup
 	 * @return void
 	 */
 	public function render_popup() {
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
@@ -143,14 +143,14 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -214,14 +214,14 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -229,7 +229,7 @@ class Notice_Popup
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if ( empty( $notice_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -239,13 +239,13 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message'      => __( 'Notice marked as read', 'notice-tracker' ),
+					'message'      => __( 'Notice marked as read', 'quietboard-notice-manager' ),
 					'count'        => $this->storage->get_unread_count(),
 					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'quietboard-notice-manager' ) ) );
 		}
 	}
 
@@ -260,14 +260,14 @@ class Notice_Popup
 		// Verify nonce.
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -275,7 +275,7 @@ class Notice_Popup
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if ( empty( $notice_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -285,13 +285,13 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message'      => __( 'Notice dismissed', 'notice-tracker' ),
+					'message'      => __( 'Notice dismissed', 'quietboard-notice-manager' ),
 					'count'        => $this->storage->get_unread_count(),
 					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'quietboard-notice-manager' ) ) );
 		}
 	}
 
@@ -305,14 +305,14 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
 		// Notices are user-scoped in storage, so 'read' is sufficient.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -321,7 +321,7 @@ class Notice_Popup
 		// mark_all_read returns false when there is nothing to mark; treat that as success.
 		wp_send_json_success(
 			array(
-				'message'      => __( 'All notices marked as read', 'notice-tracker' ),
+				'message'      => __( 'All notices marked as read', 'quietboard-notice-manager' ),
 				'count'        => 0,
 				'unread_total' => $this->storage->get_unread_count(),
 			)
@@ -338,14 +338,14 @@ class Notice_Popup
 	{
 		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
 
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
 		// Notices are user-scoped in storage, so 'read' is sufficient.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-tracker' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
 			return;
 		}
 
@@ -354,7 +354,7 @@ class Notice_Popup
 		// delete_all returns false when nothing changed; treat that as success.
 		wp_send_json_success(
 			array(
-				'message'      => __( 'All notices cleared', 'notice-tracker' ),
+				'message'      => __( 'All notices cleared', 'quietboard-notice-manager' ),
 				'count'        => 0,
 				'unread_total' => $this->storage->get_unread_count(),
 			)

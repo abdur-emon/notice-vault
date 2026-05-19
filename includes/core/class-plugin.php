@@ -4,11 +4,11 @@
  *
  * Main plugin orchestrator. Initializes all components.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Core
  */
 
-namespace Notice_Tracker\Core;
+namespace Quietboard_Notice_Manager\Core;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -49,7 +49,7 @@ class Plugin
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
 	 */
 	protected $storage;
 
@@ -83,7 +83,7 @@ class Plugin
 			Upgrader::maybe_upgrade();
 		}
 
-		$this->storage = new \Notice_Tracker\Notices\Notice_Storage();
+		$this->storage = new \Quietboard_Notice_Manager\Notices\Notice_Storage();
 
 		$this->load_dependencies();
 		$this->define_admin_hooks();
@@ -121,7 +121,7 @@ class Plugin
 		}
 
 		// Initialize Settings Page.
-		$settings_page = new \Notice_Tracker\Admin\Settings_Page();
+		$settings_page = new \Quietboard_Notice_Manager\Admin\Settings_Page();
 		$this->loader->add_action( 'admin_menu', $settings_page, 'add_settings_page' );
 		$this->loader->add_action( 'admin_init', $settings_page, 'register_settings' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $settings_page, 'enqueue_assets' );
@@ -129,7 +129,7 @@ class Plugin
 		$this->loader->add_filter( 'plugin_action_links_' . WPNM_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links' );
 
 		// Initialize Notice Popup.
-		$notice_popup = new \Notice_Tracker\Admin\Notice_Popup( $this->storage );
+		$notice_popup = new \Quietboard_Notice_Manager\Admin\Notice_Popup( $this->storage );
 		$this->loader->add_action( 'admin_enqueue_scripts', $notice_popup, 'enqueue_assets' );
 		$this->loader->add_action( 'admin_footer', $notice_popup, 'render_popup' );
 		$this->loader->add_action( 'wp_ajax_wpnm_get_notices', $notice_popup, 'ajax_get_notices' );
@@ -139,7 +139,7 @@ class Plugin
 		$this->loader->add_action( 'wp_ajax_wpnm_clear_all', $notice_popup, 'ajax_clear_all' );
 
 		// Initialize Admin Toolbar.
-		$admin_toolbar = new \Notice_Tracker\Toolbar\Admin_Toolbar( $this->storage );
+		$admin_toolbar = new \Quietboard_Notice_Manager\Toolbar\Admin_Toolbar( $this->storage );
 		$this->loader->add_action( 'admin_bar_menu', $admin_toolbar, 'add_toolbar_item', 999 );
 	}
 
@@ -159,7 +159,7 @@ class Plugin
 		// Initialize Notice Capture.
 		// NOTE: all_admin_notices fires *after* the three specialized hooks, so its
 		// buffer is independent and must be bracketed separately.
-		$notice_capture = new \Notice_Tracker\Notices\Notice_Capture( $this->storage );
+		$notice_capture = new \Quietboard_Notice_Manager\Notices\Notice_Capture( $this->storage );
 		$this->loader->add_action( 'admin_notices', $notice_capture, 'start_capture', 0 );
 		$this->loader->add_action( 'admin_notices', $notice_capture, 'end_capture', 9999 );
 		$this->loader->add_action( 'network_admin_notices', $notice_capture, 'start_capture', 0 );
@@ -207,7 +207,7 @@ class Plugin
 	 * Get the shared Notice_Storage instance.
 	 *
 	 * @since 1.0.0
-	 * @return \Notice_Tracker\Notices\Notice_Storage
+	 * @return \Quietboard_Notice_Manager\Notices\Notice_Storage
 	 */
 	public function get_storage()
 	{

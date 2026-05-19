@@ -4,13 +4,13 @@
  *
  * Captures admin notices using output buffering.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Notices
  */
 
-namespace Notice_Tracker\Notices;
+namespace Quietboard_Notice_Manager\Notices;
 
-use Notice_Tracker\Permissions\Visibility_Manager;
+use Quietboard_Notice_Manager\Permissions\Visibility_Manager;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,14 +29,14 @@ class Notice_Capture {
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Quietboard_Notice_Manager\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;

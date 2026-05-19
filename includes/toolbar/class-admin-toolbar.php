@@ -4,13 +4,13 @@
  *
  * Adds notice counter to WordPress admin bar.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Toolbar
  */
 
-namespace Notice_Tracker\Toolbar;
+namespace Quietboard_Notice_Manager\Toolbar;
 
-use Notice_Tracker\Notices\Notice_Storage;
+use Quietboard_Notice_Manager\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,14 +29,14 @@ class Admin_Toolbar {
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Notice_Tracker\Notices\Notice_Storage
+	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Notice_Tracker\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Quietboard_Notice_Manager\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -51,7 +51,7 @@ class Admin_Toolbar {
 	 */
 	public function add_toolbar_item( $wp_admin_bar ) {
 		// Only show to users who can see notices.
-		if ( ! \Notice_Tracker\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
@@ -69,7 +69,7 @@ class Admin_Toolbar {
 				'href'  => '#',
 				'meta'  => array(
 					'class' => 'wpnm-toolbar-item',
-					'title' => __( 'View Notices', 'notice-tracker' ),
+					'title' => __( 'View Notices', 'quietboard-notice-manager' ),
 				),
 			)
 		);
@@ -95,11 +95,11 @@ class Admin_Toolbar {
 				'<span class="wpnm-count-badge">%s</span>',
 				esc_html( $count )
 			);
-			$text = esc_html__( 'Notices', 'notice-tracker' );
+			$text = esc_html__( 'Notices', 'quietboard-notice-manager' );
 			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 		}
 
-		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'notice-tracker' ) . '</span>';
+		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'quietboard-notice-manager' ) . '</span>';
 	}
 
 	/**
@@ -139,7 +139,7 @@ class Admin_Toolbar {
 			array(
 				'parent' => 'wpnm-notices',
 				'id'     => 'wpnm-view-all',
-				'title'  => esc_html__( 'View All Notices', 'notice-tracker' ),
+				'title'  => esc_html__( 'View All Notices', 'quietboard-notice-manager' ),
 				'href'   => '#',
 				'meta'   => array(
 					'class' => 'wpnm-view-all',
@@ -167,7 +167,7 @@ class Admin_Toolbar {
 		}
 
 		// Get icon.
-		$icon_class = \Notice_Tracker\Notices\Notice_Classifier::get_icon( $notice['type'] );
+		$icon_class = \Quietboard_Notice_Manager\Notices\Notice_Classifier::get_icon( $notice['type'] );
 
 		return sprintf(
 			'<span class="dashicons %s"></span> %s',

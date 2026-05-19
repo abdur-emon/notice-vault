@@ -4,11 +4,11 @@
  *
  * Manages user visibility permissions.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Permissions
  */
 
-namespace Notice_Tracker\Permissions;
+namespace Quietboard_Notice_Manager\Permissions;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Visibility Manager Class
  *
- * Controls which users can see the notice tracker.
+ * Controls which users can see Quietboard Notice Manager.
  *
  * @since 1.0.0
  */
@@ -70,10 +70,10 @@ class Visibility_Manager {
 	 */
 	public static function get_mode_label( $mode ) {
 		$labels = array(
-			'show-all'      => __( 'Show to all users', 'notice-tracker' ),
-			'hide-all'      => __( 'Hide from all users', 'notice-tracker' ),
-			'hide-selected' => __( 'Hide from selected users', 'notice-tracker' ),
-			'show-selected' => __( 'Show to selected users', 'notice-tracker' ),
+			'show-all'      => __( 'Show to all users', 'quietboard-notice-manager' ),
+			'hide-all'      => __( 'Hide from all users', 'quietboard-notice-manager' ),
+			'hide-selected' => __( 'Hide from selected users', 'quietboard-notice-manager' ),
+			'show-selected' => __( 'Show to selected users', 'quietboard-notice-manager' ),
 		);
 
 		return isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['show-all'];

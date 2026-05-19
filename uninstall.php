@@ -4,7 +4,7 @@
  *
  * Runs when the plugin is uninstalled (deleted).
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  */
 
 // Exit if accessed directly.

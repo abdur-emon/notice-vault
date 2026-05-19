@@ -4,11 +4,11 @@
  *
  * PSR-4 compliant autoloader for the plugin.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Core
  */
 
-namespace Notice_Tracker\Core;
+namespace Quietboard_Notice_Manager\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,7 +29,7 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	private static $prefix = 'Notice_Tracker\\';
+	private static $prefix = 'Quietboard_Notice_Manager\\';
 
 	/**
 	 * Base directory for the namespace prefix.
@@ -67,7 +67,7 @@ class Autoloader {
 		$relative_class = substr( $class, $len );
 
 		// Convert namespace to directory structure.
-		// Notice_Tracker\Core\Plugin -> core/class-plugin.php
+		// Quietboard_Notice_Manager\Core\Plugin -> core/class-plugin.php
 		$parts = explode( '\\', $relative_class );
 
 		// Last part is the class name.

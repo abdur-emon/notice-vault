@@ -4,11 +4,11 @@
  *
  * Handles plugin activation tasks.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Core
  */
 
-namespace Notice_Tracker\Core;
+namespace Quietboard_Notice_Manager\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,8 +34,8 @@ class Activator {
 		// Check WordPress version.
 		if ( version_compare( get_bloginfo( 'version' ), '5.0', '<' ) ) {
 			wp_die(
-				esc_html__( 'Notice Tracker requires WordPress 5.0 or higher.', 'notice-tracker' ),
-				esc_html__( 'Plugin Activation Error', 'notice-tracker' ),
+				esc_html__( 'Quietboard Notice Manager requires WordPress 5.0 or higher.', 'quietboard-notice-manager' ),
+				esc_html__( 'Plugin Activation Error', 'quietboard-notice-manager' ),
 				array( 'back_link' => true )
 			);
 		}
@@ -43,8 +43,8 @@ class Activator {
 		// Check PHP version.
 		if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
 			wp_die(
-				esc_html__( 'Notice Tracker requires PHP 7.2 or higher.', 'notice-tracker' ),
-				esc_html__( 'Plugin Activation Error', 'notice-tracker' ),
+				esc_html__( 'Quietboard Notice Manager requires PHP 7.2 or higher.', 'quietboard-notice-manager' ),
+				esc_html__( 'Plugin Activation Error', 'quietboard-notice-manager' ),
 				array( 'back_link' => true )
 			);
 		}
@@ -82,7 +82,7 @@ class Activator {
 
 		// Defaults for each registered notice category. Uses the filtered list so
 		// custom buckets registered via `wpnm_notice_types` get sensible defaults too.
-		foreach ( array_keys( \Notice_Tracker\Notices\Notice_Classifier::get_types() ) as $type ) {
+		foreach ( array_keys( \Quietboard_Notice_Manager\Notices\Notice_Classifier::get_types() ) as $type ) {
 			$defaults[ 'notice_' . $type ] = 'popup';
 		}
 

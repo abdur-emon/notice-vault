@@ -1,4 +1,4 @@
-=== Notice Tracker ===
+=== Quietboard Notice Manager ===
 Contributors: abduremon, mdismail-cse
 Tags: admin notices, dashboard, notifications, declutter, productivity
 Requires at least: 5.0
@@ -8,18 +8,18 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Control your WordPress dashboard with Notice Tracker - hide, manage, and organize admin alerts for a clean, distraction-free site.
+Control your WordPress dashboard with Quietboard Notice Manager - hide, manage, and organize admin alerts for a clean, distraction-free site.
 
 == Description ==
 
-= Take Control of Your Dashboard with Notice Tracker =
-Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and update notices? **Notice Tracker** captures every admin notice as it fires and moves it into a tidy popup, so you can keep working without the visual noise — and read everything later at your convenience.
+= Take Control of Your Dashboard with Quietboard Notice Manager =
+Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and update notices? **Quietboard Notice Manager** captures every admin notice as it fires and moves it into a tidy popup, so you can keep working without the visual noise — and read everything later at your convenience.
 
-WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Notice Tracker gives you per-type rules, per-user visibility controls, and a single counter in the admin bar so nothing is ever missed.
+WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Quietboard Notice Manager gives you per-type rules, per-user visibility controls, and a single counter in the admin bar so nothing is ever missed.
 
 
 
-= Why Choose Notice Tracker? =
+= Why Choose Quietboard Notice Manager? =
 * **Declutter Your Workspace:** Move noisy admin notices out of the dashboard and into a dedicated popup.
 * **Improve Productivity:** Focus on your content instead of closing endless alert boxes.
 * **Granular Control:** Configure every notice category separately — popup, hide, or leave alone.
@@ -38,7 +38,7 @@ WordPress admin notices can be helpful, but they often become overwhelming, taki
 
 
 = Experience a Distraction-Free WordPress Workflow =
-Whether you are managing multiple sites or a blogger tired of constant upselling, **Notice Tracker** helps you maintain a professional, organized, and distraction-free environment.
+Whether you are managing multiple sites or a blogger tired of constant upselling, **Quietboard Notice Manager** helps you maintain a professional, organized, and distraction-free environment.
 
 
 **Stop the clutter and start focusing on what matters: Your Website.**
@@ -46,7 +46,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 == Privacy Policy ==
 
-**Notice Tracker does not:**
+**Quietboard Notice Manager does not:**
 
 * Collect any user data
 * Send data to external servers
@@ -58,7 +58,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 
 = About =
-**Notice Tracker** is developed and maintained by Abdur Rahman Emon. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
+**Quietboard Notice Manager** is developed and maintained by Abdur Rahman Emon. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
 
 
 == Installation ==
@@ -67,7 +67,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 1. Log in to your WordPress admin panel
 2. Navigate to **Plugins → Add New**
-3. Search for "Notice Tracker"
+3. Search for "Quietboard Notice Manager"
 4. Click **Install Now**
 5. Activate the plugin
 
@@ -89,13 +89,13 @@ No, you have full control. You can configure each notice type separately to eith
 
 No! Notices are captured and stored in the pop-up. You'll see a counter in the admin toolbar showing how many unread notices you have.
 
-= Can I control who sees the notice tracker? =
+= Can I control who sees Quietboard Notice Manager? =
 
-Yes! You can configure visibility settings to show/hide the notice tracker for specific users or user roles.
+Yes! You can configure visibility settings to show or hide Quietboard Notice Manager for specific users or user roles.
 
 = Does this work with multisite? =
 
-Notice Tracker runs per-site on a multisite network — activate it on each subsite you want to manage. Network-wide automatic activation and shared notice storage across the network are not supported in 1.0.0.
+Quietboard Notice Manager runs per-site on a multisite network — activate it on each subsite you want to manage. Network-wide automatic activation and shared notice storage across the network are not supported in 1.0.0.
 
 = Will this slow down my site? =
 
@@ -111,11 +111,11 @@ By default, notices are automatically deleted after 30 days. You can customize t
 
 = Is this plugin translation-ready? =
 
-Yes! Notice Tracker is fully translation-ready with a .pot file included.
+Yes! Quietboard Notice Manager is fully translation-ready with a .pot file included.
 
 = What happens immediately after I activate the plugin? =
 
-By default, every captured notice category (success, error, warning, info, system, non-standard) is set to **"Show in popup & hide from dashboard"**. The moment the plugin is active, admin notices from every plugin and theme will move from your dashboard into the Notices popup instead of appearing inline. You can change this per category at **Notice Tracker → Settings** — choose **"Hide completely"** to drop the notice entirely, or **"Do nothing"** to let it render on the dashboard as it normally would.
+By default, every captured notice category (success, error, warning, info, system, non-standard) is set to **"Show in popup & hide from dashboard"**. The moment the plugin is active, admin notices from every plugin and theme will move from your dashboard into the Notices popup instead of appearing inline. You can change this per category at **Quietboard Notice Manager → Settings** — choose **"Hide completely"** to drop the notice entirely, or **"Do nothing"** to let it render on the dashboard as it normally would.
 
 
 == Screenshots ==

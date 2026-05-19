@@ -4,13 +4,13 @@
  *
  * Handles scheduled cleanup tasks.
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  * @subpackage Core
  */
 
-namespace Notice_Tracker\Core;
+namespace Quietboard_Notice_Manager\Core;
 
-use Notice_Tracker\Notices\Notice_Storage;
+use Quietboard_Notice_Manager\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

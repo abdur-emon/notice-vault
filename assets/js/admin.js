@@ -1,7 +1,7 @@
 /**
- * Notice Tracker - Admin JavaScript
+ * Quietboard Notice Manager - Admin JavaScript
  *
- * @package Notice_Tracker
+ * @package Quietboard_Notice_Manager
  */
 
 (function ($) {
