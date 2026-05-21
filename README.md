@@ -20,6 +20,10 @@ rsync -a \
     --exclude='.gitignore' \
     --exclude='.gitattributes' \
     --exclude='.wordpress-org' \
+    --exclude='.claude' \
+    --exclude='.claude.local' \
+    --exclude='phpcs.xml.dist' \
+    --exclude='phpcs.xml' \
     --exclude='.DS_Store' \
     --exclude='Thumbs.db' \
     --exclude='.idea' \

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ruleset name="Admin Notice Hub">
+	<description>PHPCS configuration for the Admin Notice Hub plugin.</description>
+
+	<file>.</file>
+
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/assets/css/select2.min.css</exclude-pattern>
+	<exclude-pattern>*/assets/js/select2.min.js</exclude-pattern>
+
+	<arg value="ps"/>
+	<arg name="extensions" value="php"/>
+	<arg name="parallel" value="8"/>
+
+	<config name="minimum_supported_wp_version" value="5.0"/>
+	<config name="testVersion" value="7.2-"/>
+
+	<rule ref="WordPress-Core"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="WordPress-Extra"/>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="anh"/>
+				<element value="ANH"/>
+				<element value="Admin_Notice_Hub"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="admin-notice-hub"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>
