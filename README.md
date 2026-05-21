@@ -1,4 +1,4 @@
-# Admin Notice Hub
+# Admin Notice Hub - Track and Manage Every Notice
 
 Capture WordPress admin notices into a centralized popup, so the dashboard stays clean and nothing gets lost.
 
@@ -43,7 +43,7 @@ Point Plugin Check (and the wp.org SVN/zip submission) at `build/admin-notice-hu
 
 ## Author
 
-Developed and maintained by Abdur Rahman Emon. Issues and pull requests welcome.
+Developed and maintained by Abdur Rahman Emon and Md. Ismail. Issues and pull requests welcome.
 
 ## License
 
