@@ -4,7 +4,7 @@
  *
  * Prevents directory browsing.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  */
 
 // Silence is golden.

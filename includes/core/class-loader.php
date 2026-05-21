@@ -4,11 +4,11 @@
  *
  * Manages all hooks (actions and filters) for the plugin.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Core
  */
 
-namespace Quietboard_Notice_Manager\Core;
+namespace Admin_Notice_Hub\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

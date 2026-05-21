@@ -4,11 +4,11 @@
  *
  * Manages user visibility permissions.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Permissions
  */
 
-namespace Quietboard_Notice_Manager\Permissions;
+namespace Admin_Notice_Hub\Permissions;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Visibility Manager Class
  *
- * Controls which users can see Quietboard Notice Manager.
+ * Controls which users can see Admin Notice Hub.
  *
  * @since 1.0.0
  */
@@ -37,7 +37,7 @@ class Visibility_Manager {
 		}
 
 		// Get settings.
-		$settings = get_option( 'wpnm_settings', array() );
+		$settings = get_option( 'anh_settings', array() );
 		$mode     = isset( $settings['visibility_mode'] ) ? $settings['visibility_mode'] : 'show-all';
 		$users    = isset( $settings['visibility_users'] ) ? $settings['visibility_users'] : array();
 
@@ -70,10 +70,10 @@ class Visibility_Manager {
 	 */
 	public static function get_mode_label( $mode ) {
 		$labels = array(
-			'show-all'      => __( 'Show to all users', 'quietboard-notice-manager' ),
-			'hide-all'      => __( 'Hide from all users', 'quietboard-notice-manager' ),
-			'hide-selected' => __( 'Hide from selected users', 'quietboard-notice-manager' ),
-			'show-selected' => __( 'Show to selected users', 'quietboard-notice-manager' ),
+			'show-all'      => __( 'Show to all users', 'admin-notice-hub' ),
+			'hide-all'      => __( 'Hide from all users', 'admin-notice-hub' ),
+			'hide-selected' => __( 'Hide from selected users', 'admin-notice-hub' ),
+			'show-selected' => __( 'Show to selected users', 'admin-notice-hub' ),
 		);
 
 		return isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['show-all'];

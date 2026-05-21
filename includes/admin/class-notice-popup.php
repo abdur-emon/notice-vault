@@ -4,14 +4,14 @@
  *
  * Handles popup UI rendering and AJAX operations.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Admin
  */
 
-namespace Quietboard_Notice_Manager\Admin;
+namespace Admin_Notice_Hub\Admin;
 
-use Quietboard_Notice_Manager\Notices\Notice_Storage;
-use Quietboard_Notice_Manager\Notices\Notice_Classifier;
+use Admin_Notice_Hub\Notices\Notice_Storage;
+use Admin_Notice_Hub\Notices\Notice_Classifier;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -31,14 +31,14 @@ class Notice_Popup
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
+	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Quietboard_Notice_Manager\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Admin_Notice_Hub\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -51,55 +51,55 @@ class Notice_Popup
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
 		// Enqueue CSS.
 		wp_enqueue_style(
-			'wpnm-popup',
-			WPNM_PLUGIN_URL . 'assets/css/popup.css',
+			'anh-popup',
+			ANH_PLUGIN_URL . 'assets/css/popup.css',
 			array(),
-			WPNM_VERSION
+			ANH_VERSION
 		);
 
 		// Enqueue JS.
 		wp_enqueue_script(
-			'wpnm-popup',
-			WPNM_PLUGIN_URL . 'assets/js/popup.js',
+			'anh-popup',
+			ANH_PLUGIN_URL . 'assets/js/popup.js',
 			array('jquery'),
-			WPNM_VERSION,
+			ANH_VERSION,
 			true
 		);
 
 		// Localize script.
 		wp_localize_script(
-			'wpnm-popup',
-			'wpnmPopup',
+			'anh-popup',
+			'anhPopup',
 			array(
 				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'nonce'      => wp_create_nonce( 'wpnm_ajax_nonce' ),
+				'nonce'      => wp_create_nonce( 'anh_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n'       => array(
-					'noNotices'       => __( 'No notices to display', 'quietboard-notice-manager' ),
-					'markAllRead'     => __( 'Mark All as Read', 'quietboard-notice-manager' ),
-					'clearAll'        => __( 'Clear All', 'quietboard-notice-manager' ),
-					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'quietboard-notice-manager' ),
-					'loading'         => __( 'Loading...', 'quietboard-notice-manager' ),
-					'error'           => __( 'An error occurred', 'quietboard-notice-manager' ),
-					'markAsRead'      => __( 'Mark as read', 'quietboard-notice-manager' ),
-					'dismiss'         => __( 'Dismiss', 'quietboard-notice-manager' ),
-					'dismissNotice'   => __( 'Dismiss notice', 'quietboard-notice-manager' ),
-					'notices'         => __( 'Notices', 'quietboard-notice-manager' ),
+					'noNotices'       => __( 'No notices to display', 'admin-notice-hub' ),
+					'markAllRead'     => __( 'Mark All as Read', 'admin-notice-hub' ),
+					'clearAll'        => __( 'Clear All', 'admin-notice-hub' ),
+					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'admin-notice-hub' ),
+					'loading'         => __( 'Loading...', 'admin-notice-hub' ),
+					'error'           => __( 'An error occurred', 'admin-notice-hub' ),
+					'markAsRead'      => __( 'Mark as read', 'admin-notice-hub' ),
+					'dismiss'         => __( 'Dismiss', 'admin-notice-hub' ),
+					'dismissNotice'   => __( 'Dismiss notice', 'admin-notice-hub' ),
+					'notices'         => __( 'Notices', 'admin-notice-hub' ),
 					/* translators: %d: number of unread notices. */
-					'noticesWithCount' => __( 'Notices (%d)', 'quietboard-notice-manager' ),
-					'justNow'         => __( 'Just now', 'quietboard-notice-manager' ),
+					'noticesWithCount' => __( 'Notices (%d)', 'admin-notice-hub' ),
+					'justNow'         => __( 'Just now', 'admin-notice-hub' ),
 					/* translators: %d: number of minutes ago. */
-					'minutesAgo'      => __( '%d minutes ago', 'quietboard-notice-manager' ),
+					'minutesAgo'      => __( '%d minutes ago', 'admin-notice-hub' ),
 					/* translators: %d: number of hours ago. */
-					'hoursAgo'        => __( '%d hours ago', 'quietboard-notice-manager' ),
+					'hoursAgo'        => __( '%d hours ago', 'admin-notice-hub' ),
 					/* translators: %d: number of days ago. */
-					'daysAgo'         => __( '%d days ago', 'quietboard-notice-manager' ),
+					'daysAgo'         => __( '%d days ago', 'admin-notice-hub' ),
 				),
 			)
 		);
@@ -112,12 +112,12 @@ class Notice_Popup
 	 * @return void
 	 */
 	public function render_popup() {
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
 		$popup_style = $this->get_popup_style();
-		include WPNM_PLUGIN_DIR . 'templates/popup-template.php';
+		include ANH_PLUGIN_DIR . 'templates/popup-template.php';
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Notice_Popup
 	 */
 	private function get_popup_style()
 	{
-		$settings = get_option('wpnm_settings', array());
+		$settings = get_option('anh_settings', array());
 		return isset($settings['popup_style']) ? $settings['popup_style'] : 'slide-right';
 	}
 
@@ -141,16 +141,16 @@ class Notice_Popup
 	public function ajax_get_notices()
 	{
 		// Verify nonce.
-		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
+		check_ajax_referer('anh_ajax_nonce', 'nonce');
 
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -212,16 +212,16 @@ class Notice_Popup
 	public function ajax_mark_read()
 	{
 		// Verify nonce.
-		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
+		check_ajax_referer('anh_ajax_nonce', 'nonce');
 
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -229,7 +229,7 @@ class Notice_Popup
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if ( empty( $notice_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -239,13 +239,13 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message'      => __( 'Notice marked as read', 'quietboard-notice-manager' ),
+					'message'      => __( 'Notice marked as read', 'admin-notice-hub' ),
 					'count'        => $this->storage->get_unread_count(),
 					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'admin-notice-hub' ) ) );
 		}
 	}
 
@@ -258,16 +258,16 @@ class Notice_Popup
 	public function ajax_dismiss_notice()
 	{
 		// Verify nonce.
-		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
+		check_ajax_referer('anh_ajax_nonce', 'nonce');
 
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -275,7 +275,7 @@ class Notice_Popup
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if ( empty( $notice_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -285,13 +285,13 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message'      => __( 'Notice dismissed', 'quietboard-notice-manager' ),
+					'message'      => __( 'Notice dismissed', 'admin-notice-hub' ),
 					'count'        => $this->storage->get_unread_count(),
 					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'admin-notice-hub' ) ) );
 		}
 	}
 
@@ -303,16 +303,16 @@ class Notice_Popup
 	 */
 	public function ajax_mark_all_read()
 	{
-		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
+		check_ajax_referer('anh_ajax_nonce', 'nonce');
 
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
 		// Notices are user-scoped in storage, so 'read' is sufficient.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -321,7 +321,7 @@ class Notice_Popup
 		// mark_all_read returns false when there is nothing to mark; treat that as success.
 		wp_send_json_success(
 			array(
-				'message'      => __( 'All notices marked as read', 'quietboard-notice-manager' ),
+				'message'      => __( 'All notices marked as read', 'admin-notice-hub' ),
 				'count'        => 0,
 				'unread_total' => $this->storage->get_unread_count(),
 			)
@@ -336,16 +336,16 @@ class Notice_Popup
 	 */
 	public function ajax_clear_all()
 	{
-		check_ajax_referer('wpnm_ajax_nonce', 'nonce');
+		check_ajax_referer('anh_ajax_nonce', 'nonce');
 
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
 		// Notices are user-scoped in storage, so 'read' is sufficient.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'quietboard-notice-manager' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
 			return;
 		}
 
@@ -354,7 +354,7 @@ class Notice_Popup
 		// delete_all returns false when nothing changed; treat that as success.
 		wp_send_json_success(
 			array(
-				'message'      => __( 'All notices cleared', 'quietboard-notice-manager' ),
+				'message'      => __( 'All notices cleared', 'admin-notice-hub' ),
 				'count'        => 0,
 				'unread_total' => $this->storage->get_unread_count(),
 			)

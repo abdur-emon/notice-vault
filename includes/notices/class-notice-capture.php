@@ -4,13 +4,13 @@
  *
  * Captures admin notices using output buffering.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Notices
  */
 
-namespace Quietboard_Notice_Manager\Notices;
+namespace Admin_Notice_Hub\Notices;
 
-use Quietboard_Notice_Manager\Permissions\Visibility_Manager;
+use Admin_Notice_Hub\Permissions\Visibility_Manager;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,14 +29,14 @@ class Notice_Capture {
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
+	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Quietboard_Notice_Manager\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Admin_Notice_Hub\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -71,7 +71,7 @@ class Notice_Capture {
 	 */
 	private function get_settings() {
 		if ( null === $this->settings ) {
-			$this->settings = get_option( 'wpnm_settings', array() );
+			$this->settings = get_option( 'anh_settings', array() );
 		}
 		return $this->settings;
 	}
@@ -202,12 +202,12 @@ class Notice_Capture {
 		$doc             = new \DOMDocument();
 		$internal_errors = libxml_use_internal_errors( true );
 		$xml_prolog      = '<' . '?xml encoding="UTF-8"?' . '>';
-		$wrapped         = $xml_prolog . '<div id="wpnm-wrapper">' . $html . '</div>';
+		$wrapped         = $xml_prolog . '<div id="anh-wrapper">' . $html . '</div>';
 		$doc->loadHTML( $wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $internal_errors );
 
-		$wrapper = $doc->getElementById( 'wpnm-wrapper' );
+		$wrapper = $doc->getElementById( 'anh-wrapper' );
 
 		if ( $wrapper instanceof \DOMElement ) {
 			foreach ( $wrapper->childNodes as $child ) {

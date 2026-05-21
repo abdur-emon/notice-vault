@@ -4,11 +4,11 @@
  *
  * Handles plugin deactivation tasks.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Core
  */
 
-namespace Quietboard_Notice_Manager\Core;
+namespace Admin_Notice_Hub\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,9 +50,9 @@ class Deactivator {
 	 */
 	private static function clear_scheduled_events() {
 		// Clear notice cleanup cron.
-		$timestamp = wp_next_scheduled( 'wpnm_cleanup_notices' );
+		$timestamp = wp_next_scheduled( 'anh_cleanup_notices' );
 		if ( $timestamp ) {
-			wp_unschedule_event( $timestamp, 'wpnm_cleanup_notices' );
+			wp_unschedule_event( $timestamp, 'anh_cleanup_notices' );
 		}
 	}
 
@@ -63,8 +63,8 @@ class Deactivator {
 	 * @return void
 	 */
 	private static function clear_transients() {
-		delete_transient( 'wpnm_activation_redirect' );
-		delete_transient( 'wpnm_notice_count' );
+		delete_transient( 'anh_activation_redirect' );
+		delete_transient( 'anh_notice_count' );
 	}
 }
 

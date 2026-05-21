@@ -4,13 +4,13 @@
  *
  * Adds notice counter to WordPress admin bar.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Toolbar
  */
 
-namespace Quietboard_Notice_Manager\Toolbar;
+namespace Admin_Notice_Hub\Toolbar;
 
-use Quietboard_Notice_Manager\Notices\Notice_Storage;
+use Admin_Notice_Hub\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,14 +29,14 @@ class Admin_Toolbar {
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Quietboard_Notice_Manager\Notices\Notice_Storage
+	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Quietboard_Notice_Manager\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Admin_Notice_Hub\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -51,7 +51,7 @@ class Admin_Toolbar {
 	 */
 	public function add_toolbar_item( $wp_admin_bar ) {
 		// Only show to users who can see notices.
-		if ( ! \Quietboard_Notice_Manager\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
@@ -64,12 +64,12 @@ class Admin_Toolbar {
 		// Add parent menu item.
 		$wp_admin_bar->add_node(
 			array(
-				'id'    => 'wpnm-notices',
+				'id'    => 'anh-notices',
 				'title' => $title,
 				'href'  => '#',
 				'meta'  => array(
-					'class' => 'wpnm-toolbar-item',
-					'title' => __( 'View Notices', 'quietboard-notice-manager' ),
+					'class' => 'anh-toolbar-item',
+					'title' => __( 'View Notices', 'admin-notice-hub' ),
 				),
 			)
 		);
@@ -92,14 +92,14 @@ class Admin_Toolbar {
 
 		if ( $count > 0 ) {
 			$badge = sprintf(
-				'<span class="wpnm-count-badge">%s</span>',
+				'<span class="anh-count-badge">%s</span>',
 				esc_html( $count )
 			);
-			$text = esc_html__( 'Notices', 'quietboard-notice-manager' );
+			$text = esc_html__( 'Notices', 'admin-notice-hub' );
 			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 		}
 
-		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'quietboard-notice-manager' ) . '</span>';
+		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'admin-notice-hub' ) . '</span>';
 	}
 
 	/**
@@ -121,12 +121,12 @@ class Admin_Toolbar {
 		foreach ( $notices as $notice ) {
 			$wp_admin_bar->add_node(
 				array(
-					'parent' => 'wpnm-notices',
-					'id'     => 'wpnm-notice-' . $notice['id'],
+					'parent' => 'anh-notices',
+					'id'     => 'anh-notice-' . $notice['id'],
 					'title'  => $this->get_notice_preview( $notice ),
 					'href'   => '#',
 					'meta'   => array(
-						'class'           => 'wpnm-notice-preview',
+						'class'           => 'anh-notice-preview',
 						'data-notice-id'  => $notice['id'],
 						'data-notice-type' => $notice['type'],
 					),
@@ -137,12 +137,12 @@ class Admin_Toolbar {
 		// Add "View All" link.
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => 'wpnm-notices',
-				'id'     => 'wpnm-view-all',
-				'title'  => esc_html__( 'View All Notices', 'quietboard-notice-manager' ),
+				'parent' => 'anh-notices',
+				'id'     => 'anh-view-all',
+				'title'  => esc_html__( 'View All Notices', 'admin-notice-hub' ),
 				'href'   => '#',
 				'meta'   => array(
-					'class' => 'wpnm-view-all',
+					'class' => 'anh-view-all',
 				),
 			)
 		);
@@ -167,7 +167,7 @@ class Admin_Toolbar {
 		}
 
 		// Get icon.
-		$icon_class = \Quietboard_Notice_Manager\Notices\Notice_Classifier::get_icon( $notice['type'] );
+		$icon_class = \Admin_Notice_Hub\Notices\Notice_Classifier::get_icon( $notice['type'] );
 
 		return sprintf(
 			'<span class="dashicons %s"></span> %s',

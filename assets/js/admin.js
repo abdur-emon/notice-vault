@@ -1,7 +1,7 @@
 /**
- * Quietboard Notice Manager - Admin JavaScript
+ * Admin Notice Hub - Admin JavaScript
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  */
 
 (function ($) {
@@ -25,18 +25,18 @@
 		 */
 		initSelect2: function () {
 			if (typeof $.fn.select2 !== 'undefined') {
-				$('.wpnm-select2-users').select2({
+				$('.anh-select2-users').select2({
 					placeholder: 'Search for a user...',
 					minimumInputLength: 2,
 					ajax: {
-						url: wpnmAdmin.ajaxUrl,
+						url: anhAdmin.ajaxUrl,
 						type: 'POST',
 						dataType: 'json',
 						delay: 250,
 						data: function (params) {
 							return {
-								action: 'wpnm_search_users',
-								nonce: wpnmAdmin.nonce,
+								action: 'anh_search_users',
+								nonce: anhAdmin.nonce,
 								q: params.term
 							};
 						},
@@ -56,7 +56,7 @@
 		 */
 		bindEvents: function () {
 			// Toggle visibility users field based on mode
-			$(document).on('change', '#wpnm-visibility-mode', function () {
+			$(document).on('change', '#anh-visibility-mode', function () {
 				SettingsPage.toggleVisibilityUsers();
 			});
 		},
@@ -65,8 +65,8 @@
 		 * Toggle visibility users field
 		 */
 		toggleVisibilityUsers: function () {
-			const mode = $('#wpnm-visibility-mode').val();
-			const $usersField = $('#wpnm-visibility-users').closest('tr');
+			const mode = $('#anh-visibility-mode').val();
+			const $usersField = $('#anh-visibility-users').closest('tr');
 
 			if (mode === 'hide-selected' || mode === 'show-selected') {
 				$usersField.show();

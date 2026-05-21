@@ -4,11 +4,11 @@
  *
  * Classifies admin notices by type.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Notices
  */
 
-namespace Quietboard_Notice_Manager\Notices;
+namespace Admin_Notice_Hub\Notices;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +28,7 @@ class Notice_Classifier {
 	 * Get the canonical list of notice categories, filtered.
 	 *
 	 * Third-party code can register additional categories via the
-	 * `wpnm_notice_types` filter. The returned array maps a type key
+	 * `anh_notice_types` filter. The returned array maps a type key
 	 * (e.g. `success`) to a human label used by the settings UI.
 	 *
 	 * @since 1.0.0
@@ -36,12 +36,12 @@ class Notice_Classifier {
 	 */
 	public static function get_types() {
 		$types = array(
-			'success' => __( 'Success Notices', 'quietboard-notice-manager' ),
-			'error'   => __( 'Error Notices', 'quietboard-notice-manager' ),
-			'warning' => __( 'Warning Notices', 'quietboard-notice-manager' ),
-			'info'    => __( 'Info Notices', 'quietboard-notice-manager' ),
-			'other'   => __( 'Non-standard Notices', 'quietboard-notice-manager' ),
-			'system'  => __( 'WordPress System Notices', 'quietboard-notice-manager' ),
+			'success' => __( 'Success Notices', 'admin-notice-hub' ),
+			'error'   => __( 'Error Notices', 'admin-notice-hub' ),
+			'warning' => __( 'Warning Notices', 'admin-notice-hub' ),
+			'info'    => __( 'Info Notices', 'admin-notice-hub' ),
+			'other'   => __( 'Non-standard Notices', 'admin-notice-hub' ),
+			'system'  => __( 'WordPress System Notices', 'admin-notice-hub' ),
 		);
 
 		/**
@@ -55,7 +55,7 @@ class Notice_Classifier {
 		 * @since 1.0.0
 		 * @param array<string,string> $types Type-key => translated label.
 		 */
-		return (array) apply_filters( 'wpnm_notice_types', $types );
+		return (array) apply_filters( 'anh_notice_types', $types );
 	}
 
 	/**

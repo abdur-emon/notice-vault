@@ -4,11 +4,11 @@
  *
  * PSR-4 compliant autoloader for the plugin.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Core
  */
 
-namespace Quietboard_Notice_Manager\Core;
+namespace Admin_Notice_Hub\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,7 +29,7 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	private static $prefix = 'Quietboard_Notice_Manager\\';
+	private static $prefix = 'Admin_Notice_Hub\\';
 
 	/**
 	 * Base directory for the namespace prefix.
@@ -45,7 +45,7 @@ class Autoloader {
 	 * @return void
 	 */
 	public static function register() {
-		self::$base_dir = WPNM_PLUGIN_DIR . 'includes/';
+		self::$base_dir = ANH_PLUGIN_DIR . 'includes/';
 		spl_autoload_register( array( __CLASS__, 'autoload' ) );
 	}
 
@@ -67,7 +67,7 @@ class Autoloader {
 		$relative_class = substr( $class, $len );
 
 		// Convert namespace to directory structure.
-		// Quietboard_Notice_Manager\Core\Plugin -> core/class-plugin.php
+		// Admin_Notice_Hub\Core\Plugin -> core/class-plugin.php
 		$parts = explode( '\\', $relative_class );
 
 		// Last part is the class name.

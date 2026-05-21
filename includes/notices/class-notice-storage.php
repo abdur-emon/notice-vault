@@ -11,13 +11,13 @@
  * Notice_Popup, Admin_Toolbar, Cleanup, templates/settings-page.php —
  * works unchanged.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Notices
  */
 
-namespace Quietboard_Notice_Manager\Notices;
+namespace Admin_Notice_Hub\Notices;
 
-use Quietboard_Notice_Manager\Core\Upgrader;
+use Admin_Notice_Hub\Core\Upgrader;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,7 +47,7 @@ class Notice_Storage {
 	 *
 	 * @param string $option_name Legacy parameter; ignored.
 	 */
-	public function __construct( $option_name = 'wpnm_notices' ) {
+	public function __construct( $option_name = 'anh_notices' ) {
 		unset( $option_name ); // explicitly discard.
 	}
 
@@ -66,7 +66,7 @@ class Notice_Storage {
 	 * @return string
 	 */
 	private function unread_count_cache_key() {
-		return 'wpnm_notice_count_' . absint( get_current_user_id() );
+		return 'anh_notice_count_' . absint( get_current_user_id() );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Notice_Storage {
 		 * @since 1.0.0
 		 * @param array $notice The notice data.
 		 */
-		$notice = apply_filters( 'wpnm_before_store_notice', $notice );
+		$notice = apply_filters( 'anh_before_store_notice', $notice );
 		if ( ! is_array( $notice ) || empty( $notice ) ) {
 			return false;
 		}
@@ -138,7 +138,7 @@ class Notice_Storage {
 		 * @param string $notice_id The generated notice ID (UUID-prefixed).
 		 * @param array  $notice    The full notice array as inserted.
 		 */
-		do_action( 'wpnm_notice_stored', $row['notice_id'], $notice );
+		do_action( 'anh_notice_stored', $row['notice_id'], $notice );
 
 		return $row['notice_id'];
 	}
@@ -373,7 +373,7 @@ class Notice_Storage {
 	 * @return string
 	 */
 	private function get_expiration_date() {
-		$settings = get_option( 'wpnm_settings', array() );
+		$settings = get_option( 'anh_settings', array() );
 		$days     = isset( $settings['auto_expire_days'] ) ? absint( $settings['auto_expire_days'] ) : 30;
 		return gmdate( 'Y-m-d H:i:s', strtotime( "+{$days} days" ) );
 	}

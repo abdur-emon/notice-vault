@@ -6,11 +6,11 @@
  * migrations. Both Activator (on plugin activation) and Plugin
  * (on every admin request, idempotently) call into this class.
  *
- * @package Quietboard_Notice_Manager
+ * @package Admin_Notice_Hub
  * @subpackage Core
  */
 
-namespace Quietboard_Notice_Manager\Core;
+namespace Admin_Notice_Hub\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Upgrader Class
  *
- * Migration flags are stored inside the `wpnm_settings` option under the
+ * Migration flags are stored inside the `anh_settings` option under the
  * `migrations` sub-key. Each flag holds the plugin version that ran it,
  * so the same migration never executes twice.
  *
@@ -33,7 +33,7 @@ class Upgrader {
 	 *
 	 * @var string
 	 */
-	const OPTION = 'wpnm_settings';
+	const OPTION = 'anh_settings';
 
 	/**
 	 * Legacy option that held all notices before the table existed.
@@ -41,14 +41,14 @@ class Upgrader {
 	 *
 	 * @var string
 	 */
-	const LEGACY_NOTICES_OPTION = 'wpnm_notices';
+	const LEGACY_NOTICES_OPTION = 'anh_notices';
 
 	/**
 	 * Notices table base name (without prefix).
 	 *
 	 * @var string
 	 */
-	const NOTICES_TABLE_BASENAME = 'wpnm_notices';
+	const NOTICES_TABLE_BASENAME = 'anh_notices';
 
 	/**
 	 * Fully-qualified notices table name for the current blog.
@@ -123,34 +123,34 @@ class Upgrader {
 		// Migration: ensure schema is in place.
 		if ( empty( $migrations['schema_v1'] ) ) {
 			self::ensure_table();
-			$migrations['schema_v1'] = WPNM_VERSION;
+			$migrations['schema_v1'] = ANH_VERSION;
 			$dirty                   = true;
 		}
 
 		// Migration: import legacy option-stored notices into the table.
 		if ( empty( $migrations['notices_option_to_table'] ) ) {
 			self::migrate_notices_option_to_table();
-			$migrations['notices_option_to_table'] = WPNM_VERSION;
+			$migrations['notices_option_to_table'] = ANH_VERSION;
 			$dirty                                 = true;
 		}
 
-		// Migration: flip the autoload state of wpnm_settings to 'no'.
+		// Migration: flip the autoload state of anh_settings to 'no'.
 		if ( empty( $migrations['settings_autoload_no'] ) ) {
 			if ( self::flip_settings_autoload_to_no() ) {
-				$migrations['settings_autoload_no'] = WPNM_VERSION;
+				$migrations['settings_autoload_no'] = ANH_VERSION;
 				$dirty                              = true;
 			}
 		}
 
 		if ( $dirty ) {
 			$settings['migrations'] = $migrations;
-			$settings['version']    = WPNM_VERSION;
+			$settings['version']    = ANH_VERSION;
 			update_option( self::OPTION, $settings, false );
 		}
 	}
 
 	/**
-	 * Import legacy `wpnm_notices` option (an array keyed by notice_id)
+	 * Import legacy `anh_notices` option (an array keyed by notice_id)
 	 * into the new custom table. Idempotent — uses INSERT IGNORE on the
 	 * notice_id UNIQUE index.
 	 *
@@ -210,7 +210,7 @@ class Upgrader {
 	}
 
 	/**
-	 * Flip the `wpnm_settings` option from autoload=yes to autoload=no.
+	 * Flip the `anh_settings` option from autoload=yes to autoload=no.
 	 *
 	 * The original activator did not pass an autoload argument, so the
 	 * option defaulted to autoload=yes and was loaded on every front-end

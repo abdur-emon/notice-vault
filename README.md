@@ -1,4 +1,4 @@
-# Quietboard Notice Manager
+# Admin Notice Hub
 
 Capture WordPress admin notices into a centralized popup, so the dashboard stays clean and nothing gets lost.
 
@@ -10,10 +10,10 @@ The full plugin description, feature list, installation steps, FAQ, screenshots,
 
 ## Building for WordPress.org
 
-The dev tree contains files that should not ship to the wp.org plugin directory: `.git`, `.gitignore`, `.wordpress-org` (uploaded separately to the SVN `/assets/` folder, not the plugin zip), `README.md`, `CHANGELOG.md`, etc. Run the following from the plugin root to produce a clean `./build/quietboard-notice-manager/` copy that contains only the files that should ship:
+The dev tree contains files that should not ship to the wp.org plugin directory: `.git`, `.gitignore`, `.wordpress-org` (uploaded separately to the SVN `/assets/` folder, not the plugin zip), `README.md`, `CHANGELOG.md`, etc. Run the following from the plugin root to produce a clean `./build/admin-notice-hub/` copy that contains only the files that should ship:
 
 ```sh
-rm -rf build && mkdir -p build/quietboard-notice-manager && \
+rm -rf build && mkdir -p build/admin-notice-hub && \
 rsync -a \
     --exclude='.git' \
     --exclude='.github' \
@@ -32,10 +32,10 @@ rsync -a \
     --exclude='CHANGELOG.md' \
     --exclude='*.zip' \
     --exclude='*.tar.gz' \
-    ./ build/quietboard-notice-manager/
+    ./ build/admin-notice-hub/
 ```
 
-Point Plugin Check (and the wp.org SVN/zip submission) at `build/quietboard-notice-manager/`, not at the dev folder. The `build/` directory is git-ignored.
+Point Plugin Check (and the wp.org SVN/zip submission) at `build/admin-notice-hub/`, not at the dev folder. The `build/` directory is git-ignored.
 
 ## Author
 
