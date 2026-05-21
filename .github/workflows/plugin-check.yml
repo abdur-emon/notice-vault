@@ -1,0 +1,54 @@
+name: Plugin Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  plugin-check:
+    name: Plugin Check (WP latest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build clean plugin directory
+        run: |
+          rm -rf build && mkdir -p build/admin-notice-hub
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='.wordpress-org' \
+            --exclude='.claude' \
+            --exclude='.claude.local' \
+            --exclude='phpcs.xml.dist' \
+            --exclude='phpcs.xml' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            --exclude='.idea' \
+            --exclude='.vscode' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='build' \
+            --exclude='dist' \
+            --exclude='README.md' \
+            --exclude='CHANGELOG.md' \
+            --exclude='*.zip' \
+            --exclude='*.tar.gz' \
+            ./ build/admin-notice-hub/
+
+      - name: List build contents
+        run: |
+          echo "Files in build/admin-notice-hub/:"
+          find build/admin-notice-hub -maxdepth 3 -print
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: ./build/admin-notice-hub
