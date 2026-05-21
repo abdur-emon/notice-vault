@@ -81,7 +81,7 @@ class Notice_Storage {
 
 		$notice_id = $this->generate_id();
 		$user_id   = (int) get_current_user_id();
-		$created   = current_time( 'mysql' );
+		$created   = current_time( 'mysql', true );
 		$expires   = $this->get_expiration_date();
 
 		// Compose the array the filter sees. Mirrors v0.x shape.
@@ -200,7 +200,7 @@ class Notice_Storage {
 		$args = wp_parse_args( $args, $defaults );
 
 		$user_id = (int) get_current_user_id();
-		$now     = current_time( 'mysql' );
+		$now     = current_time( 'mysql', true );
 		$table   = $this->table();
 
 		$where      = array( 'user_id = %d', 'expires_at > %s' );
@@ -341,7 +341,7 @@ class Notice_Storage {
 
 		if ( false === $count ) {
 			$user_id = (int) get_current_user_id();
-			$now     = current_time( 'mysql' );
+			$now     = current_time( 'mysql', true );
 			$table   = $this->table();
 			// Wrapped in a transient cache (set_transient below); $table is safe ($wpdb->prefix + class constant).
 			$count   = (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -428,7 +428,7 @@ class Notice_Storage {
 	 */
 	public function clean_expired() {
 		global $wpdb;
-		$now   = current_time( 'mysql' );
+		$now   = current_time( 'mysql', true );
 		$table = $this->table();
 
 		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter

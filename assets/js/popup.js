@@ -387,7 +387,9 @@
 		timeAgo: function (datetime) {
 			const i18n = adminNoticeHubPopup.i18n || {};
 			const now = new Date();
-			const past = new Date(datetime);
+			// Stored datetimes are UTC (PHP current_time('mysql', true));
+			// force UTC parsing so "X minutes ago" is right regardless of TZ.
+			const past = new Date(datetime.replace(' ', 'T') + 'Z');
 			const seconds = Math.floor((now - past) / 1000);
 			const sprintf = function (tmpl, n) {
 				return (tmpl || '').replace('%d', n);
