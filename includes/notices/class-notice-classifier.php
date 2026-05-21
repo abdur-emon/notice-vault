@@ -28,7 +28,7 @@ class Notice_Classifier {
 	 * Get the canonical list of notice categories, filtered.
 	 *
 	 * Third-party code can register additional categories via the
-	 * `anh_notice_types` filter. The returned array maps a type key
+	 * `admin_notice_hub_notice_types` filter. The returned array maps a type key
 	 * (e.g. `success`) to a human label used by the settings UI.
 	 *
 	 * @since 1.0.0
@@ -55,7 +55,7 @@ class Notice_Classifier {
 		 * @since 1.0.0
 		 * @param array<string,string> $types Type-key => translated label.
 		 */
-		return (array) apply_filters( 'anh_notice_types', $types );
+		return (array) apply_filters( 'admin_notice_hub_notice_types', $types );
 	}
 
 	/**

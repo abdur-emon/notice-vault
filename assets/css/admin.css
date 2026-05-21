@@ -5,47 +5,47 @@
  */
 
 /* Settings Page */
-.anh-settings-wrap h1 {
+.admin-notice-hub-settings-wrap h1 {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 }
 
-.anh-settings-wrap h1 .dashicons {
+.admin-notice-hub-settings-wrap h1 .dashicons {
 	color: #2271b1;
 	font-size: 32px;
 	width: 32px;
 	height: 32px;
 }
 
-.anh-description {
+.admin-notice-hub-description {
 	font-size: 14px;
 	color: #50575e;
 	margin-bottom: 20px;
 }
 
 /* Settings Sections */
-.anh-settings-wrap h2 {
+.admin-notice-hub-settings-wrap h2 {
 	border-bottom: 2px solid #2271b1;
 	padding-bottom: 10px;
 	margin-top: 30px;
 }
 
-.anh-settings-wrap .form-table th {
+.admin-notice-hub-settings-wrap .form-table th {
 	width: 250px;
 	font-weight: 600;
 }
 
-.anh-settings-wrap .form-table td {
+.admin-notice-hub-settings-wrap .form-table td {
 	padding: 15px 10px;
 }
 
-.anh-settings-wrap select.regular-text {
+.admin-notice-hub-settings-wrap select.regular-text {
 	max-width: 400px;
 }
 
 /* Info Box */
-.anh-info-box {
+.admin-notice-hub-info-box {
 	background: #e7f5fe;
 	border-left: 4px solid #2271b1;
 	padding: 20px;
@@ -53,22 +53,22 @@
 	border-radius: 3px;
 }
 
-.anh-info-box h3 {
+.admin-notice-hub-info-box h3 {
 	margin-top: 0;
 	color: #2271b1;
 }
 
-.anh-info-box ol {
+.admin-notice-hub-info-box ol {
 	margin: 10px 0 0 20px;
 }
 
-.anh-info-box li {
+.admin-notice-hub-info-box li {
 	margin-bottom: 8px;
 	line-height: 1.6;
 }
 
 /* Stats Box */
-.anh-stats-box {
+.admin-notice-hub-stats-box {
 	background: #f9f9f9;
 	border: 1px solid #ddd;
 	padding: 20px;
@@ -76,38 +76,38 @@
 	border-radius: 3px;
 }
 
-.anh-stats-box h3 {
+.admin-notice-hub-stats-box h3 {
 	margin-top: 0;
 	color: #2c3338;
 }
 
-.anh-stats-box p {
+.admin-notice-hub-stats-box p {
 	margin: 10px 0;
 	font-size: 14px;
 }
 
-.anh-stats-box strong {
+.admin-notice-hub-stats-box strong {
 	display: inline-block;
 	min-width: 150px;
 }
 
 /* Visibility Users Field */
-#anh-visibility-users {
+#admin-notice-hub-visibility-users {
 	width: 100%;
 	max-width: 400px;
 }
 
 /* Responsive */
 @media screen and (max-width: 782px) {
-	.anh-settings-wrap .form-table th,
-	.anh-settings-wrap .form-table td {
+	.admin-notice-hub-settings-wrap .form-table th,
+	.admin-notice-hub-settings-wrap .form-table td {
 		display: block;
 		width: 100%;
 		padding: 10px 0;
 	}
 
-	.anh-settings-wrap select.regular-text,
-	#anh-visibility-users {
+	.admin-notice-hub-settings-wrap select.regular-text,
+	#admin-notice-hub-visibility-users {
 		max-width: 100%;
 	}
 }

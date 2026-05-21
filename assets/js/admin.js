@@ -25,18 +25,18 @@
 		 */
 		initSelect2: function () {
 			if (typeof $.fn.select2 !== 'undefined') {
-				$('.anh-select2-users').select2({
+				$('.admin-notice-hub-select2-users').select2({
 					placeholder: 'Search for a user...',
 					minimumInputLength: 2,
 					ajax: {
-						url: anhAdmin.ajaxUrl,
+						url: adminNoticeHubAdmin.ajaxUrl,
 						type: 'POST',
 						dataType: 'json',
 						delay: 250,
 						data: function (params) {
 							return {
-								action: 'anh_search_users',
-								nonce: anhAdmin.nonce,
+								action: 'admin_notice_hub_search_users',
+								nonce: adminNoticeHubAdmin.nonce,
 								q: params.term
 							};
 						},
@@ -56,7 +56,7 @@
 		 */
 		bindEvents: function () {
 			// Toggle visibility users field based on mode
-			$(document).on('change', '#anh-visibility-mode', function () {
+			$(document).on('change', '#admin-notice-hub-visibility-mode', function () {
 				SettingsPage.toggleVisibilityUsers();
 			});
 		},
@@ -65,8 +65,8 @@
 		 * Toggle visibility users field
 		 */
 		toggleVisibilityUsers: function () {
-			const mode = $('#anh-visibility-mode').val();
-			const $usersField = $('#anh-visibility-users').closest('tr');
+			const mode = $('#admin-notice-hub-visibility-mode').val();
+			const $usersField = $('#admin-notice-hub-visibility-users').closest('tr');
 
 			if (mode === 'hide-selected' || mode === 'show-selected') {
 				$usersField.show();

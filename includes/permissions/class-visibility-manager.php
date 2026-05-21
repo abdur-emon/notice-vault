@@ -37,7 +37,7 @@ class Visibility_Manager {
 		}
 
 		// Get settings.
-		$settings = get_option( 'anh_settings', array() );
+		$settings = get_option( 'admin_notice_hub_settings', array() );
 		$mode     = isset( $settings['visibility_mode'] ) ? $settings['visibility_mode'] : 'show-all';
 		$users    = isset( $settings['visibility_users'] ) ? $settings['visibility_users'] : array();
 

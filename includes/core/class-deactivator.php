@@ -50,9 +50,9 @@ class Deactivator {
 	 */
 	private static function clear_scheduled_events() {
 		// Clear notice cleanup cron.
-		$timestamp = wp_next_scheduled( 'anh_cleanup_notices' );
+		$timestamp = wp_next_scheduled( 'admin_notice_hub_cleanup_notices' );
 		if ( $timestamp ) {
-			wp_unschedule_event( $timestamp, 'anh_cleanup_notices' );
+			wp_unschedule_event( $timestamp, 'admin_notice_hub_cleanup_notices' );
 		}
 	}
 
@@ -63,8 +63,8 @@ class Deactivator {
 	 * @return void
 	 */
 	private static function clear_transients() {
-		delete_transient( 'anh_activation_redirect' );
-		delete_transient( 'anh_notice_count' );
+		delete_transient( 'admin_notice_hub_activation_redirect' );
+		delete_transient( 'admin_notice_hub_notice_count' );
 	}
 }
 

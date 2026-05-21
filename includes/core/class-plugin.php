@@ -74,7 +74,7 @@ class Plugin
 	 */
 	private function __construct()
 	{
-		$this->version = ANH_VERSION;
+		$this->version = ADMIN_NOTICE_HUB_VERSION;
 		$this->loader  = new Loader();
 
 		// Run pending migrations BEFORE instantiating storage so the table
@@ -125,18 +125,18 @@ class Plugin
 		$this->loader->add_action( 'admin_menu', $settings_page, 'add_settings_page' );
 		$this->loader->add_action( 'admin_init', $settings_page, 'register_settings' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $settings_page, 'enqueue_assets' );
-		$this->loader->add_action( 'wp_ajax_anh_search_users', $settings_page, 'ajax_search_users' );
-		$this->loader->add_filter( 'plugin_action_links_' . ANH_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links' );
+		$this->loader->add_action( 'wp_ajax_admin_notice_hub_search_users', $settings_page, 'ajax_search_users' );
+		$this->loader->add_filter( 'plugin_action_links_' . ADMIN_NOTICE_HUB_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links' );
 
 		// Initialize Notice Popup.
 		$notice_popup = new \Admin_Notice_Hub\Admin\Notice_Popup( $this->storage );
 		$this->loader->add_action( 'admin_enqueue_scripts', $notice_popup, 'enqueue_assets' );
 		$this->loader->add_action( 'admin_footer', $notice_popup, 'render_popup' );
-		$this->loader->add_action( 'wp_ajax_anh_get_notices', $notice_popup, 'ajax_get_notices' );
-		$this->loader->add_action( 'wp_ajax_anh_mark_read', $notice_popup, 'ajax_mark_read' );
-		$this->loader->add_action( 'wp_ajax_anh_dismiss_notice', $notice_popup, 'ajax_dismiss_notice' );
-		$this->loader->add_action( 'wp_ajax_anh_mark_all_read', $notice_popup, 'ajax_mark_all_read' );
-		$this->loader->add_action( 'wp_ajax_anh_clear_all', $notice_popup, 'ajax_clear_all' );
+		$this->loader->add_action( 'wp_ajax_admin_notice_hub_get_notices', $notice_popup, 'ajax_get_notices' );
+		$this->loader->add_action( 'wp_ajax_admin_notice_hub_mark_read', $notice_popup, 'ajax_mark_read' );
+		$this->loader->add_action( 'wp_ajax_admin_notice_hub_dismiss_notice', $notice_popup, 'ajax_dismiss_notice' );
+		$this->loader->add_action( 'wp_ajax_admin_notice_hub_mark_all_read', $notice_popup, 'ajax_mark_all_read' );
+		$this->loader->add_action( 'wp_ajax_admin_notice_hub_clear_all', $notice_popup, 'ajax_clear_all' );
 
 		// Initialize Admin Toolbar.
 		$admin_toolbar = new \Admin_Notice_Hub\Toolbar\Admin_Toolbar( $this->storage );

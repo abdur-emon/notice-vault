@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="wrap anh-settings-wrap">
+<div class="wrap admin-notice-hub-settings-wrap">
 	<h1>
 		<span class="dashicons dashicons-bell"></span>
 		<?php echo esc_html( get_admin_page_title() ); ?>
 	</h1>
 
-	<p class="anh-description">
+	<p class="admin-notice-hub-description">
 		<?php esc_html_e( 'Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.', 'admin-notice-hub' ); ?>
 	</p>
 
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 	</form>
 
-	<div class="anh-info-box">
+	<div class="admin-notice-hub-info-box">
 		<h3><?php esc_html_e( 'How It Works', 'admin-notice-hub' ); ?></h3>
 		<ol>
 			<li><?php esc_html_e( 'Configure how each notice type should be handled above', 'admin-notice-hub' ); ?></li>
@@ -41,20 +41,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</ol>
 	</div>
 
-	<div class="anh-stats-box">
+	<div class="admin-notice-hub-stats-box">
 		<h3><?php esc_html_e( 'Statistics', 'admin-notice-hub' ); ?></h3>
 		<?php
-		$anh_storage        = \Admin_Notice_Hub\Core\Plugin::get_instance()->get_storage();
-		$anh_total_notices  = count( $anh_storage->get_all() );
-		$anh_unread_notices = $anh_storage->get_unread_count();
+		$admin_notice_hub_storage        = \Admin_Notice_Hub\Core\Plugin::get_instance()->get_storage();
+		$admin_notice_hub_total_notices  = count( $admin_notice_hub_storage->get_all() );
+		$admin_notice_hub_unread_notices = $admin_notice_hub_storage->get_unread_count();
 		?>
 		<p>
 			<strong><?php esc_html_e( 'Total Notices:', 'admin-notice-hub' ); ?></strong>
-			<?php echo esc_html( $anh_total_notices ); ?>
+			<?php echo esc_html( $admin_notice_hub_total_notices ); ?>
 		</p>
 		<p>
 			<strong><?php esc_html_e( 'Unread Notices:', 'admin-notice-hub' ); ?></strong>
-			<?php echo esc_html( $anh_unread_notices ); ?>
+			<?php echo esc_html( $admin_notice_hub_unread_notices ); ?>
 		</p>
 	</div>
 </div>

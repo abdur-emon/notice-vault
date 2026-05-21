@@ -37,14 +37,14 @@ class Settings_Page
 	 *
 	 * @var string
 	 */
-	const OPTION_GROUP = 'anh_settings_group';
+	const OPTION_GROUP = 'admin_notice_hub_settings_group';
 
 	/**
 	 * Option name.
 	 *
 	 * @var string
 	 */
-	const OPTION_NAME = 'anh_settings';
+	const OPTION_NAME = 'admin_notice_hub_settings';
 
 	/**
 	 * Add settings page to admin menu.
@@ -80,7 +80,7 @@ class Settings_Page
 
 		// Notice Type Settings Section.
 		add_settings_section(
-			'anh_notice_types',
+			'admin_notice_hub_notice_types',
 			__( 'Notice Type Settings', 'admin-notice-hub' ),
 			array( $this, 'render_notice_types_section' ),
 			self::PAGE_SLUG
@@ -88,7 +88,7 @@ class Settings_Page
 
 		// Popup Settings Section.
 		add_settings_section(
-			'anh_popup_settings',
+			'admin_notice_hub_popup_settings',
 			__( 'Popup Settings', 'admin-notice-hub' ),
 			array( $this, 'render_popup_section' ),
 			self::PAGE_SLUG
@@ -96,7 +96,7 @@ class Settings_Page
 
 		// User Visibility Section.
 		add_settings_section(
-			'anh_visibility',
+			'admin_notice_hub_visibility',
 			__( 'User Visibility Settings', 'admin-notice-hub' ),
 			array( $this, 'render_visibility_section' ),
 			self::PAGE_SLUG
@@ -104,7 +104,7 @@ class Settings_Page
 
 		// Advanced Settings Section.
 		add_settings_section(
-			'anh_advanced',
+			'admin_notice_hub_advanced',
 			__( 'Advanced Settings', 'admin-notice-hub' ),
 			array( $this, 'render_advanced_section' ),
 			self::PAGE_SLUG
@@ -131,7 +131,7 @@ class Settings_Page
 				$label,
 				array($this, 'render_notice_type_field'),
 				self::PAGE_SLUG,
-				'anh_notice_types',
+				'admin_notice_hub_notice_types',
 				array('type' => $type)
 			);
 		}
@@ -142,7 +142,7 @@ class Settings_Page
 			__( 'Popup Style', 'admin-notice-hub' ),
 			array( $this, 'render_popup_style_field' ),
 			self::PAGE_SLUG,
-			'anh_popup_settings'
+			'admin_notice_hub_popup_settings'
 		);
 
 		// Visibility mode field.
@@ -151,7 +151,7 @@ class Settings_Page
 			__( 'Visibility Mode', 'admin-notice-hub' ),
 			array( $this, 'render_visibility_mode_field' ),
 			self::PAGE_SLUG,
-			'anh_visibility'
+			'admin_notice_hub_visibility'
 		);
 
 		// Visibility users field.
@@ -160,7 +160,7 @@ class Settings_Page
 			__( 'Select Users', 'admin-notice-hub' ),
 			array( $this, 'render_visibility_users_field' ),
 			self::PAGE_SLUG,
-			'anh_visibility'
+			'admin_notice_hub_visibility'
 		);
 
 		// Auto expire days field.
@@ -169,7 +169,7 @@ class Settings_Page
 			__( 'Auto-expire Notices After', 'admin-notice-hub' ),
 			array( $this, 'render_auto_expire_field' ),
 			self::PAGE_SLUG,
-			'anh_advanced'
+			'admin_notice_hub_advanced'
 		);
 	}
 
@@ -184,7 +184,7 @@ class Settings_Page
 			wp_die( esc_html__( 'Unauthorized access', 'admin-notice-hub' ) );
 		}
 
-		include ANH_PLUGIN_DIR . 'templates/settings-page.php';
+		include ADMIN_NOTICE_HUB_PLUGIN_DIR . 'templates/settings-page.php';
 	}
 
 	/**
@@ -310,7 +310,7 @@ class Settings_Page
 			'show-selected' => __( 'Show to selected users only', 'admin-notice-hub' ),
 		);
 
-		echo '<select name="' . esc_attr(self::OPTION_NAME . '[visibility_mode]') . '" id="anh-visibility-mode" class="regular-text">';
+		echo '<select name="' . esc_attr(self::OPTION_NAME . '[visibility_mode]') . '" id="admin-notice-hub-visibility-mode" class="regular-text">';
 		foreach ($options as $option_value => $option_label) {
 			printf(
 				'<option value="%s" %s>%s</option>',
@@ -333,7 +333,7 @@ class Settings_Page
 		$settings = get_option(self::OPTION_NAME, array());
 		$selected_users = isset($settings['visibility_users']) ? $settings['visibility_users'] : array();
 
-		echo '<select name="' . esc_attr( self::OPTION_NAME . '[visibility_users][]' ) . '" id="anh-visibility-users" class="regular-text anh-select2-users" multiple="multiple" style="width:100%; max-width:400px;">';
+		echo '<select name="' . esc_attr( self::OPTION_NAME . '[visibility_users][]' ) . '" id="admin-notice-hub-visibility-users" class="regular-text admin-notice-hub-select2-users" multiple="multiple" style="width:100%; max-width:400px;">';
 		foreach ( $selected_users as $user_id ) {
 			$user = get_userdata( $user_id );
 			if ( $user ) {
@@ -381,7 +381,7 @@ class Settings_Page
 		$sanitized = array();
 
 		// Sanitize notice type settings — uses the filtered type list so custom buckets
-		// registered via `anh_notice_types` are validated too.
+		// registered via `admin_notice_hub_notice_types` are validated too.
 		$notice_types = array_keys( \Admin_Notice_Hub\Notices\Notice_Classifier::get_types() );
 		foreach ($notice_types as $type) {
 			$key = 'notice_' . $type;
@@ -425,7 +425,7 @@ class Settings_Page
 		}
 
 		// Keep version.
-		$sanitized['version'] = ANH_VERSION;
+		$sanitized['version'] = ADMIN_NOTICE_HUB_VERSION;
 
 		return $sanitized;
 	}
@@ -444,30 +444,30 @@ class Settings_Page
 			return;
 		}
 
-		wp_enqueue_style( 'select2', ANH_PLUGIN_URL . 'assets/css/select2.min.css', array(), '4.0.13' );
-		wp_enqueue_script( 'select2', ANH_PLUGIN_URL . 'assets/js/select2.min.js', array( 'jquery' ), '4.0.13', true );
+		wp_enqueue_style( 'select2', ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/css/select2.min.css', array(), '4.0.13' );
+		wp_enqueue_script( 'select2', ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/js/select2.min.js', array( 'jquery' ), '4.0.13', true );
 
 		wp_enqueue_style(
-			'anh-admin',
-			ANH_PLUGIN_URL . 'assets/css/admin.css',
+			'admin-notice-hub-admin',
+			ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/css/admin.css',
 			array(),
-			ANH_VERSION
+			ADMIN_NOTICE_HUB_VERSION
 		);
 
 		wp_enqueue_script(
-			'anh-admin',
-			ANH_PLUGIN_URL . 'assets/js/admin.js',
+			'admin-notice-hub-admin',
+			ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/js/admin.js',
 			array( 'jquery', 'select2' ),
-			ANH_VERSION,
+			ADMIN_NOTICE_HUB_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'anh-admin',
-			'anhAdmin',
+			'admin-notice-hub-admin',
+			'adminNoticeHubAdmin',
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'anh_admin_nonce' ),
+				'nonce'   => wp_create_nonce( 'admin_notice_hub_admin_nonce' ),
 			)
 		);
 	}
@@ -492,7 +492,7 @@ class Settings_Page
 	 * @return void
 	 */
 	public function ajax_search_users() {
-		check_ajax_referer( 'anh_admin_nonce', 'nonce' );
+		check_ajax_referer( 'admin_notice_hub_admin_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );

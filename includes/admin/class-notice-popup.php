@@ -57,28 +57,28 @@ class Notice_Popup
 
 		// Enqueue CSS.
 		wp_enqueue_style(
-			'anh-popup',
-			ANH_PLUGIN_URL . 'assets/css/popup.css',
+			'admin-notice-hub-popup',
+			ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/css/popup.css',
 			array(),
-			ANH_VERSION
+			ADMIN_NOTICE_HUB_VERSION
 		);
 
 		// Enqueue JS.
 		wp_enqueue_script(
-			'anh-popup',
-			ANH_PLUGIN_URL . 'assets/js/popup.js',
+			'admin-notice-hub-popup',
+			ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/js/popup.js',
 			array('jquery'),
-			ANH_VERSION,
+			ADMIN_NOTICE_HUB_VERSION,
 			true
 		);
 
 		// Localize script.
 		wp_localize_script(
-			'anh-popup',
-			'anhPopup',
+			'admin-notice-hub-popup',
+			'adminNoticeHubPopup',
 			array(
 				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'nonce'      => wp_create_nonce( 'anh_ajax_nonce' ),
+				'nonce'      => wp_create_nonce( 'admin_notice_hub_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n'       => array(
 					'noNotices'       => __( 'No notices to display', 'admin-notice-hub' ),
@@ -117,7 +117,7 @@ class Notice_Popup
 		}
 
 		$popup_style = $this->get_popup_style();
-		include ANH_PLUGIN_DIR . 'templates/popup-template.php';
+		include ADMIN_NOTICE_HUB_PLUGIN_DIR . 'templates/popup-template.php';
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Notice_Popup
 	 */
 	private function get_popup_style()
 	{
-		$settings = get_option('anh_settings', array());
+		$settings = get_option('admin_notice_hub_settings', array());
 		return isset($settings['popup_style']) ? $settings['popup_style'] : 'slide-right';
 	}
 
@@ -141,7 +141,7 @@ class Notice_Popup
 	public function ajax_get_notices()
 	{
 		// Verify nonce.
-		check_ajax_referer('anh_ajax_nonce', 'nonce');
+		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
 
 		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
@@ -212,7 +212,7 @@ class Notice_Popup
 	public function ajax_mark_read()
 	{
 		// Verify nonce.
-		check_ajax_referer('anh_ajax_nonce', 'nonce');
+		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
 
 		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
@@ -258,7 +258,7 @@ class Notice_Popup
 	public function ajax_dismiss_notice()
 	{
 		// Verify nonce.
-		check_ajax_referer('anh_ajax_nonce', 'nonce');
+		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
 
 		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
@@ -303,7 +303,7 @@ class Notice_Popup
 	 */
 	public function ajax_mark_all_read()
 	{
-		check_ajax_referer('anh_ajax_nonce', 'nonce');
+		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
 
 		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
@@ -336,7 +336,7 @@ class Notice_Popup
 	 */
 	public function ajax_clear_all()
 	{
-		check_ajax_referer('anh_ajax_nonce', 'nonce');
+		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
 
 		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
 			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );

@@ -34,12 +34,12 @@ class Cleanup {
 	 */
 	public static function init() {
 		// Schedule cleanup if not already scheduled.
-		if ( ! wp_next_scheduled( 'anh_cleanup_notices' ) ) {
-			wp_schedule_event( time(), 'daily', 'anh_cleanup_notices' );
+		if ( ! wp_next_scheduled( 'admin_notice_hub_cleanup_notices' ) ) {
+			wp_schedule_event( time(), 'daily', 'admin_notice_hub_cleanup_notices' );
 		}
 
 		// Hook cleanup function.
-		add_action( 'anh_cleanup_notices', array( __CLASS__, 'cleanup_expired_notices' ) );
+		add_action( 'admin_notice_hub_cleanup_notices', array( __CLASS__, 'cleanup_expired_notices' ) );
 	}
 
 	/**

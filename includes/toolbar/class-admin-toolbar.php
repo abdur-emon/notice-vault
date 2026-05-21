@@ -64,11 +64,11 @@ class Admin_Toolbar {
 		// Add parent menu item.
 		$wp_admin_bar->add_node(
 			array(
-				'id'    => 'anh-notices',
+				'id'    => 'admin-notice-hub-notices',
 				'title' => $title,
 				'href'  => '#',
 				'meta'  => array(
-					'class' => 'anh-toolbar-item',
+					'class' => 'admin-notice-hub-toolbar-item',
 					'title' => __( 'View Notices', 'admin-notice-hub' ),
 				),
 			)
@@ -92,7 +92,7 @@ class Admin_Toolbar {
 
 		if ( $count > 0 ) {
 			$badge = sprintf(
-				'<span class="anh-count-badge">%s</span>',
+				'<span class="admin-notice-hub-count-badge">%s</span>',
 				esc_html( $count )
 			);
 			$text = esc_html__( 'Notices', 'admin-notice-hub' );
@@ -121,12 +121,12 @@ class Admin_Toolbar {
 		foreach ( $notices as $notice ) {
 			$wp_admin_bar->add_node(
 				array(
-					'parent' => 'anh-notices',
-					'id'     => 'anh-notice-' . $notice['id'],
+					'parent' => 'admin-notice-hub-notices',
+					'id'     => 'admin-notice-hub-notice-' . $notice['id'],
 					'title'  => $this->get_notice_preview( $notice ),
 					'href'   => '#',
 					'meta'   => array(
-						'class'           => 'anh-notice-preview',
+						'class'           => 'admin-notice-hub-notice-preview',
 						'data-notice-id'  => $notice['id'],
 						'data-notice-type' => $notice['type'],
 					),
@@ -137,12 +137,12 @@ class Admin_Toolbar {
 		// Add "View All" link.
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => 'anh-notices',
-				'id'     => 'anh-view-all',
+				'parent' => 'admin-notice-hub-notices',
+				'id'     => 'admin-notice-hub-view-all',
 				'title'  => esc_html__( 'View All Notices', 'admin-notice-hub' ),
 				'href'   => '#',
 				'meta'   => array(
-					'class' => 'anh-view-all',
+					'class' => 'admin-notice-hub-view-all',
 				),
 			)
 		);

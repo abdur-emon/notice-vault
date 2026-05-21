@@ -25,17 +25,17 @@
 		 */
 		bindEvents: function () {
 			// Open popup when clicking toolbar item
-			$(document).on('click', '#wp-admin-bar-anh-notices > a, .anh-view-all', function (e) {
+			$(document).on('click', '#wp-admin-bar-admin-notice-hub-notices > a, .admin-notice-hub-view-all', function (e) {
 				e.preventDefault();
 				NoticePopup.openPopup();
 			});
 
 			// Close popup
-			$(document).on('click', '.anh-close-popup', function (e) {
+			$(document).on('click', '.admin-notice-hub-close-popup', function (e) {
 				NoticePopup.closePopup();
 			});
 
-			$(document).on('click', '.anh-popup-overlay', function (e) {
+			$(document).on('click', '.admin-notice-hub-popup-overlay', function (e) {
 				if (e.target === this) {
 					NoticePopup.closePopup();
 				}
@@ -43,55 +43,55 @@
 
 			// ESC key to close
 			$(document).on('keydown', function (e) {
-				if (e.key === 'Escape' && $('#anh-popup-overlay').hasClass('anh-active')) {
+				if (e.key === 'Escape' && $('#admin-notice-hub-popup-overlay').hasClass('admin-notice-hub-active')) {
 					NoticePopup.closePopup();
 				}
 			});
 
 			// Filter change
-			$(document).on('change', '#anh-filter-type, #anh-show-read', function () {
+			$(document).on('change', '#admin-notice-hub-filter-type, #admin-notice-hub-show-read', function () {
 				NoticePopup.loadNotices();
 			});
 
 			// Mark as read
-			$(document).on('click', '.anh-mark-read', function (e) {
+			$(document).on('click', '.admin-notice-hub-mark-read', function (e) {
 				e.preventDefault();
 				const noticeId = $(this).data('notice-id');
 				NoticePopup.markRead(noticeId);
 			});
 
 			// Dismiss notice
-			$(document).on('click', '.anh-dismiss', function (e) {
+			$(document).on('click', '.admin-notice-hub-dismiss', function (e) {
 				e.preventDefault();
 				const noticeId = $(this).data('notice-id');
 				NoticePopup.dismissNotice(noticeId);
 			});
 
 			// Mark all read
-			$(document).on('click', '#anh-mark-all-read', function (e) {
+			$(document).on('click', '#admin-notice-hub-mark-all-read', function (e) {
 				e.preventDefault();
 				NoticePopup.markAllRead();
 			});
 
 			// Clear all
-			$(document).on('click', '#anh-clear-all', function (e) {
+			$(document).on('click', '#admin-notice-hub-clear-all', function (e) {
 				e.preventDefault();
-				$('#anh-confirm-modal').fadeIn(200);
+				$('#admin-notice-hub-confirm-modal').fadeIn(200);
 			});
 
 			// Modal Confirm Cancel
-			$(document).on('click', '#anh-confirm-cancel', function () {
-				$('#anh-confirm-modal').fadeOut(200);
+			$(document).on('click', '#admin-notice-hub-confirm-cancel', function () {
+				$('#admin-notice-hub-confirm-modal').fadeOut(200);
 			});
 
 			// Modal Confirm Yes
-			$(document).on('click', '#anh-confirm-yes', function () {
-				$('#anh-confirm-modal').fadeOut(200);
+			$(document).on('click', '#admin-notice-hub-confirm-yes', function () {
+				$('#admin-notice-hub-confirm-modal').fadeOut(200);
 				NoticePopup.clearAll();
 			});
 
 			// Focus Trapping within Popup
-			$(document).on('keydown', '#anh-popup', function (e) {
+			$(document).on('keydown', '#admin-notice-hub-popup', function (e) {
 				if (e.key === 'Tab') {
 					NoticePopup.trapFocus(e);
 				}
@@ -102,7 +102,7 @@
 		 * Trap focus inside popup
 		 */
 		trapFocus: function (e) {
-			const focusableElements = $('#anh-popup').find('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter(':visible').not('#anh-confirm-modal *');
+			const focusableElements = $('#admin-notice-hub-popup').find('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter(':visible').not('#admin-notice-hub-confirm-modal *');
 			if (focusableElements.length === 0) return;
 
 			const firstElement = focusableElements[0];
@@ -126,11 +126,11 @@
 		 */
 		openPopup: function () {
 			this.previousFocus = document.activeElement;
-			$('#anh-popup-overlay').show();
+			$('#admin-notice-hub-popup-overlay').show();
 			setTimeout(function () {
-				$('#anh-popup-overlay').addClass('anh-active');
+				$('#admin-notice-hub-popup-overlay').addClass('admin-notice-hub-active');
 				// Focus the close button for accessibility
-				$('#anh-popup-overlay').find('.anh-close-popup').focus();
+				$('#admin-notice-hub-popup-overlay').find('.admin-notice-hub-close-popup').focus();
 			}, 10);
 			this.loadNotices();
 		},
@@ -139,9 +139,9 @@
 		 * Close popup
 		 */
 		closePopup: function () {
-			$('#anh-popup-overlay').removeClass('anh-active');
+			$('#admin-notice-hub-popup-overlay').removeClass('admin-notice-hub-active');
 			setTimeout(function () {
-				$('#anh-popup-overlay').hide();
+				$('#admin-notice-hub-popup-overlay').hide();
 				// Restore focus
 				if (NoticePopup.previousFocus) {
 					NoticePopup.previousFocus.focus();
@@ -153,30 +153,30 @@
 		 * Load notices via AJAX
 		 */
 		loadNotices: function () {
-			const filterType = $('#anh-filter-type').val();
-			const showRead = $('#anh-show-read').is(':checked');
+			const filterType = $('#admin-notice-hub-filter-type').val();
+			const showRead = $('#admin-notice-hub-show-read').is(':checked');
 
-			$('.anh-loading').show();
-			$('.anh-notices-list').hide();
-			$('.anh-empty-state').hide();
+			$('.admin-notice-hub-loading').show();
+			$('.admin-notice-hub-notices-list').hide();
+			$('.admin-notice-hub-empty-state').hide();
 
 			$.ajax({
-				url: anhPopup.ajaxUrl,
+				url: adminNoticeHubPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'anh_get_notices',
-					nonce: anhPopup.nonce,
+					action: 'admin_notice_hub_get_notices',
+					nonce: adminNoticeHubPopup.nonce,
 					filter_type: filterType,
 					show_read: showRead
 				},
 				success: function (response) {
-					$('.anh-loading').hide();
+					$('.admin-notice-hub-loading').hide();
 
 					if (response.success && response.data.notices.length > 0) {
 						NoticePopup.renderNotices(response.data.notices);
-						$('.anh-notices-list').show();
+						$('.admin-notice-hub-notices-list').show();
 					} else {
-						$('.anh-empty-state').show();
+						$('.admin-notice-hub-empty-state').show();
 					}
 
 					if (response.success && response.data) {
@@ -186,8 +186,8 @@
 					}
 				},
 				error: function () {
-					$('.anh-loading').hide();
-					NoticePopup.showToast(anhPopup.i18n.error, 'error');
+					$('.admin-notice-hub-loading').hide();
+					NoticePopup.showToast(adminNoticeHubPopup.i18n.error, 'error');
 				}
 			});
 		},
@@ -196,7 +196,7 @@
 		 * Render notices
 		 */
 		renderNotices: function (notices) {
-			const $list = $('#anh-notices-list');
+			const $list = $('#admin-notice-hub-notices-list');
 			$list.empty();
 
 			notices.forEach(function (notice) {
@@ -212,26 +212,26 @@
 		 * stripped notice copy can never be re-interpreted as HTML.
 		 */
 		createNoticeItem: function (notice) {
-			const readClass = notice.is_read ? 'anh-notice-read' : '';
-			const typeClass = 'anh-notice-' + notice.type;
+			const readClass = notice.is_read ? 'admin-notice-hub-notice-read' : '';
+			const typeClass = 'admin-notice-hub-notice-' + notice.type;
 			const timeAgo = NoticePopup.timeAgo(notice.created_at);
-			const i18n = anhPopup.i18n || {};
+			const i18n = adminNoticeHubPopup.i18n || {};
 
 			const $item = $('<div>')
-				.addClass('anh-notice-item ' + typeClass + ' ' + readClass)
+				.addClass('admin-notice-hub-notice-item ' + typeClass + ' ' + readClass)
 				.attr('data-notice-id', notice.id);
 
-			const $header = $('<div class="anh-notice-header">');
+			const $header = $('<div class="admin-notice-hub-notice-header">');
 			$header.append(
-				$('<div class="anh-notice-type">')
+				$('<div class="admin-notice-hub-notice-type">')
 					.append($('<span class="dashicons">').addClass(notice.icon).attr('aria-hidden', 'true'))
 					.append(document.createTextNode(' ' + notice.type))
 			);
 
-			const $actions = $('<div class="anh-notice-actions">');
+			const $actions = $('<div class="admin-notice-hub-notice-actions">');
 			if (!notice.is_read) {
 				$actions.append(
-					$('<button type="button" class="anh-notice-action anh-mark-read">')
+					$('<button type="button" class="admin-notice-hub-notice-action admin-notice-hub-mark-read">')
 						.attr('data-notice-id', notice.id)
 						.attr('title', i18n.markAsRead || 'Mark as read')
 						.attr('aria-label', i18n.markAsRead || 'Mark as read')
@@ -239,7 +239,7 @@
 				);
 			}
 			$actions.append(
-				$('<button type="button" class="anh-notice-action anh-dismiss">')
+				$('<button type="button" class="admin-notice-hub-notice-action admin-notice-hub-dismiss">')
 					.attr('data-notice-id', notice.id)
 					.attr('title', i18n.dismiss || 'Dismiss')
 					.attr('aria-label', i18n.dismissNotice || 'Dismiss notice')
@@ -248,10 +248,10 @@
 			$header.append($actions);
 
 			$item.append($header);
-			$item.append($('<div class="anh-notice-content">').text(notice.content || ''));
+			$item.append($('<div class="admin-notice-hub-notice-content">').text(notice.content || ''));
 			$item.append(
-				$('<div class="anh-notice-meta">').append(
-					$('<div class="anh-notice-time">')
+				$('<div class="admin-notice-hub-notice-meta">').append(
+					$('<div class="admin-notice-hub-notice-time">')
 						.append('<span class="dashicons dashicons-clock" aria-hidden="true"></span>')
 						.append(document.createTextNode(' ' + timeAgo))
 				)
@@ -265,17 +265,17 @@
 		 */
 		markRead: function (noticeId) {
 			$.ajax({
-				url: anhPopup.ajaxUrl,
+				url: adminNoticeHubPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'anh_mark_read',
-					nonce: anhPopup.nonce,
+					action: 'admin_notice_hub_mark_read',
+					nonce: adminNoticeHubPopup.nonce,
 					notice_id: noticeId
 				},
 				success: function (response) {
 					if (response.success) {
-						$('[data-notice-id="' + noticeId + '"]').addClass('anh-notice-read');
-						$('[data-notice-id="' + noticeId + '"] .anh-mark-read').remove();
+						$('[data-notice-id="' + noticeId + '"]').addClass('admin-notice-hub-notice-read');
+						$('[data-notice-id="' + noticeId + '"] .admin-notice-hub-mark-read').remove();
 						NoticePopup.updateToolbarCount(response.data.unread_total);
 					}
 				}
@@ -287,11 +287,11 @@
 		 */
 		dismissNotice: function (noticeId) {
 			$.ajax({
-				url: anhPopup.ajaxUrl,
+				url: adminNoticeHubPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'anh_dismiss_notice',
-					nonce: anhPopup.nonce,
+					action: 'admin_notice_hub_dismiss_notice',
+					nonce: adminNoticeHubPopup.nonce,
 					notice_id: noticeId
 				},
 				success: function (response) {
@@ -299,8 +299,8 @@
 						$('[data-notice-id="' + noticeId + '"]').fadeOut(300, function () {
 							$(this).slideUp(200, function () {
 								$(this).remove();
-								if ($('.anh-notice-item').length === 0) {
-									$('.anh-empty-state').fadeIn(200);
+								if ($('.admin-notice-hub-notice-item').length === 0) {
+									$('.admin-notice-hub-empty-state').fadeIn(200);
 								}
 							});
 						});
@@ -315,18 +315,18 @@
 		 */
 		markAllRead: function () {
 			$.ajax({
-				url: anhPopup.ajaxUrl,
+				url: adminNoticeHubPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'anh_mark_all_read',
-					nonce: anhPopup.nonce
+					action: 'admin_notice_hub_mark_all_read',
+					nonce: adminNoticeHubPopup.nonce
 				},
 				success: function (response) {
 					if (response.success) {
-						$('.anh-notice-item').addClass('anh-notice-read');
-						$('.anh-mark-read').remove();
+						$('.admin-notice-hub-notice-item').addClass('admin-notice-hub-notice-read');
+						$('.admin-notice-hub-mark-read').remove();
 						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
-						NoticePopup.showToast(response.data.message || anhPopup.i18n.markAllRead);
+						NoticePopup.showToast(response.data.message || adminNoticeHubPopup.i18n.markAllRead);
 					}
 				}
 			});
@@ -337,19 +337,19 @@
 		 */
 		clearAll: function () {
 			$.ajax({
-				url: anhPopup.ajaxUrl,
+				url: adminNoticeHubPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'anh_clear_all',
-					nonce: anhPopup.nonce
+					action: 'admin_notice_hub_clear_all',
+					nonce: adminNoticeHubPopup.nonce
 				},
 				success: function (response) {
 					if (response.success) {
-						$('#anh-notices-list').empty();
-						$('.anh-empty-state').show();
-						$('.anh-notices-list').hide();
+						$('#admin-notice-hub-notices-list').empty();
+						$('.admin-notice-hub-empty-state').show();
+						$('.admin-notice-hub-notices-list').hide();
 						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
-						NoticePopup.showToast(response.data.message || anhPopup.i18n.clearAll);
+						NoticePopup.showToast(response.data.message || adminNoticeHubPopup.i18n.clearAll);
 					}
 				}
 			});
@@ -359,33 +359,33 @@
 		 * Update count badge
 		 */
 		updateCount: function (count) {
-			$('.anh-notice-count-badge').text(count);
+			$('.admin-notice-hub-notice-count-badge').text(count);
 		},
 
 		/**
 		 * Update toolbar count
 		 */
 		updateToolbarCount: function (count) {
-			const i18n = anhPopup.i18n || {};
-			const $label = $('#wp-admin-bar-anh-notices .ab-label');
+			const i18n = adminNoticeHubPopup.i18n || {};
+			const $label = $('#wp-admin-bar-admin-notice-hub-notices .ab-label');
 			const num = parseInt(count, 10) || 0;
 
 			if (num > 0) {
 				const tmpl = i18n.noticesWithCount || 'Notices (%d)';
 				$label.text(tmpl.replace('%d', num));
-				$('.anh-count-badge').text(num).show();
+				$('.admin-notice-hub-count-badge').text(num).show();
 			} else {
 				$label.text(i18n.notices || 'Notices');
-				$('.anh-count-badge').hide();
+				$('.admin-notice-hub-count-badge').hide();
 			}
 			this.updateCount(num);
 		},
 
 		/**
-		 * Time ago helper (translatable via anhPopup.i18n).
+		 * Time ago helper (translatable via adminNoticeHubPopup.i18n).
 		 */
 		timeAgo: function (datetime) {
-			const i18n = anhPopup.i18n || {};
+			const i18n = adminNoticeHubPopup.i18n || {};
 			const now = new Date();
 			const past = new Date(datetime);
 			const seconds = Math.floor((now - past) / 1000);
@@ -406,17 +406,17 @@
 		 */
 		showToast: function (message, type = 'success') {
 			const $toast = $('<div>')
-				.addClass('anh-toast anh-toast-' + type)
+				.addClass('admin-notice-hub-toast admin-notice-hub-toast-' + type)
 				.text(message);
 
-			$('#anh-toast-container').append($toast);
+			$('#admin-notice-hub-toast-container').append($toast);
 
 			// Trigger reflow for transition
 			$toast[0].offsetHeight;
-			$toast.addClass('anh-toast-show');
+			$toast.addClass('admin-notice-hub-toast-show');
 
 			setTimeout(function () {
-				$toast.removeClass('anh-toast-show');
+				$toast.removeClass('admin-notice-hub-toast-show');
 				setTimeout(function () {
 					$toast.remove();
 				}, 300);

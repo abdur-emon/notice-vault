@@ -134,7 +134,7 @@ By default, every captured notice category (success, error, warning, info, syste
 * Settings page with per-type rules, per-user visibility controls, and configurable auto-expire window.
 * AJAX-powered mark-as-read and dismiss actions, per-user scoped.
 * Daily cleanup cron for expired notices.
-* Developer hooks: `anh_notice_types`, `anh_before_store_notice`, `anh_notice_stored`.
+* Developer hooks: `admin_notice_hub_notice_types`, `admin_notice_hub_before_store_notice`, `admin_notice_hub_notice_stored`.
 
 
 == Upgrade Notice ==

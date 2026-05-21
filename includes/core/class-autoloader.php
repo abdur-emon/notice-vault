@@ -45,7 +45,7 @@ class Autoloader {
 	 * @return void
 	 */
 	public static function register() {
-		self::$base_dir = ANH_PLUGIN_DIR . 'includes/';
+		self::$base_dir = ADMIN_NOTICE_HUB_PLUGIN_DIR . 'includes/';
 		spl_autoload_register( array( __CLASS__, 'autoload' ) );
 	}
 

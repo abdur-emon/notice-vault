@@ -24,16 +24,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin Constants
  */
-define( 'ANH_VERSION', '1.0.0' );
-define( 'ANH_PLUGIN_FILE', __FILE__ );
-define( 'ANH_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'ANH_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'ANH_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+define( 'ADMIN_NOTICE_HUB_VERSION', '1.0.0' );
+define( 'ADMIN_NOTICE_HUB_PLUGIN_FILE', __FILE__ );
+define( 'ADMIN_NOTICE_HUB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'ADMIN_NOTICE_HUB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'ADMIN_NOTICE_HUB_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 /**
  * Autoloader
  */
-require_once ANH_PLUGIN_DIR . 'includes/core/class-autoloader.php';
+require_once ADMIN_NOTICE_HUB_PLUGIN_DIR . 'includes/core/class-autoloader.php';
 
 // Initialize autoloader.
 Admin_Notice_Hub\Core\Autoloader::register();
@@ -41,20 +41,20 @@ Admin_Notice_Hub\Core\Autoloader::register();
 /**
  * Activation Hook
  */
-function anh_activate_plugin() {
-	require_once ANH_PLUGIN_DIR . 'includes/core/class-activator.php';
+function admin_notice_hub_activate_plugin() {
+	require_once ADMIN_NOTICE_HUB_PLUGIN_DIR . 'includes/core/class-activator.php';
 	Admin_Notice_Hub\Core\Activator::activate();
 }
-register_activation_hook( __FILE__, 'anh_activate_plugin' );
+register_activation_hook( __FILE__, 'admin_notice_hub_activate_plugin' );
 
 /**
  * Deactivation Hook
  */
-function anh_deactivate_plugin() {
-	require_once ANH_PLUGIN_DIR . 'includes/core/class-deactivator.php';
+function admin_notice_hub_deactivate_plugin() {
+	require_once ADMIN_NOTICE_HUB_PLUGIN_DIR . 'includes/core/class-deactivator.php';
 	Admin_Notice_Hub\Core\Deactivator::deactivate();
 }
-register_deactivation_hook( __FILE__, 'anh_deactivate_plugin' );
+register_deactivation_hook( __FILE__, 'admin_notice_hub_deactivate_plugin' );
 
 /**
  * Initialize Plugin.
@@ -65,9 +65,9 @@ register_deactivation_hook( __FILE__, 'anh_deactivate_plugin' );
  * necessary and is flagged as a discouraged function by Plugin Check, so we
  * rely on the auto-loader.
  */
-function anh_init_plugin() {
+function admin_notice_hub_init_plugin() {
 	$plugin = Admin_Notice_Hub\Core\Plugin::get_instance();
 	$plugin->run();
 }
-add_action( 'plugins_loaded', 'anh_init_plugin' );
+add_action( 'plugins_loaded', 'admin_notice_hub_init_plugin' );
 

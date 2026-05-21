@@ -71,7 +71,7 @@ class Notice_Capture {
 	 */
 	private function get_settings() {
 		if ( null === $this->settings ) {
-			$this->settings = get_option( 'anh_settings', array() );
+			$this->settings = get_option( 'admin_notice_hub_settings', array() );
 		}
 		return $this->settings;
 	}
@@ -202,12 +202,12 @@ class Notice_Capture {
 		$doc             = new \DOMDocument();
 		$internal_errors = libxml_use_internal_errors( true );
 		$xml_prolog      = '<' . '?xml encoding="UTF-8"?' . '>';
-		$wrapped         = $xml_prolog . '<div id="anh-wrapper">' . $html . '</div>';
+		$wrapped         = $xml_prolog . '<div id="admin-notice-hub-wrapper">' . $html . '</div>';
 		$doc->loadHTML( $wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $internal_errors );
 
-		$wrapper = $doc->getElementById( 'anh-wrapper' );
+		$wrapper = $doc->getElementById( 'admin-notice-hub-wrapper' );
 
 		if ( $wrapper instanceof \DOMElement ) {
 			foreach ( $wrapper->childNodes as $child ) {
