@@ -22,8 +22,6 @@ rsync -a \
     --exclude='.wordpress-org' \
     --exclude='.claude' \
     --exclude='.claude.local' \
-    --exclude='phpcs.xml.dist' \
-    --exclude='phpcs.xml' \
     --exclude='.DS_Store' \
     --exclude='Thumbs.db' \
     --exclude='.idea' \
