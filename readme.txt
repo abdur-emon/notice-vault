@@ -1,6 +1,6 @@
-=== Admin Notice Hub ===
+=== Admin Notice Hub - Track and Manage Every Notice ===
 Contributors: abduremon, mdismail-cse
-Tags: admin notices, dashboard, notifications, declutter, productivity
+Tags: admin notices, dashboard, notifications, productivity
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.2
@@ -58,7 +58,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 
 = About =
-**Admin Notice Hub** is developed and maintained by Abdur Rahman Emon. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
+**Admin Notice Hub** is developed and maintained by Abdur Rahman Emon and Md. Ismail. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
 
 
 == Installation ==
@@ -132,9 +132,6 @@ By default, every captured notice category (success, error, warning, info, syste
 * Admin toolbar counter with quick-preview submenu.
 * Popup interface with three display styles (Slide from Right, Modal, Slide Background Panel).
 * Settings page with per-type rules, per-user visibility controls, and configurable auto-expire window.
-* AJAX-powered mark-as-read and dismiss actions, per-user scoped.
-* Daily cleanup cron for expired notices.
-* Developer hooks: `admin_notice_hub_notice_types`, `admin_notice_hub_before_store_notice`, `admin_notice_hub_notice_stored`.
 
 
 == Upgrade Notice ==
