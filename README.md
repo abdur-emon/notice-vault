@@ -1,4 +1,4 @@
-# Notice Vault - Track and Manage Every Notice
+# Notice Vault
 
 Capture WordPress admin notices into a centralized popup, so the dashboard stays clean and nothing gets lost.
 

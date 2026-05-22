@@ -1,4 +1,4 @@
-=== Notice Vault - Track and Manage Every Notice ===
+=== Notice Vault ===
 Contributors: abduremon, mdismail-cse
 Tags: admin notices, dashboard, notifications, productivity
 Requires at least: 5.0
