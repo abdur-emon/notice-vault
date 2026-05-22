@@ -4,11 +4,11 @@
  *
  * Manages user visibility permissions.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Permissions
  */
 
-namespace Admin_Notice_Hub\Permissions;
+namespace Notice_Vault\Permissions;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Visibility Manager Class
  *
- * Controls which users can see Admin Notice Hub.
+ * Controls which users can see Notice Vault.
  *
  * @since 1.0.0
  */
@@ -37,7 +37,7 @@ class Visibility_Manager {
 		}
 
 		// Get settings.
-		$settings = get_option( 'admin_notice_hub_settings', array() );
+		$settings = get_option( 'notice_vault_settings', array() );
 		$mode     = isset( $settings['visibility_mode'] ) ? $settings['visibility_mode'] : 'show-all';
 		$users    = isset( $settings['visibility_users'] ) ? $settings['visibility_users'] : array();
 
@@ -70,10 +70,10 @@ class Visibility_Manager {
 	 */
 	public static function get_mode_label( $mode ) {
 		$labels = array(
-			'show-all'      => __( 'Show to all users', 'admin-notice-hub' ),
-			'hide-all'      => __( 'Hide from all users', 'admin-notice-hub' ),
-			'hide-selected' => __( 'Hide from selected users', 'admin-notice-hub' ),
-			'show-selected' => __( 'Show to selected users', 'admin-notice-hub' ),
+			'show-all'      => __( 'Show to all users', 'notice-vault' ),
+			'hide-all'      => __( 'Hide from all users', 'notice-vault' ),
+			'hide-selected' => __( 'Hide from selected users', 'notice-vault' ),
+			'show-selected' => __( 'Show to selected users', 'notice-vault' ),
 		);
 
 		return isset( $labels[ $mode ] ) ? $labels[ $mode ] : $labels['show-all'];

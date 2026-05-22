@@ -1,4 +1,4 @@
-=== Admin Notice Hub - Track and Manage Every Notice ===
+=== Notice Vault - Track and Manage Every Notice ===
 Contributors: abduremon, mdismail-cse
 Tags: admin notices, dashboard, notifications, productivity
 Requires at least: 5.0
@@ -8,18 +8,18 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Control your WordPress dashboard with Admin Notice Hub - hide, manage, and organize admin alerts for a clean, distraction-free site.
+Control your WordPress dashboard with Notice Vault - hide, manage, and organize admin alerts for a clean, distraction-free site.
 
 == Description ==
 
-= Take Control of Your Dashboard with Admin Notice Hub =
-Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and update notices? **Admin Notice Hub** captures every admin notice as it fires and moves it into a tidy popup, so you can keep working without the visual noise — and read everything later at your convenience.
+= Take Control of Your Dashboard with Notice Vault =
+Is your WordPress dashboard cluttered with constant plugin alerts, theme warnings, and update notices? **Notice Vault** captures every admin notice as it fires and moves it into a tidy popup, so you can keep working without the visual noise — and read everything later at your convenience.
 
-WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Admin Notice Hub gives you per-type rules, per-user visibility controls, and a single counter in the admin bar so nothing is ever missed.
+WordPress admin notices can be helpful, but they often become overwhelming, taking up valuable screen real estate and disrupting your workflow. Notice Vault gives you per-type rules, per-user visibility controls, and a single counter in the admin bar so nothing is ever missed.
 
 
 
-= Why Choose Admin Notice Hub? =
+= Why Choose Notice Vault? =
 * **Declutter Your Workspace:** Move noisy admin notices out of the dashboard and into a dedicated popup.
 * **Improve Productivity:** Focus on your content instead of closing endless alert boxes.
 * **Granular Control:** Configure every notice category separately — popup, hide, or leave alone.
@@ -38,7 +38,7 @@ WordPress admin notices can be helpful, but they often become overwhelming, taki
 
 
 = Experience a Distraction-Free WordPress Workflow =
-Whether you are managing multiple sites or a blogger tired of constant upselling, **Admin Notice Hub** helps you maintain a professional, organized, and distraction-free environment.
+Whether you are managing multiple sites or a blogger tired of constant upselling, **Notice Vault** helps you maintain a professional, organized, and distraction-free environment.
 
 
 **Stop the clutter and start focusing on what matters: Your Website.**
@@ -46,7 +46,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 == Privacy Policy ==
 
-**Admin Notice Hub does not:**
+**Notice Vault does not:**
 
 * Collect any user data
 * Send data to external servers
@@ -58,7 +58,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 
 = About =
-**Admin Notice Hub** is developed and maintained by Abdur Rahman Emon and Md. Ismail. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
+**Notice Vault** is developed and maintained by Abdur Rahman Emon and Md. Ismail. Source code, issue tracking, and contributions are welcome on the project's GitHub repository.
 
 
 == Installation ==
@@ -67,7 +67,7 @@ Whether you are managing multiple sites or a blogger tired of constant upselling
 
 1. Log in to your WordPress admin panel
 2. Navigate to **Plugins → Add New**
-3. Search for "Admin Notice Hub"
+3. Search for "Notice Vault"
 4. Click **Install Now**
 5. Activate the plugin
 
@@ -89,13 +89,13 @@ No, you have full control. You can configure each notice type separately to eith
 
 No! Notices are captured and stored in the pop-up. You'll see a counter in the admin toolbar showing how many unread notices you have.
 
-= Can I control who sees Admin Notice Hub? =
+= Can I control who sees Notice Vault? =
 
-Yes! You can configure visibility settings to show or hide Admin Notice Hub for specific users or user roles.
+Yes! You can configure visibility settings to show or hide Notice Vault for specific users or user roles.
 
 = Does this work with multisite? =
 
-Admin Notice Hub runs per-site on a multisite network — activate it on each subsite you want to manage. Network-wide automatic activation and shared notice storage across the network are not supported in 1.0.0.
+Notice Vault runs per-site on a multisite network — activate it on each subsite you want to manage. Network-wide automatic activation and shared notice storage across the network are not supported in 1.0.0.
 
 = Will this slow down my site? =
 
@@ -111,11 +111,11 @@ By default, notices are automatically deleted after 30 days. You can customize t
 
 = Is this plugin translation-ready? =
 
-Yes! Admin Notice Hub is fully translation-ready with a .pot file included.
+Yes! Notice Vault is fully translation-ready with a .pot file included.
 
 = What happens immediately after I activate the plugin? =
 
-By default, every captured notice category (success, error, warning, info, system, non-standard) is set to **"Show in popup & hide from dashboard"**. The moment the plugin is active, admin notices from every plugin and theme will move from your dashboard into the Notices popup instead of appearing inline. You can change this per category at **Admin Notice Hub → Settings** — choose **"Hide completely"** to drop the notice entirely, or **"Do nothing"** to let it render on the dashboard as it normally would.
+By default, every captured notice category (success, error, warning, info, system, non-standard) is set to **"Show in popup & hide from dashboard"**. The moment the plugin is active, admin notices from every plugin and theme will move from your dashboard into the Notices popup instead of appearing inline. You can change this per category at **Notice Vault → Settings** — choose **"Hide completely"** to drop the notice entirely, or **"Do nothing"** to let it render on the dashboard as it normally would.
 
 
 == Screenshots ==

@@ -107,7 +107,7 @@ clover.xml
 wp-cli.local.yml
 
 # Plugin Check / WP-CLI reports
-admin-notice-hub-*.md
+notice-vault-*.md
 plugin-check-*.json
 
 # Composer artifacts
@@ -146,7 +146,7 @@ yarn-error.log
 *.zip
 *.tar.gz
 *.tar
-Admin-Notice-Hub-QA-Audit-Issues.pdf
+Notice-Vault-QA-Audit-Issues.pdf
 
 # =============================================================================
 # Secrets / credentials (defense in depth — never commit these)

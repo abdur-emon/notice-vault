@@ -4,11 +4,11 @@
  *
  * Handles plugin deactivation tasks.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Core
  */
 
-namespace Admin_Notice_Hub\Core;
+namespace Notice_Vault\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -50,9 +50,9 @@ class Deactivator {
 	 */
 	private static function clear_scheduled_events() {
 		// Clear notice cleanup cron.
-		$timestamp = wp_next_scheduled( 'admin_notice_hub_cleanup_notices' );
+		$timestamp = wp_next_scheduled( 'notice_vault_cleanup_notices' );
 		if ( $timestamp ) {
-			wp_unschedule_event( $timestamp, 'admin_notice_hub_cleanup_notices' );
+			wp_unschedule_event( $timestamp, 'notice_vault_cleanup_notices' );
 		}
 	}
 
@@ -63,8 +63,8 @@ class Deactivator {
 	 * @return void
 	 */
 	private static function clear_transients() {
-		delete_transient( 'admin_notice_hub_activation_redirect' );
-		delete_transient( 'admin_notice_hub_notice_count' );
+		delete_transient( 'notice_vault_activation_redirect' );
+		delete_transient( 'notice_vault_notice_count' );
 	}
 }
 

@@ -1,7 +1,7 @@
 /**
- * Admin Notice Hub - Admin JavaScript
+ * Notice Vault - Admin JavaScript
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  */
 
 (function ($) {
@@ -25,18 +25,18 @@
 		 */
 		initSelect2: function () {
 			if (typeof $.fn.select2 !== 'undefined') {
-				$('.admin-notice-hub-select2-users').select2({
+				$('.notice-vault-select2-users').select2({
 					placeholder: 'Search for a user...',
 					minimumInputLength: 2,
 					ajax: {
-						url: adminNoticeHubAdmin.ajaxUrl,
+						url: noticeVaultAdmin.ajaxUrl,
 						type: 'POST',
 						dataType: 'json',
 						delay: 250,
 						data: function (params) {
 							return {
-								action: 'admin_notice_hub_search_users',
-								nonce: adminNoticeHubAdmin.nonce,
+								action: 'notice_vault_search_users',
+								nonce: noticeVaultAdmin.nonce,
 								q: params.term
 							};
 						},
@@ -56,7 +56,7 @@
 		 */
 		bindEvents: function () {
 			// Toggle visibility users field based on mode
-			$(document).on('change', '#admin-notice-hub-visibility-mode', function () {
+			$(document).on('change', '#notice-vault-visibility-mode', function () {
 				SettingsPage.toggleVisibilityUsers();
 			});
 		},
@@ -65,8 +65,8 @@
 		 * Toggle visibility users field
 		 */
 		toggleVisibilityUsers: function () {
-			const mode = $('#admin-notice-hub-visibility-mode').val();
-			const $usersField = $('#admin-notice-hub-visibility-users').closest('tr');
+			const mode = $('#notice-vault-visibility-mode').val();
+			const $usersField = $('#notice-vault-visibility-users').closest('tr');
 
 			if (mode === 'hide-selected' || mode === 'show-selected') {
 				$usersField.show();

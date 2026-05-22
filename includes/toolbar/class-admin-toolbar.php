@@ -4,13 +4,13 @@
  *
  * Adds notice counter to WordPress admin bar.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Toolbar
  */
 
-namespace Admin_Notice_Hub\Toolbar;
+namespace Notice_Vault\Toolbar;
 
-use Admin_Notice_Hub\Notices\Notice_Storage;
+use Notice_Vault\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,14 +29,14 @@ class Admin_Toolbar {
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
+	 * @var \Notice_Vault\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Admin_Notice_Hub\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Notice_Vault\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -51,7 +51,7 @@ class Admin_Toolbar {
 	 */
 	public function add_toolbar_item( $wp_admin_bar ) {
 		// Only show to users who can see notices.
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
@@ -64,12 +64,12 @@ class Admin_Toolbar {
 		// Add parent menu item.
 		$wp_admin_bar->add_node(
 			array(
-				'id'    => 'admin-notice-hub-notices',
+				'id'    => 'notice-vault-notices',
 				'title' => $title,
 				'href'  => '#',
 				'meta'  => array(
-					'class' => 'admin-notice-hub-toolbar-item',
-					'title' => __( 'View Notices', 'admin-notice-hub' ),
+					'class' => 'notice-vault-toolbar-item',
+					'title' => __( 'View Notices', 'notice-vault' ),
 				),
 			)
 		);
@@ -92,14 +92,14 @@ class Admin_Toolbar {
 
 		if ( $count > 0 ) {
 			$badge = sprintf(
-				'<span class="admin-notice-hub-count-badge">%s</span>',
+				'<span class="notice-vault-count-badge">%s</span>',
 				esc_html( $count )
 			);
-			$text = esc_html__( 'Notices', 'admin-notice-hub' );
+			$text = esc_html__( 'Notices', 'notice-vault' );
 			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 		}
 
-		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'admin-notice-hub' ) . '</span>';
+		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'notice-vault' ) . '</span>';
 	}
 
 	/**
@@ -121,12 +121,12 @@ class Admin_Toolbar {
 		foreach ( $notices as $notice ) {
 			$wp_admin_bar->add_node(
 				array(
-					'parent' => 'admin-notice-hub-notices',
-					'id'     => 'admin-notice-hub-notice-' . $notice['id'],
+					'parent' => 'notice-vault-notices',
+					'id'     => 'notice-vault-notice-' . $notice['id'],
 					'title'  => $this->get_notice_preview( $notice ),
 					'href'   => '#',
 					'meta'   => array(
-						'class'           => 'admin-notice-hub-notice-preview',
+						'class'           => 'notice-vault-notice-preview',
 						'data-notice-id'  => $notice['id'],
 						'data-notice-type' => $notice['type'],
 					),
@@ -137,12 +137,12 @@ class Admin_Toolbar {
 		// Add "View All" link.
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => 'admin-notice-hub-notices',
-				'id'     => 'admin-notice-hub-view-all',
-				'title'  => esc_html__( 'View All Notices', 'admin-notice-hub' ),
+				'parent' => 'notice-vault-notices',
+				'id'     => 'notice-vault-view-all',
+				'title'  => esc_html__( 'View All Notices', 'notice-vault' ),
 				'href'   => '#',
 				'meta'   => array(
-					'class' => 'admin-notice-hub-view-all',
+					'class' => 'notice-vault-view-all',
 				),
 			)
 		);
@@ -167,7 +167,7 @@ class Admin_Toolbar {
 		}
 
 		// Get icon.
-		$icon_class = \Admin_Notice_Hub\Notices\Notice_Classifier::get_icon( $notice['type'] );
+		$icon_class = \Notice_Vault\Notices\Notice_Classifier::get_icon( $notice['type'] );
 
 		return sprintf(
 			'<span class="dashicons %s"></span> %s',

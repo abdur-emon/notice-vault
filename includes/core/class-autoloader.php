@@ -4,11 +4,11 @@
  *
  * PSR-4 compliant autoloader for the plugin.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Core
  */
 
-namespace Admin_Notice_Hub\Core;
+namespace Notice_Vault\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,7 +29,7 @@ class Autoloader {
 	 *
 	 * @var string
 	 */
-	private static $prefix = 'Admin_Notice_Hub\\';
+	private static $prefix = 'Notice_Vault\\';
 
 	/**
 	 * Base directory for the namespace prefix.
@@ -45,7 +45,7 @@ class Autoloader {
 	 * @return void
 	 */
 	public static function register() {
-		self::$base_dir = ADMIN_NOTICE_HUB_PLUGIN_DIR . 'includes/';
+		self::$base_dir = NOTICE_VAULT_PLUGIN_DIR . 'includes/';
 		spl_autoload_register( array( __CLASS__, 'autoload' ) );
 	}
 
@@ -67,7 +67,7 @@ class Autoloader {
 		$relative_class = substr( $class, $len );
 
 		// Convert namespace to directory structure.
-		// Admin_Notice_Hub\Core\Plugin -> core/class-plugin.php
+		// Notice_Vault\Core\Plugin -> core/class-plugin.php
 		$parts = explode( '\\', $relative_class );
 
 		// Last part is the class name.

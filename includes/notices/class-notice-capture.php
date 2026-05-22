@@ -4,13 +4,13 @@
  *
  * Captures admin notices using output buffering.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Notices
  */
 
-namespace Admin_Notice_Hub\Notices;
+namespace Notice_Vault\Notices;
 
-use Admin_Notice_Hub\Permissions\Visibility_Manager;
+use Notice_Vault\Permissions\Visibility_Manager;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,14 +29,14 @@ class Notice_Capture {
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
+	 * @var \Notice_Vault\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Admin_Notice_Hub\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Notice_Vault\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -71,7 +71,7 @@ class Notice_Capture {
 	 */
 	private function get_settings() {
 		if ( null === $this->settings ) {
-			$this->settings = get_option( 'admin_notice_hub_settings', array() );
+			$this->settings = get_option( 'notice_vault_settings', array() );
 		}
 		return $this->settings;
 	}
@@ -202,12 +202,12 @@ class Notice_Capture {
 		$doc             = new \DOMDocument();
 		$internal_errors = libxml_use_internal_errors( true );
 		$xml_prolog      = '<' . '?xml encoding="UTF-8"?' . '>';
-		$wrapped         = $xml_prolog . '<div id="admin-notice-hub-wrapper">' . $html . '</div>';
+		$wrapped         = $xml_prolog . '<div id="notice-vault-wrapper">' . $html . '</div>';
 		$doc->loadHTML( $wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 		libxml_clear_errors();
 		libxml_use_internal_errors( $internal_errors );
 
-		$wrapper = $doc->getElementById( 'admin-notice-hub-wrapper' );
+		$wrapper = $doc->getElementById( 'notice-vault-wrapper' );
 
 		if ( $wrapper instanceof \DOMElement ) {
 			foreach ( $wrapper->childNodes as $child ) {

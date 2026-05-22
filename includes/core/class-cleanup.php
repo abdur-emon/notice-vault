@@ -4,13 +4,13 @@
  *
  * Handles scheduled cleanup tasks.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Core
  */
 
-namespace Admin_Notice_Hub\Core;
+namespace Notice_Vault\Core;
 
-use Admin_Notice_Hub\Notices\Notice_Storage;
+use Notice_Vault\Notices\Notice_Storage;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,12 +34,12 @@ class Cleanup {
 	 */
 	public static function init() {
 		// Schedule cleanup if not already scheduled.
-		if ( ! wp_next_scheduled( 'admin_notice_hub_cleanup_notices' ) ) {
-			wp_schedule_event( time(), 'daily', 'admin_notice_hub_cleanup_notices' );
+		if ( ! wp_next_scheduled( 'notice_vault_cleanup_notices' ) ) {
+			wp_schedule_event( time(), 'daily', 'notice_vault_cleanup_notices' );
 		}
 
 		// Hook cleanup function.
-		add_action( 'admin_notice_hub_cleanup_notices', array( __CLASS__, 'cleanup_expired_notices' ) );
+		add_action( 'notice_vault_cleanup_notices', array( __CLASS__, 'cleanup_expired_notices' ) );
 	}
 
 	/**

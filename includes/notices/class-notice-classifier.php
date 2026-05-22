@@ -4,11 +4,11 @@
  *
  * Classifies admin notices by type.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Notices
  */
 
-namespace Admin_Notice_Hub\Notices;
+namespace Notice_Vault\Notices;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +28,7 @@ class Notice_Classifier {
 	 * Get the canonical list of notice categories, filtered.
 	 *
 	 * Third-party code can register additional categories via the
-	 * `admin_notice_hub_notice_types` filter. The returned array maps a type key
+	 * `notice_vault_notice_types` filter. The returned array maps a type key
 	 * (e.g. `success`) to a human label used by the settings UI.
 	 *
 	 * @since 1.0.0
@@ -36,12 +36,12 @@ class Notice_Classifier {
 	 */
 	public static function get_types() {
 		$types = array(
-			'success' => __( 'Success Notices', 'admin-notice-hub' ),
-			'error'   => __( 'Error Notices', 'admin-notice-hub' ),
-			'warning' => __( 'Warning Notices', 'admin-notice-hub' ),
-			'info'    => __( 'Info Notices', 'admin-notice-hub' ),
-			'other'   => __( 'Non-standard Notices', 'admin-notice-hub' ),
-			'system'  => __( 'WordPress System Notices', 'admin-notice-hub' ),
+			'success' => __( 'Success Notices', 'notice-vault' ),
+			'error'   => __( 'Error Notices', 'notice-vault' ),
+			'warning' => __( 'Warning Notices', 'notice-vault' ),
+			'info'    => __( 'Info Notices', 'notice-vault' ),
+			'other'   => __( 'Non-standard Notices', 'notice-vault' ),
+			'system'  => __( 'WordPress System Notices', 'notice-vault' ),
 		);
 
 		/**
@@ -55,7 +55,7 @@ class Notice_Classifier {
 		 * @since 1.0.0
 		 * @param array<string,string> $types Type-key => translated label.
 		 */
-		return (array) apply_filters( 'admin_notice_hub_notice_types', $types );
+		return (array) apply_filters( 'notice_vault_notice_types', $types );
 	}
 
 	/**

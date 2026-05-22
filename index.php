@@ -4,7 +4,7 @@
  *
  * Prevents directory browsing.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  */
 
 // Silence is golden.

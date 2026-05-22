@@ -4,11 +4,11 @@
  *
  * Main plugin orchestrator. Initializes all components.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Core
  */
 
-namespace Admin_Notice_Hub\Core;
+namespace Notice_Vault\Core;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -49,7 +49,7 @@ class Plugin
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
+	 * @var \Notice_Vault\Notices\Notice_Storage
 	 */
 	protected $storage;
 
@@ -74,7 +74,7 @@ class Plugin
 	 */
 	private function __construct()
 	{
-		$this->version = ADMIN_NOTICE_HUB_VERSION;
+		$this->version = NOTICE_VAULT_VERSION;
 		$this->loader  = new Loader();
 
 		// Run pending migrations BEFORE instantiating storage so the table
@@ -83,7 +83,7 @@ class Plugin
 			Upgrader::maybe_upgrade();
 		}
 
-		$this->storage = new \Admin_Notice_Hub\Notices\Notice_Storage();
+		$this->storage = new \Notice_Vault\Notices\Notice_Storage();
 
 		$this->load_dependencies();
 		$this->define_admin_hooks();
@@ -121,25 +121,25 @@ class Plugin
 		}
 
 		// Initialize Settings Page.
-		$settings_page = new \Admin_Notice_Hub\Admin\Settings_Page();
+		$settings_page = new \Notice_Vault\Admin\Settings_Page();
 		$this->loader->add_action( 'admin_menu', $settings_page, 'add_settings_page' );
 		$this->loader->add_action( 'admin_init', $settings_page, 'register_settings' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $settings_page, 'enqueue_assets' );
-		$this->loader->add_action( 'wp_ajax_admin_notice_hub_search_users', $settings_page, 'ajax_search_users' );
-		$this->loader->add_filter( 'plugin_action_links_' . ADMIN_NOTICE_HUB_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links' );
+		$this->loader->add_action( 'wp_ajax_notice_vault_search_users', $settings_page, 'ajax_search_users' );
+		$this->loader->add_filter( 'plugin_action_links_' . NOTICE_VAULT_PLUGIN_BASENAME, $settings_page, 'add_plugin_action_links' );
 
 		// Initialize Notice Popup.
-		$notice_popup = new \Admin_Notice_Hub\Admin\Notice_Popup( $this->storage );
+		$notice_popup = new \Notice_Vault\Admin\Notice_Popup( $this->storage );
 		$this->loader->add_action( 'admin_enqueue_scripts', $notice_popup, 'enqueue_assets' );
 		$this->loader->add_action( 'admin_footer', $notice_popup, 'render_popup' );
-		$this->loader->add_action( 'wp_ajax_admin_notice_hub_get_notices', $notice_popup, 'ajax_get_notices' );
-		$this->loader->add_action( 'wp_ajax_admin_notice_hub_mark_read', $notice_popup, 'ajax_mark_read' );
-		$this->loader->add_action( 'wp_ajax_admin_notice_hub_dismiss_notice', $notice_popup, 'ajax_dismiss_notice' );
-		$this->loader->add_action( 'wp_ajax_admin_notice_hub_mark_all_read', $notice_popup, 'ajax_mark_all_read' );
-		$this->loader->add_action( 'wp_ajax_admin_notice_hub_clear_all', $notice_popup, 'ajax_clear_all' );
+		$this->loader->add_action( 'wp_ajax_notice_vault_get_notices', $notice_popup, 'ajax_get_notices' );
+		$this->loader->add_action( 'wp_ajax_notice_vault_mark_read', $notice_popup, 'ajax_mark_read' );
+		$this->loader->add_action( 'wp_ajax_notice_vault_dismiss_notice', $notice_popup, 'ajax_dismiss_notice' );
+		$this->loader->add_action( 'wp_ajax_notice_vault_mark_all_read', $notice_popup, 'ajax_mark_all_read' );
+		$this->loader->add_action( 'wp_ajax_notice_vault_clear_all', $notice_popup, 'ajax_clear_all' );
 
 		// Initialize Admin Toolbar.
-		$admin_toolbar = new \Admin_Notice_Hub\Toolbar\Admin_Toolbar( $this->storage );
+		$admin_toolbar = new \Notice_Vault\Toolbar\Admin_Toolbar( $this->storage );
 		$this->loader->add_action( 'admin_bar_menu', $admin_toolbar, 'add_toolbar_item', 999 );
 	}
 
@@ -159,7 +159,7 @@ class Plugin
 		// Initialize Notice Capture.
 		// NOTE: all_admin_notices fires *after* the three specialized hooks, so its
 		// buffer is independent and must be bracketed separately.
-		$notice_capture = new \Admin_Notice_Hub\Notices\Notice_Capture( $this->storage );
+		$notice_capture = new \Notice_Vault\Notices\Notice_Capture( $this->storage );
 		$this->loader->add_action( 'admin_notices', $notice_capture, 'start_capture', 0 );
 		$this->loader->add_action( 'admin_notices', $notice_capture, 'end_capture', 9999 );
 		$this->loader->add_action( 'network_admin_notices', $notice_capture, 'start_capture', 0 );
@@ -207,7 +207,7 @@ class Plugin
 	 * Get the shared Notice_Storage instance.
 	 *
 	 * @since 1.0.0
-	 * @return \Admin_Notice_Hub\Notices\Notice_Storage
+	 * @return \Notice_Vault\Notices\Notice_Storage
 	 */
 	public function get_storage()
 	{

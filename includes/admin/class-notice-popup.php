@@ -4,14 +4,14 @@
  *
  * Handles popup UI rendering and AJAX operations.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Admin
  */
 
-namespace Admin_Notice_Hub\Admin;
+namespace Notice_Vault\Admin;
 
-use Admin_Notice_Hub\Notices\Notice_Storage;
-use Admin_Notice_Hub\Notices\Notice_Classifier;
+use Notice_Vault\Notices\Notice_Storage;
+use Notice_Vault\Notices\Notice_Classifier;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -31,14 +31,14 @@ class Notice_Popup
 	/**
 	 * Notice Storage instance.
 	 *
-	 * @var \Admin_Notice_Hub\Notices\Notice_Storage
+	 * @var \Notice_Vault\Notices\Notice_Storage
 	 */
 	protected $storage;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Admin_Notice_Hub\Notices\Notice_Storage $storage Notice Storage instance.
+	 * @param \Notice_Vault\Notices\Notice_Storage $storage Notice Storage instance.
 	 */
 	public function __construct( $storage ) {
 		$this->storage = $storage;
@@ -51,55 +51,55 @@ class Notice_Popup
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
 		// Enqueue CSS.
 		wp_enqueue_style(
-			'admin-notice-hub-popup',
-			ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/css/popup.css',
+			'notice-vault-popup',
+			NOTICE_VAULT_PLUGIN_URL . 'assets/css/popup.css',
 			array(),
-			ADMIN_NOTICE_HUB_VERSION
+			NOTICE_VAULT_VERSION
 		);
 
 		// Enqueue JS.
 		wp_enqueue_script(
-			'admin-notice-hub-popup',
-			ADMIN_NOTICE_HUB_PLUGIN_URL . 'assets/js/popup.js',
+			'notice-vault-popup',
+			NOTICE_VAULT_PLUGIN_URL . 'assets/js/popup.js',
 			array('jquery'),
-			ADMIN_NOTICE_HUB_VERSION,
+			NOTICE_VAULT_VERSION,
 			true
 		);
 
 		// Localize script.
 		wp_localize_script(
-			'admin-notice-hub-popup',
-			'adminNoticeHubPopup',
+			'notice-vault-popup',
+			'noticeVaultPopup',
 			array(
 				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
-				'nonce'      => wp_create_nonce( 'admin_notice_hub_ajax_nonce' ),
+				'nonce'      => wp_create_nonce( 'notice_vault_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n'       => array(
-					'noNotices'       => __( 'No notices to display', 'admin-notice-hub' ),
-					'markAllRead'     => __( 'Mark All as Read', 'admin-notice-hub' ),
-					'clearAll'        => __( 'Clear All', 'admin-notice-hub' ),
-					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'admin-notice-hub' ),
-					'loading'         => __( 'Loading...', 'admin-notice-hub' ),
-					'error'           => __( 'An error occurred', 'admin-notice-hub' ),
-					'markAsRead'      => __( 'Mark as read', 'admin-notice-hub' ),
-					'dismiss'         => __( 'Dismiss', 'admin-notice-hub' ),
-					'dismissNotice'   => __( 'Dismiss notice', 'admin-notice-hub' ),
-					'notices'         => __( 'Notices', 'admin-notice-hub' ),
+					'noNotices'       => __( 'No notices to display', 'notice-vault' ),
+					'markAllRead'     => __( 'Mark All as Read', 'notice-vault' ),
+					'clearAll'        => __( 'Clear All', 'notice-vault' ),
+					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'notice-vault' ),
+					'loading'         => __( 'Loading...', 'notice-vault' ),
+					'error'           => __( 'An error occurred', 'notice-vault' ),
+					'markAsRead'      => __( 'Mark as read', 'notice-vault' ),
+					'dismiss'         => __( 'Dismiss', 'notice-vault' ),
+					'dismissNotice'   => __( 'Dismiss notice', 'notice-vault' ),
+					'notices'         => __( 'Notices', 'notice-vault' ),
 					/* translators: %d: number of unread notices. */
-					'noticesWithCount' => __( 'Notices (%d)', 'admin-notice-hub' ),
-					'justNow'         => __( 'Just now', 'admin-notice-hub' ),
+					'noticesWithCount' => __( 'Notices (%d)', 'notice-vault' ),
+					'justNow'         => __( 'Just now', 'notice-vault' ),
 					/* translators: %d: number of minutes ago. */
-					'minutesAgo'      => __( '%d minutes ago', 'admin-notice-hub' ),
+					'minutesAgo'      => __( '%d minutes ago', 'notice-vault' ),
 					/* translators: %d: number of hours ago. */
-					'hoursAgo'        => __( '%d hours ago', 'admin-notice-hub' ),
+					'hoursAgo'        => __( '%d hours ago', 'notice-vault' ),
 					/* translators: %d: number of days ago. */
-					'daysAgo'         => __( '%d days ago', 'admin-notice-hub' ),
+					'daysAgo'         => __( '%d days ago', 'notice-vault' ),
 				),
 			)
 		);
@@ -112,12 +112,12 @@ class Notice_Popup
 	 * @return void
 	 */
 	public function render_popup() {
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
 			return;
 		}
 
 		$popup_style = $this->get_popup_style();
-		include ADMIN_NOTICE_HUB_PLUGIN_DIR . 'templates/popup-template.php';
+		include NOTICE_VAULT_PLUGIN_DIR . 'templates/popup-template.php';
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Notice_Popup
 	 */
 	private function get_popup_style()
 	{
-		$settings = get_option('admin_notice_hub_settings', array());
+		$settings = get_option('notice_vault_settings', array());
 		return isset($settings['popup_style']) ? $settings['popup_style'] : 'slide-right';
 	}
 
@@ -141,16 +141,16 @@ class Notice_Popup
 	public function ajax_get_notices()
 	{
 		// Verify nonce.
-		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
+		check_ajax_referer('notice_vault_ajax_nonce', 'nonce');
 
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -212,16 +212,16 @@ class Notice_Popup
 	public function ajax_mark_read()
 	{
 		// Verify nonce.
-		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
+		check_ajax_referer('notice_vault_ajax_nonce', 'nonce');
 
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -229,7 +229,7 @@ class Notice_Popup
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if ( empty( $notice_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -239,13 +239,13 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message'      => __( 'Notice marked as read', 'admin-notice-hub' ),
+					'message'      => __( 'Notice marked as read', 'notice-vault' ),
 					'count'        => $this->storage->get_unread_count(),
 					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to mark notice as read', 'notice-vault' ) ) );
 		}
 	}
 
@@ -258,16 +258,16 @@ class Notice_Popup
 	public function ajax_dismiss_notice()
 	{
 		// Verify nonce.
-		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
+		check_ajax_referer('notice_vault_ajax_nonce', 'nonce');
 
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
 		// Check capability.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -275,7 +275,7 @@ class Notice_Popup
 		$notice_id = isset($_POST['notice_id']) ? sanitize_text_field(wp_unslash($_POST['notice_id'])) : '';
 
 		if ( empty( $notice_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid notice ID', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -285,13 +285,13 @@ class Notice_Popup
 		if ($result) {
 			wp_send_json_success(
 				array(
-					'message'      => __( 'Notice dismissed', 'admin-notice-hub' ),
+					'message'      => __( 'Notice dismissed', 'notice-vault' ),
 					'count'        => $this->storage->get_unread_count(),
 					'unread_total' => $this->storage->get_unread_count(),
 				)
 			);
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to dismiss notice', 'notice-vault' ) ) );
 		}
 	}
 
@@ -303,16 +303,16 @@ class Notice_Popup
 	 */
 	public function ajax_mark_all_read()
 	{
-		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
+		check_ajax_referer('notice_vault_ajax_nonce', 'nonce');
 
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
 		// Notices are user-scoped in storage, so 'read' is sufficient.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -321,7 +321,7 @@ class Notice_Popup
 		// mark_all_read returns false when there is nothing to mark; treat that as success.
 		wp_send_json_success(
 			array(
-				'message'      => __( 'All notices marked as read', 'admin-notice-hub' ),
+				'message'      => __( 'All notices marked as read', 'notice-vault' ),
 				'count'        => 0,
 				'unread_total' => $this->storage->get_unread_count(),
 			)
@@ -336,16 +336,16 @@ class Notice_Popup
 	 */
 	public function ajax_clear_all()
 	{
-		check_ajax_referer('admin_notice_hub_ajax_nonce', 'nonce');
+		check_ajax_referer('notice_vault_ajax_nonce', 'nonce');
 
-		if ( ! \Admin_Notice_Hub\Permissions\Visibility_Manager::can_see_notices() ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+		if ( ! \Notice_Vault\Permissions\Visibility_Manager::can_see_notices() ) {
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
 		// Notices are user-scoped in storage, so 'read' is sufficient.
 		if ( ! current_user_can( 'read' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'admin-notice-hub' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized', 'notice-vault' ) ) );
 			return;
 		}
 
@@ -354,7 +354,7 @@ class Notice_Popup
 		// delete_all returns false when nothing changed; treat that as success.
 		wp_send_json_success(
 			array(
-				'message'      => __( 'All notices cleared', 'admin-notice-hub' ),
+				'message'      => __( 'All notices cleared', 'notice-vault' ),
 				'count'        => 0,
 				'unread_total' => $this->storage->get_unread_count(),
 			)

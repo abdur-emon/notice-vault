@@ -4,11 +4,11 @@
  *
  * Manages all hooks (actions and filters) for the plugin.
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  * @subpackage Core
  */
 
-namespace Admin_Notice_Hub\Core;
+namespace Notice_Vault\Core;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

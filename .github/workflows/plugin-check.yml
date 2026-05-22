@@ -21,7 +21,7 @@ jobs:
 
       - name: Build clean plugin directory
         run: |
-          rm -rf build && mkdir -p build/admin-notice-hub
+          rm -rf build && mkdir -p build/notice-vault
           rsync -a \
             --exclude='.git' \
             --exclude='.github' \
@@ -44,14 +44,14 @@ jobs:
             --exclude='CHANGELOG.md' \
             --exclude='*.zip' \
             --exclude='*.tar.gz' \
-            ./ build/admin-notice-hub/
+            ./ build/notice-vault/
 
       - name: List build contents
         run: |
-          echo "Files in build/admin-notice-hub/:"
-          find build/admin-notice-hub -maxdepth 3 -print
+          echo "Files in build/notice-vault/:"
+          find build/notice-vault -maxdepth 3 -print
 
       - name: Run Plugin Check
         uses: wordpress/plugin-check-action@v1
         with:
-          build-dir: ./build/admin-notice-hub
+          build-dir: ./build/notice-vault

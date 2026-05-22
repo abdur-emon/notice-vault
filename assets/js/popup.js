@@ -1,7 +1,7 @@
 /**
- * Admin Notice Hub - Popup JavaScript
+ * Notice Vault - Popup JavaScript
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  */
 
 (function ($) {
@@ -25,17 +25,17 @@
 		 */
 		bindEvents: function () {
 			// Open popup when clicking toolbar item
-			$(document).on('click', '#wp-admin-bar-admin-notice-hub-notices > a, .admin-notice-hub-view-all', function (e) {
+			$(document).on('click', '#wp-admin-bar-notice-vault-notices > a, .notice-vault-view-all', function (e) {
 				e.preventDefault();
 				NoticePopup.openPopup();
 			});
 
 			// Close popup
-			$(document).on('click', '.admin-notice-hub-close-popup', function (e) {
+			$(document).on('click', '.notice-vault-close-popup', function (e) {
 				NoticePopup.closePopup();
 			});
 
-			$(document).on('click', '.admin-notice-hub-popup-overlay', function (e) {
+			$(document).on('click', '.notice-vault-popup-overlay', function (e) {
 				if (e.target === this) {
 					NoticePopup.closePopup();
 				}
@@ -43,55 +43,55 @@
 
 			// ESC key to close
 			$(document).on('keydown', function (e) {
-				if (e.key === 'Escape' && $('#admin-notice-hub-popup-overlay').hasClass('admin-notice-hub-active')) {
+				if (e.key === 'Escape' && $('#notice-vault-popup-overlay').hasClass('notice-vault-active')) {
 					NoticePopup.closePopup();
 				}
 			});
 
 			// Filter change
-			$(document).on('change', '#admin-notice-hub-filter-type, #admin-notice-hub-show-read', function () {
+			$(document).on('change', '#notice-vault-filter-type, #notice-vault-show-read', function () {
 				NoticePopup.loadNotices();
 			});
 
 			// Mark as read
-			$(document).on('click', '.admin-notice-hub-mark-read', function (e) {
+			$(document).on('click', '.notice-vault-mark-read', function (e) {
 				e.preventDefault();
 				const noticeId = $(this).data('notice-id');
 				NoticePopup.markRead(noticeId);
 			});
 
 			// Dismiss notice
-			$(document).on('click', '.admin-notice-hub-dismiss', function (e) {
+			$(document).on('click', '.notice-vault-dismiss', function (e) {
 				e.preventDefault();
 				const noticeId = $(this).data('notice-id');
 				NoticePopup.dismissNotice(noticeId);
 			});
 
 			// Mark all read
-			$(document).on('click', '#admin-notice-hub-mark-all-read', function (e) {
+			$(document).on('click', '#notice-vault-mark-all-read', function (e) {
 				e.preventDefault();
 				NoticePopup.markAllRead();
 			});
 
 			// Clear all
-			$(document).on('click', '#admin-notice-hub-clear-all', function (e) {
+			$(document).on('click', '#notice-vault-clear-all', function (e) {
 				e.preventDefault();
-				$('#admin-notice-hub-confirm-modal').fadeIn(200);
+				$('#notice-vault-confirm-modal').fadeIn(200);
 			});
 
 			// Modal Confirm Cancel
-			$(document).on('click', '#admin-notice-hub-confirm-cancel', function () {
-				$('#admin-notice-hub-confirm-modal').fadeOut(200);
+			$(document).on('click', '#notice-vault-confirm-cancel', function () {
+				$('#notice-vault-confirm-modal').fadeOut(200);
 			});
 
 			// Modal Confirm Yes
-			$(document).on('click', '#admin-notice-hub-confirm-yes', function () {
-				$('#admin-notice-hub-confirm-modal').fadeOut(200);
+			$(document).on('click', '#notice-vault-confirm-yes', function () {
+				$('#notice-vault-confirm-modal').fadeOut(200);
 				NoticePopup.clearAll();
 			});
 
 			// Focus Trapping within Popup
-			$(document).on('keydown', '#admin-notice-hub-popup', function (e) {
+			$(document).on('keydown', '#notice-vault-popup', function (e) {
 				if (e.key === 'Tab') {
 					NoticePopup.trapFocus(e);
 				}
@@ -102,7 +102,7 @@
 		 * Trap focus inside popup
 		 */
 		trapFocus: function (e) {
-			const focusableElements = $('#admin-notice-hub-popup').find('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter(':visible').not('#admin-notice-hub-confirm-modal *');
+			const focusableElements = $('#notice-vault-popup').find('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').filter(':visible').not('#notice-vault-confirm-modal *');
 			if (focusableElements.length === 0) return;
 
 			const firstElement = focusableElements[0];
@@ -126,11 +126,11 @@
 		 */
 		openPopup: function () {
 			this.previousFocus = document.activeElement;
-			$('#admin-notice-hub-popup-overlay').show();
+			$('#notice-vault-popup-overlay').show();
 			setTimeout(function () {
-				$('#admin-notice-hub-popup-overlay').addClass('admin-notice-hub-active');
+				$('#notice-vault-popup-overlay').addClass('notice-vault-active');
 				// Focus the close button for accessibility
-				$('#admin-notice-hub-popup-overlay').find('.admin-notice-hub-close-popup').focus();
+				$('#notice-vault-popup-overlay').find('.notice-vault-close-popup').focus();
 			}, 10);
 			this.loadNotices();
 		},
@@ -139,9 +139,9 @@
 		 * Close popup
 		 */
 		closePopup: function () {
-			$('#admin-notice-hub-popup-overlay').removeClass('admin-notice-hub-active');
+			$('#notice-vault-popup-overlay').removeClass('notice-vault-active');
 			setTimeout(function () {
-				$('#admin-notice-hub-popup-overlay').hide();
+				$('#notice-vault-popup-overlay').hide();
 				// Restore focus
 				if (NoticePopup.previousFocus) {
 					NoticePopup.previousFocus.focus();
@@ -153,30 +153,30 @@
 		 * Load notices via AJAX
 		 */
 		loadNotices: function () {
-			const filterType = $('#admin-notice-hub-filter-type').val();
-			const showRead = $('#admin-notice-hub-show-read').is(':checked');
+			const filterType = $('#notice-vault-filter-type').val();
+			const showRead = $('#notice-vault-show-read').is(':checked');
 
-			$('.admin-notice-hub-loading').show();
-			$('.admin-notice-hub-notices-list').hide();
-			$('.admin-notice-hub-empty-state').hide();
+			$('.notice-vault-loading').show();
+			$('.notice-vault-notices-list').hide();
+			$('.notice-vault-empty-state').hide();
 
 			$.ajax({
-				url: adminNoticeHubPopup.ajaxUrl,
+				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'admin_notice_hub_get_notices',
-					nonce: adminNoticeHubPopup.nonce,
+					action: 'notice_vault_get_notices',
+					nonce: noticeVaultPopup.nonce,
 					filter_type: filterType,
 					show_read: showRead
 				},
 				success: function (response) {
-					$('.admin-notice-hub-loading').hide();
+					$('.notice-vault-loading').hide();
 
 					if (response.success && response.data.notices.length > 0) {
 						NoticePopup.renderNotices(response.data.notices);
-						$('.admin-notice-hub-notices-list').show();
+						$('.notice-vault-notices-list').show();
 					} else {
-						$('.admin-notice-hub-empty-state').show();
+						$('.notice-vault-empty-state').show();
 					}
 
 					if (response.success && response.data) {
@@ -186,8 +186,8 @@
 					}
 				},
 				error: function () {
-					$('.admin-notice-hub-loading').hide();
-					NoticePopup.showToast(adminNoticeHubPopup.i18n.error, 'error');
+					$('.notice-vault-loading').hide();
+					NoticePopup.showToast(noticeVaultPopup.i18n.error, 'error');
 				}
 			});
 		},
@@ -196,7 +196,7 @@
 		 * Render notices
 		 */
 		renderNotices: function (notices) {
-			const $list = $('#admin-notice-hub-notices-list');
+			const $list = $('#notice-vault-notices-list');
 			$list.empty();
 
 			notices.forEach(function (notice) {
@@ -212,26 +212,26 @@
 		 * stripped notice copy can never be re-interpreted as HTML.
 		 */
 		createNoticeItem: function (notice) {
-			const readClass = notice.is_read ? 'admin-notice-hub-notice-read' : '';
-			const typeClass = 'admin-notice-hub-notice-' + notice.type;
+			const readClass = notice.is_read ? 'notice-vault-notice-read' : '';
+			const typeClass = 'notice-vault-notice-' + notice.type;
 			const timeAgo = NoticePopup.timeAgo(notice.created_at);
-			const i18n = adminNoticeHubPopup.i18n || {};
+			const i18n = noticeVaultPopup.i18n || {};
 
 			const $item = $('<div>')
-				.addClass('admin-notice-hub-notice-item ' + typeClass + ' ' + readClass)
+				.addClass('notice-vault-notice-item ' + typeClass + ' ' + readClass)
 				.attr('data-notice-id', notice.id);
 
-			const $header = $('<div class="admin-notice-hub-notice-header">');
+			const $header = $('<div class="notice-vault-notice-header">');
 			$header.append(
-				$('<div class="admin-notice-hub-notice-type">')
+				$('<div class="notice-vault-notice-type">')
 					.append($('<span class="dashicons">').addClass(notice.icon).attr('aria-hidden', 'true'))
 					.append(document.createTextNode(' ' + notice.type))
 			);
 
-			const $actions = $('<div class="admin-notice-hub-notice-actions">');
+			const $actions = $('<div class="notice-vault-notice-actions">');
 			if (!notice.is_read) {
 				$actions.append(
-					$('<button type="button" class="admin-notice-hub-notice-action admin-notice-hub-mark-read">')
+					$('<button type="button" class="notice-vault-notice-action notice-vault-mark-read">')
 						.attr('data-notice-id', notice.id)
 						.attr('title', i18n.markAsRead || 'Mark as read')
 						.attr('aria-label', i18n.markAsRead || 'Mark as read')
@@ -239,7 +239,7 @@
 				);
 			}
 			$actions.append(
-				$('<button type="button" class="admin-notice-hub-notice-action admin-notice-hub-dismiss">')
+				$('<button type="button" class="notice-vault-notice-action notice-vault-dismiss">')
 					.attr('data-notice-id', notice.id)
 					.attr('title', i18n.dismiss || 'Dismiss')
 					.attr('aria-label', i18n.dismissNotice || 'Dismiss notice')
@@ -248,10 +248,10 @@
 			$header.append($actions);
 
 			$item.append($header);
-			$item.append($('<div class="admin-notice-hub-notice-content">').text(notice.content || ''));
+			$item.append($('<div class="notice-vault-notice-content">').text(notice.content || ''));
 			$item.append(
-				$('<div class="admin-notice-hub-notice-meta">').append(
-					$('<div class="admin-notice-hub-notice-time">')
+				$('<div class="notice-vault-notice-meta">').append(
+					$('<div class="notice-vault-notice-time">')
 						.append('<span class="dashicons dashicons-clock" aria-hidden="true"></span>')
 						.append(document.createTextNode(' ' + timeAgo))
 				)
@@ -265,17 +265,17 @@
 		 */
 		markRead: function (noticeId) {
 			$.ajax({
-				url: adminNoticeHubPopup.ajaxUrl,
+				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'admin_notice_hub_mark_read',
-					nonce: adminNoticeHubPopup.nonce,
+					action: 'notice_vault_mark_read',
+					nonce: noticeVaultPopup.nonce,
 					notice_id: noticeId
 				},
 				success: function (response) {
 					if (response.success) {
-						$('[data-notice-id="' + noticeId + '"]').addClass('admin-notice-hub-notice-read');
-						$('[data-notice-id="' + noticeId + '"] .admin-notice-hub-mark-read').remove();
+						$('[data-notice-id="' + noticeId + '"]').addClass('notice-vault-notice-read');
+						$('[data-notice-id="' + noticeId + '"] .notice-vault-mark-read').remove();
 						NoticePopup.updateToolbarCount(response.data.unread_total);
 					}
 				}
@@ -287,11 +287,11 @@
 		 */
 		dismissNotice: function (noticeId) {
 			$.ajax({
-				url: adminNoticeHubPopup.ajaxUrl,
+				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'admin_notice_hub_dismiss_notice',
-					nonce: adminNoticeHubPopup.nonce,
+					action: 'notice_vault_dismiss_notice',
+					nonce: noticeVaultPopup.nonce,
 					notice_id: noticeId
 				},
 				success: function (response) {
@@ -299,8 +299,8 @@
 						$('[data-notice-id="' + noticeId + '"]').fadeOut(300, function () {
 							$(this).slideUp(200, function () {
 								$(this).remove();
-								if ($('.admin-notice-hub-notice-item').length === 0) {
-									$('.admin-notice-hub-empty-state').fadeIn(200);
+								if ($('.notice-vault-notice-item').length === 0) {
+									$('.notice-vault-empty-state').fadeIn(200);
 								}
 							});
 						});
@@ -315,18 +315,18 @@
 		 */
 		markAllRead: function () {
 			$.ajax({
-				url: adminNoticeHubPopup.ajaxUrl,
+				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'admin_notice_hub_mark_all_read',
-					nonce: adminNoticeHubPopup.nonce
+					action: 'notice_vault_mark_all_read',
+					nonce: noticeVaultPopup.nonce
 				},
 				success: function (response) {
 					if (response.success) {
-						$('.admin-notice-hub-notice-item').addClass('admin-notice-hub-notice-read');
-						$('.admin-notice-hub-mark-read').remove();
+						$('.notice-vault-notice-item').addClass('notice-vault-notice-read');
+						$('.notice-vault-mark-read').remove();
 						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
-						NoticePopup.showToast(response.data.message || adminNoticeHubPopup.i18n.markAllRead);
+						NoticePopup.showToast(response.data.message || noticeVaultPopup.i18n.markAllRead);
 					}
 				}
 			});
@@ -337,19 +337,19 @@
 		 */
 		clearAll: function () {
 			$.ajax({
-				url: adminNoticeHubPopup.ajaxUrl,
+				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
 				data: {
-					action: 'admin_notice_hub_clear_all',
-					nonce: adminNoticeHubPopup.nonce
+					action: 'notice_vault_clear_all',
+					nonce: noticeVaultPopup.nonce
 				},
 				success: function (response) {
 					if (response.success) {
-						$('#admin-notice-hub-notices-list').empty();
-						$('.admin-notice-hub-empty-state').show();
-						$('.admin-notice-hub-notices-list').hide();
+						$('#notice-vault-notices-list').empty();
+						$('.notice-vault-empty-state').show();
+						$('.notice-vault-notices-list').hide();
 						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
-						NoticePopup.showToast(response.data.message || adminNoticeHubPopup.i18n.clearAll);
+						NoticePopup.showToast(response.data.message || noticeVaultPopup.i18n.clearAll);
 					}
 				}
 			});
@@ -359,33 +359,33 @@
 		 * Update count badge
 		 */
 		updateCount: function (count) {
-			$('.admin-notice-hub-notice-count-badge').text(count);
+			$('.notice-vault-notice-count-badge').text(count);
 		},
 
 		/**
 		 * Update toolbar count
 		 */
 		updateToolbarCount: function (count) {
-			const i18n = adminNoticeHubPopup.i18n || {};
-			const $label = $('#wp-admin-bar-admin-notice-hub-notices .ab-label');
+			const i18n = noticeVaultPopup.i18n || {};
+			const $label = $('#wp-admin-bar-notice-vault-notices .ab-label');
 			const num = parseInt(count, 10) || 0;
 
 			if (num > 0) {
 				const tmpl = i18n.noticesWithCount || 'Notices (%d)';
 				$label.text(tmpl.replace('%d', num));
-				$('.admin-notice-hub-count-badge').text(num).show();
+				$('.notice-vault-count-badge').text(num).show();
 			} else {
 				$label.text(i18n.notices || 'Notices');
-				$('.admin-notice-hub-count-badge').hide();
+				$('.notice-vault-count-badge').hide();
 			}
 			this.updateCount(num);
 		},
 
 		/**
-		 * Time ago helper (translatable via adminNoticeHubPopup.i18n).
+		 * Time ago helper (translatable via noticeVaultPopup.i18n).
 		 */
 		timeAgo: function (datetime) {
-			const i18n = adminNoticeHubPopup.i18n || {};
+			const i18n = noticeVaultPopup.i18n || {};
 			const now = new Date();
 			// Stored datetimes are UTC (PHP current_time('mysql', true));
 			// force UTC parsing so "X minutes ago" is right regardless of TZ.
@@ -408,17 +408,17 @@
 		 */
 		showToast: function (message, type = 'success') {
 			const $toast = $('<div>')
-				.addClass('admin-notice-hub-toast admin-notice-hub-toast-' + type)
+				.addClass('notice-vault-toast notice-vault-toast-' + type)
 				.text(message);
 
-			$('#admin-notice-hub-toast-container').append($toast);
+			$('#notice-vault-toast-container').append($toast);
 
 			// Trigger reflow for transition
 			$toast[0].offsetHeight;
-			$toast.addClass('admin-notice-hub-toast-show');
+			$toast.addClass('notice-vault-toast-show');
 
 			setTimeout(function () {
-				$toast.removeClass('admin-notice-hub-toast-show');
+				$toast.removeClass('notice-vault-toast-show');
 				setTimeout(function () {
 					$toast.remove();
 				}, 300);

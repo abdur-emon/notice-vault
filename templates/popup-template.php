@@ -2,7 +2,7 @@
 /**
  * Notice Popup Template
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  */
 
 // Exit if accessed directly.
@@ -11,89 +11,89 @@ if (!defined('ABSPATH')) {
 }
 ?>
 
-<div id="admin-notice-hub-popup-overlay" class="admin-notice-hub-popup-overlay" style="display: none;" role="presentation">
-	<div id="admin-notice-hub-popup" class="admin-notice-hub-popup admin-notice-hub-popup-<?php echo esc_attr($popup_style); ?>" role="dialog" aria-modal="true" aria-labelledby="admin-notice-hub-popup-title" tabindex="-1">
+<div id="notice-vault-popup-overlay" class="notice-vault-popup-overlay" style="display: none;" role="presentation">
+	<div id="notice-vault-popup" class="notice-vault-popup notice-vault-popup-<?php echo esc_attr($popup_style); ?>" role="dialog" aria-modal="true" aria-labelledby="notice-vault-popup-title" tabindex="-1">
 		<!-- Popup Header -->
-		<div class="admin-notice-hub-popup-header">
-			<h2 class="admin-notice-hub-popup-title" id="admin-notice-hub-popup-title">
+		<div class="notice-vault-popup-header">
+			<h2 class="notice-vault-popup-title" id="notice-vault-popup-title">
 				<span class="dashicons dashicons-bell" aria-hidden="true"></span>
-				<?php esc_html_e('Notices', 'admin-notice-hub'); ?>
-				<span class="admin-notice-hub-notice-count-badge" aria-live="polite" aria-atomic="true">0</span>
+				<?php esc_html_e('Notices', 'notice-vault'); ?>
+				<span class="notice-vault-notice-count-badge" aria-live="polite" aria-atomic="true">0</span>
 			</h2>
-			<button type="button" class="admin-notice-hub-close-popup"
-				aria-label="<?php esc_attr_e('Close', 'admin-notice-hub'); ?>">
+			<button type="button" class="notice-vault-close-popup"
+				aria-label="<?php esc_attr_e('Close', 'notice-vault'); ?>">
 				<span class="dashicons dashicons-no-alt"></span>
 			</button>
 		</div>
 
 		<!-- Popup Toolbar -->
-		<div class="admin-notice-hub-popup-toolbar">
-			<div class="admin-notice-hub-filters">
-				<select id="admin-notice-hub-filter-type" class="admin-notice-hub-filter-select">
-					<option value="all"><?php esc_html_e('All Types', 'admin-notice-hub'); ?></option>
-					<option value="success"><?php esc_html_e('Success', 'admin-notice-hub'); ?></option>
-					<option value="error"><?php esc_html_e('Errors', 'admin-notice-hub'); ?></option>
-					<option value="warning"><?php esc_html_e('Warnings', 'admin-notice-hub'); ?></option>
-					<option value="info"><?php esc_html_e('Info', 'admin-notice-hub'); ?></option>
-					<option value="system"><?php esc_html_e('System', 'admin-notice-hub'); ?></option>
-					<option value="other"><?php esc_html_e('Other', 'admin-notice-hub'); ?></option>
+		<div class="notice-vault-popup-toolbar">
+			<div class="notice-vault-filters">
+				<select id="notice-vault-filter-type" class="notice-vault-filter-select">
+					<option value="all"><?php esc_html_e('All Types', 'notice-vault'); ?></option>
+					<option value="success"><?php esc_html_e('Success', 'notice-vault'); ?></option>
+					<option value="error"><?php esc_html_e('Errors', 'notice-vault'); ?></option>
+					<option value="warning"><?php esc_html_e('Warnings', 'notice-vault'); ?></option>
+					<option value="info"><?php esc_html_e('Info', 'notice-vault'); ?></option>
+					<option value="system"><?php esc_html_e('System', 'notice-vault'); ?></option>
+					<option value="other"><?php esc_html_e('Other', 'notice-vault'); ?></option>
 				</select>
 
-				<label class="admin-notice-hub-checkbox-label">
-					<input type="checkbox" id="admin-notice-hub-show-read" class="admin-notice-hub-checkbox">
-					<?php esc_html_e('Show Read', 'admin-notice-hub'); ?>
+				<label class="notice-vault-checkbox-label">
+					<input type="checkbox" id="notice-vault-show-read" class="notice-vault-checkbox">
+					<?php esc_html_e('Show Read', 'notice-vault'); ?>
 				</label>
 			</div>
 
-			<div class="admin-notice-hub-actions">
-				<button type="button" class="admin-notice-hub-btn admin-notice-hub-btn-secondary" id="admin-notice-hub-mark-all-read">
-					<?php esc_html_e('Mark All Read', 'admin-notice-hub'); ?>
+			<div class="notice-vault-actions">
+				<button type="button" class="notice-vault-btn notice-vault-btn-secondary" id="notice-vault-mark-all-read">
+					<?php esc_html_e('Mark All Read', 'notice-vault'); ?>
 				</button>
-				<button type="button" class="admin-notice-hub-btn admin-notice-hub-btn-secondary" id="admin-notice-hub-clear-all">
-					<?php esc_html_e('Clear All', 'admin-notice-hub'); ?>
+				<button type="button" class="notice-vault-btn notice-vault-btn-secondary" id="notice-vault-clear-all">
+					<?php esc_html_e('Clear All', 'notice-vault'); ?>
 				</button>
 			</div>
 		</div>
 
 		<!-- Popup Content -->
-		<div class="admin-notice-hub-popup-content">
-			<div class="admin-notice-hub-loading" style="display: none;">
+		<div class="notice-vault-popup-content">
+			<div class="notice-vault-loading" style="display: none;">
 				<span class="spinner is-active"></span>
-				<p><?php esc_html_e('Loading notices...', 'admin-notice-hub'); ?></p>
+				<p><?php esc_html_e('Loading notices...', 'notice-vault'); ?></p>
 			</div>
 
-			<div class="admin-notice-hub-notices-list" id="admin-notice-hub-notices-list">
+			<div class="notice-vault-notices-list" id="notice-vault-notices-list">
 				<!-- Notices will be loaded here via AJAX -->
 			</div>
 
-			<div class="admin-notice-hub-empty-state" style="display: none;">
+			<div class="notice-vault-empty-state" style="display: none;">
 				<span class="dashicons dashicons-yes-alt"></span>
-				<p><?php esc_html_e('You\'re all caught up! No new notices.', 'admin-notice-hub'); ?></p>
+				<p><?php esc_html_e('You\'re all caught up! No new notices.', 'notice-vault'); ?></p>
 			</div>
 		</div>
 
 		<!-- Popup Footer -->
-		<div class="admin-notice-hub-popup-footer">
-			<a href="<?php echo esc_url( menu_page_url( \Admin_Notice_Hub\Admin\Settings_Page::PAGE_SLUG, false ) ); ?>"
-				class="admin-notice-hub-settings-link">
+		<div class="notice-vault-popup-footer">
+			<a href="<?php echo esc_url( menu_page_url( \Notice_Vault\Admin\Settings_Page::PAGE_SLUG, false ) ); ?>"
+				class="notice-vault-settings-link">
 				<span class="dashicons dashicons-admin-settings" aria-hidden="true"></span>
-				<?php esc_html_e('Settings', 'admin-notice-hub'); ?>
+				<?php esc_html_e('Settings', 'notice-vault'); ?>
 			</a>
 		</div>
 
 		<!-- Toast Container -->
-		<div id="admin-notice-hub-toast-container" class="admin-notice-hub-toast-container" aria-live="polite" aria-atomic="true"></div>
+		<div id="notice-vault-toast-container" class="notice-vault-toast-container" aria-live="polite" aria-atomic="true"></div>
 
 		<!-- Custom Confirm Modal -->
-		<div class="admin-notice-hub-confirm-modal" id="admin-notice-hub-confirm-modal" style="display: none;" role="alertdialog" aria-labelledby="admin-notice-hub-confirm-title" aria-describedby="admin-notice-hub-confirm-message">
-			<div class="admin-notice-hub-confirm-content">
-				<h3 id="admin-notice-hub-confirm-title"><?php esc_html_e('Confirm Action', 'admin-notice-hub'); ?></h3>
-				<p id="admin-notice-hub-confirm-message"><?php esc_html_e('Are you sure?', 'admin-notice-hub'); ?></p>
-				<div class="admin-notice-hub-confirm-actions">
-					<button type="button" class="admin-notice-hub-btn admin-notice-hub-btn-secondary"
-						id="admin-notice-hub-confirm-cancel"><?php esc_html_e('Cancel', 'admin-notice-hub'); ?></button>
-					<button type="button" class="admin-notice-hub-btn admin-notice-hub-btn-danger"
-						id="admin-notice-hub-confirm-yes"><?php esc_html_e('Clear All', 'admin-notice-hub'); ?></button>
+		<div class="notice-vault-confirm-modal" id="notice-vault-confirm-modal" style="display: none;" role="alertdialog" aria-labelledby="notice-vault-confirm-title" aria-describedby="notice-vault-confirm-message">
+			<div class="notice-vault-confirm-content">
+				<h3 id="notice-vault-confirm-title"><?php esc_html_e('Confirm Action', 'notice-vault'); ?></h3>
+				<p id="notice-vault-confirm-message"><?php esc_html_e('Are you sure?', 'notice-vault'); ?></p>
+				<div class="notice-vault-confirm-actions">
+					<button type="button" class="notice-vault-btn notice-vault-btn-secondary"
+						id="notice-vault-confirm-cancel"><?php esc_html_e('Cancel', 'notice-vault'); ?></button>
+					<button type="button" class="notice-vault-btn notice-vault-btn-danger"
+						id="notice-vault-confirm-yes"><?php esc_html_e('Clear All', 'notice-vault'); ?></button>
 				</div>
 			</div>
 		</div>

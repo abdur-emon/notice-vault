@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Admin Notice Hub">
-	<description>PHPCS configuration for the Admin Notice Hub plugin.</description>
+<ruleset name="Notice Vault">
+	<description>PHPCS configuration for the Notice Vault plugin.</description>
 
 	<file>.</file>
 
@@ -26,7 +26,7 @@
 			<property name="prefixes" type="array">
 				<element value="anh"/>
 				<element value="ANH"/>
-				<element value="Admin_Notice_Hub"/>
+				<element value="Notice_Vault"/>
 			</property>
 		</properties>
 	</rule>
@@ -34,7 +34,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="admin-notice-hub"/>
+				<element value="notice-vault"/>
 			</property>
 		</properties>
 	</rule>

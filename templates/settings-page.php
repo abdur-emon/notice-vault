@@ -2,7 +2,7 @@
 /**
  * Settings Page Template
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  */
 
 // Exit if accessed directly.
@@ -11,50 +11,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="wrap admin-notice-hub-settings-wrap">
+<div class="wrap notice-vault-settings-wrap">
 	<h1>
 		<span class="dashicons dashicons-bell"></span>
 		<?php echo esc_html( get_admin_page_title() ); ?>
 	</h1>
 
-	<p class="admin-notice-hub-description">
-		<?php esc_html_e( 'Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.', 'admin-notice-hub' ); ?>
+	<p class="notice-vault-description">
+		<?php esc_html_e( 'Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.', 'notice-vault' ); ?>
 	</p>
 
 	<?php settings_errors(); ?>
 
 	<form method="post" action="options.php">
 		<?php
-		settings_fields( \Admin_Notice_Hub\Admin\Settings_Page::OPTION_GROUP );
-		do_settings_sections( \Admin_Notice_Hub\Admin\Settings_Page::PAGE_SLUG );
+		settings_fields( \Notice_Vault\Admin\Settings_Page::OPTION_GROUP );
+		do_settings_sections( \Notice_Vault\Admin\Settings_Page::PAGE_SLUG );
 		submit_button();
 		?>
 	</form>
 
-	<div class="admin-notice-hub-info-box">
-		<h3><?php esc_html_e( 'How It Works', 'admin-notice-hub' ); ?></h3>
+	<div class="notice-vault-info-box">
+		<h3><?php esc_html_e( 'How It Works', 'notice-vault' ); ?></h3>
 		<ol>
-			<li><?php esc_html_e( 'Configure how each notice type should be handled above', 'admin-notice-hub' ); ?></li>
-			<li><?php esc_html_e( 'Notices will be captured and stored based on your settings', 'admin-notice-hub' ); ?></li>
-			<li><?php esc_html_e( 'Click "Notices" in the admin toolbar to view all captured notices', 'admin-notice-hub' ); ?></li>
-			<li><?php esc_html_e( 'Mark notices as read or dismiss them from the popup', 'admin-notice-hub' ); ?></li>
+			<li><?php esc_html_e( 'Configure how each notice type should be handled above', 'notice-vault' ); ?></li>
+			<li><?php esc_html_e( 'Notices will be captured and stored based on your settings', 'notice-vault' ); ?></li>
+			<li><?php esc_html_e( 'Click "Notices" in the admin toolbar to view all captured notices', 'notice-vault' ); ?></li>
+			<li><?php esc_html_e( 'Mark notices as read or dismiss them from the popup', 'notice-vault' ); ?></li>
 		</ol>
 	</div>
 
-	<div class="admin-notice-hub-stats-box">
-		<h3><?php esc_html_e( 'Statistics', 'admin-notice-hub' ); ?></h3>
+	<div class="notice-vault-stats-box">
+		<h3><?php esc_html_e( 'Statistics', 'notice-vault' ); ?></h3>
 		<?php
-		$admin_notice_hub_storage        = \Admin_Notice_Hub\Core\Plugin::get_instance()->get_storage();
-		$admin_notice_hub_total_notices  = count( $admin_notice_hub_storage->get_all() );
-		$admin_notice_hub_unread_notices = $admin_notice_hub_storage->get_unread_count();
+		$notice_vault_storage        = \Notice_Vault\Core\Plugin::get_instance()->get_storage();
+		$notice_vault_total_notices  = count( $notice_vault_storage->get_all() );
+		$notice_vault_unread_notices = $notice_vault_storage->get_unread_count();
 		?>
 		<p>
-			<strong><?php esc_html_e( 'Total Notices:', 'admin-notice-hub' ); ?></strong>
-			<?php echo esc_html( $admin_notice_hub_total_notices ); ?>
+			<strong><?php esc_html_e( 'Total Notices:', 'notice-vault' ); ?></strong>
+			<?php echo esc_html( $notice_vault_total_notices ); ?>
 		</p>
 		<p>
-			<strong><?php esc_html_e( 'Unread Notices:', 'admin-notice-hub' ); ?></strong>
-			<?php echo esc_html( $admin_notice_hub_unread_notices ); ?>
+			<strong><?php esc_html_e( 'Unread Notices:', 'notice-vault' ); ?></strong>
+			<?php echo esc_html( $notice_vault_unread_notices ); ?>
 		</p>
 	</div>
 </div>

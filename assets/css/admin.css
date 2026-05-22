@@ -1,51 +1,51 @@
 /**
- * Admin Notice Hub - Admin Styles
+ * Notice Vault - Admin Styles
  *
- * @package Admin_Notice_Hub
+ * @package Notice_Vault
  */
 
 /* Settings Page */
-.admin-notice-hub-settings-wrap h1 {
+.notice-vault-settings-wrap h1 {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 }
 
-.admin-notice-hub-settings-wrap h1 .dashicons {
+.notice-vault-settings-wrap h1 .dashicons {
 	color: #2271b1;
 	font-size: 32px;
 	width: 32px;
 	height: 32px;
 }
 
-.admin-notice-hub-description {
+.notice-vault-description {
 	font-size: 14px;
 	color: #50575e;
 	margin-bottom: 20px;
 }
 
 /* Settings Sections */
-.admin-notice-hub-settings-wrap h2 {
+.notice-vault-settings-wrap h2 {
 	border-bottom: 2px solid #2271b1;
 	padding-bottom: 10px;
 	margin-top: 30px;
 }
 
-.admin-notice-hub-settings-wrap .form-table th {
+.notice-vault-settings-wrap .form-table th {
 	width: 250px;
 	font-weight: 600;
 }
 
-.admin-notice-hub-settings-wrap .form-table td {
+.notice-vault-settings-wrap .form-table td {
 	padding: 15px 10px;
 }
 
-.admin-notice-hub-settings-wrap select.regular-text {
+.notice-vault-settings-wrap select.regular-text {
 	max-width: 400px;
 }
 
 /* Info Box */
-.admin-notice-hub-info-box {
+.notice-vault-info-box {
 	background: #e7f5fe;
 	border-left: 4px solid #2271b1;
 	padding: 20px;
@@ -53,22 +53,22 @@
 	border-radius: 3px;
 }
 
-.admin-notice-hub-info-box h3 {
+.notice-vault-info-box h3 {
 	margin-top: 0;
 	color: #2271b1;
 }
 
-.admin-notice-hub-info-box ol {
+.notice-vault-info-box ol {
 	margin: 10px 0 0 20px;
 }
 
-.admin-notice-hub-info-box li {
+.notice-vault-info-box li {
 	margin-bottom: 8px;
 	line-height: 1.6;
 }
 
 /* Stats Box */
-.admin-notice-hub-stats-box {
+.notice-vault-stats-box {
 	background: #f9f9f9;
 	border: 1px solid #ddd;
 	padding: 20px;
@@ -76,38 +76,38 @@
 	border-radius: 3px;
 }
 
-.admin-notice-hub-stats-box h3 {
+.notice-vault-stats-box h3 {
 	margin-top: 0;
 	color: #2c3338;
 }
 
-.admin-notice-hub-stats-box p {
+.notice-vault-stats-box p {
 	margin: 10px 0;
 	font-size: 14px;
 }
 
-.admin-notice-hub-stats-box strong {
+.notice-vault-stats-box strong {
 	display: inline-block;
 	min-width: 150px;
 }
 
 /* Visibility Users Field */
-#admin-notice-hub-visibility-users {
+#notice-vault-visibility-users {
 	width: 100%;
 	max-width: 400px;
 }
 
 /* Responsive */
 @media screen and (max-width: 782px) {
-	.admin-notice-hub-settings-wrap .form-table th,
-	.admin-notice-hub-settings-wrap .form-table td {
+	.notice-vault-settings-wrap .form-table th,
+	.notice-vault-settings-wrap .form-table td {
 		display: block;
 		width: 100%;
 		padding: 10px 0;
 	}
 
-	.admin-notice-hub-settings-wrap select.regular-text,
-	#admin-notice-hub-visibility-users {
+	.notice-vault-settings-wrap select.regular-text,
+	#notice-vault-visibility-users {
 		max-width: 100%;
 	}
 }

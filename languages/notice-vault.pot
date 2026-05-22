@@ -1,9 +1,9 @@
-# Copyright (C) 2026 Admin Notice Hub
-# This file is distributed under the same license as the Admin Notice Hub package.
+# Copyright (C) 2026 Notice Vault
+# This file is distributed under the same license as the Notice Vault package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Admin Notice Hub 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/admin-notice-hub\n"
+"Project-Id-Version: Notice Vault 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/notice-vault\n"
 "POT-Creation-Date: 2026-03-05 00:00:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12,8 +12,8 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: admin-notice-hub.php
-msgid "Admin Notice Hub"
+#: notice-vault.php
+msgid "Notice Vault"
 msgstr ""
 
 msgid "Manage and organize WordPress admin notices."
@@ -55,10 +55,10 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-msgid "Admin Notice Hub Settings"
+msgid "Notice Vault Settings"
 msgstr ""
 
-msgid "Admin Notice Hub"
+msgid "Notice Vault"
 msgstr ""
 
 msgid "Notice Type Settings"
