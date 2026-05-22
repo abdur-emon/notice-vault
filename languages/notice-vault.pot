@@ -1,165 +1,375 @@
-# Copyright (C) 2026 Notice Vault
-# This file is distributed under the same license as the Notice Vault package.
+# Copyright (C) 2026 Abdur Rahman Emon
+# This file is distributed under the same license as the Notice Vault plugin.
 msgid ""
 msgstr ""
 "Project-Id-Version: Notice Vault 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/notice-vault\n"
-"POT-Creation-Date: 2026-03-05 00:00:00+00:00\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2026-05-22T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Domain: notice-vault\n"
 
+#. Plugin Name of the plugin
 #: notice-vault.php
 msgid "Notice Vault"
 msgstr ""
 
-msgid "Manage and organize WordPress admin notices."
+#. Plugin description / settings page intro
+#: templates/settings-page.php
+msgid ""
+"Manage and organize WordPress admin notices by moving them from the "
+"cluttered dashboard into a centralized notice management system."
 msgstr ""
 
-msgid "Notices"
+#: includes/core/class-activator.php
+msgid "Notice Vault requires WordPress 5.0 or higher."
 msgstr ""
 
-msgid "View Notices"
+#: includes/core/class-activator.php
+msgid "Notice Vault requires PHP 7.2 or higher."
 msgstr ""
 
-msgid "Mark All as Read"
+#: includes/core/class-activator.php
+msgid "Plugin Activation Error"
 msgstr ""
 
-msgid "Clear All"
-msgstr ""
-
-msgid "Loading..."
-msgstr ""
-
-msgid "An error occurred"
-msgstr ""
-
-msgid "No notices to display"
-msgstr ""
-
-msgid "Success"
-msgstr ""
-
-msgid "Error"
-msgstr ""
-
-msgid "Warning"
-msgstr ""
-
-msgid "Info"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
+#: includes/admin/class-settings-page.php
 msgid "Notice Vault Settings"
 msgstr ""
 
-msgid "Notice Vault"
+#: includes/admin/class-settings-page.php
+msgid "Settings"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Notice Type Settings"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Popup Settings"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "User Visibility Settings"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Advanced Settings"
 msgstr ""
 
-msgid "Success Notices"
+#: includes/admin/class-settings-page.php
+msgid "Configure how each notice type should be handled."
 msgstr ""
 
-msgid "Error Notices"
+#: includes/admin/class-settings-page.php
+msgid "Customize the popup appearance and behavior."
 msgstr ""
 
-msgid "Warning Notices"
+#: includes/admin/class-settings-page.php
+msgid "Control which users can see Notice Vault."
 msgstr ""
 
-msgid "Info Notices"
+#: includes/admin/class-settings-page.php
+msgid "Advanced plugin settings."
 msgstr ""
 
-msgid "Non-standard Notices"
-msgstr ""
-
-msgid "WordPress System Notices"
-msgstr ""
-
+#: includes/admin/class-settings-page.php
 msgid "Show in popup & hide from dashboard"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Hide completely"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Do nothing (leave in dashboard)"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Popup Style"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Slide from Right"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Modal Popup (Centered)"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Slide Background Panel"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
+#: includes/permissions/class-visibility-manager.php
 msgid "Visibility Mode"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
+#: includes/permissions/class-visibility-manager.php
 msgid "Show to all users"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
+#: includes/permissions/class-visibility-manager.php
 msgid "Hide from all users"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Hide from selected users only"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Show to selected users only"
 msgstr ""
 
+#: includes/permissions/class-visibility-manager.php
+msgid "Hide from selected users"
+msgstr ""
+
+#: includes/permissions/class-visibility-manager.php
+msgid "Show to selected users"
+msgstr ""
+
+#: includes/admin/class-settings-page.php
 msgid "Select Users"
 msgstr ""
 
-msgid "Hold Ctrl/Cmd to select multiple users."
+#: includes/admin/class-settings-page.php
+msgid "Search and select users."
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Auto-expire Notices After"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "days"
 msgstr ""
 
+#: includes/admin/class-settings-page.php
 msgid "Notices older than this will be automatically deleted."
 msgstr ""
 
-msgid "Unauthorized access"
-msgstr ""
-
+#: includes/admin/class-settings-page.php
+#: includes/admin/class-notice-popup.php
 msgid "Unauthorized"
 msgstr ""
 
+#: includes/admin/class-notice-popup.php
+msgid "Unauthorized access"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
 msgid "Invalid notice ID"
 msgstr ""
 
+#: includes/admin/class-notice-popup.php
 msgid "Notice marked as read"
 msgstr ""
 
+#: includes/admin/class-notice-popup.php
 msgid "Failed to mark notice as read"
 msgstr ""
 
+#: includes/admin/class-notice-popup.php
 msgid "Notice dismissed"
 msgstr ""
 
+#: includes/admin/class-notice-popup.php
 msgid "Failed to dismiss notice"
 msgstr ""
 
+#: includes/admin/class-notice-popup.php
+msgid "All notices marked as read"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "All notices cleared"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "No notices to display"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+#: templates/popup-template.php
+msgid "Mark All as Read"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+#: templates/popup-template.php
+msgid "Clear All"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Are you sure you want to clear all notices?"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Loading..."
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Mark as read"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Dismiss"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Dismiss notice"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+#: includes/toolbar/class-admin-toolbar.php
+#: templates/popup-template.php
+msgid "Notices"
+msgstr ""
+
+#. translators: %d: number of unread notices.
+#: includes/admin/class-notice-popup.php
+msgid "Notices (%d)"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Just now"
+msgstr ""
+
+#. translators: %d: number of minutes ago.
+#: includes/admin/class-notice-popup.php
+msgid "%d minutes ago"
+msgstr ""
+
+#. translators: %d: number of hours ago.
+#: includes/admin/class-notice-popup.php
+msgid "%d hours ago"
+msgstr ""
+
+#. translators: %d: number of days ago.
+#: includes/admin/class-notice-popup.php
+msgid "%d days ago"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+#: templates/popup-template.php
+msgid "Load more"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "Loading…"
+msgstr ""
+
+#: includes/admin/class-notice-popup.php
+msgid "All notices loaded"
+msgstr ""
+
+#: includes/notices/class-notice-classifier.php
+msgid "Success Notices"
+msgstr ""
+
+#: includes/notices/class-notice-classifier.php
+msgid "Error Notices"
+msgstr ""
+
+#: includes/notices/class-notice-classifier.php
+msgid "Warning Notices"
+msgstr ""
+
+#: includes/notices/class-notice-classifier.php
+msgid "Info Notices"
+msgstr ""
+
+#: includes/notices/class-notice-classifier.php
+msgid "Non-standard Notices"
+msgstr ""
+
+#: includes/notices/class-notice-classifier.php
+msgid "WordPress System Notices"
+msgstr ""
+
+#: includes/toolbar/class-admin-toolbar.php
+msgid "View Notices"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Close"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "All Types"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Show Read"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Mark All Read"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Loading notices..."
+msgstr ""
+
+#: templates/popup-template.php
+msgid "You're all caught up! No new notices."
+msgstr ""
+
+#: templates/popup-template.php
+msgid "View All Notices"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Clear All Notices?"
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Are you sure you want to clear all notices? This cannot be undone."
+msgstr ""
+
+#: templates/popup-template.php
+msgid "Cancel"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "How It Works"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Configure how each notice type should be handled above"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Notices will be captured and stored based on your settings"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Click \"Notices\" in the admin toolbar to view all captured notices"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Mark notices as read or dismiss them from the popup"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Statistics"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Total Notices:"
+msgstr ""
+
+#: templates/settings-page.php
+msgid "Unread Notices:"
+msgstr ""

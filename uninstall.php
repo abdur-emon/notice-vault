@@ -13,38 +13,22 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 /**
- * Delete plugin options.
- *
- * `notice_vault_settings`  — settings + migration flags.
- * `notice_vault_notices`   — legacy v0.x option (kept here for installs that never
- *                    completed the option-to-table migration before uninstall).
+ * Per-blog teardown. Drops the notices table, the settings option, and the
+ * legacy v0.x option (in case the option-to-table migration never ran on
+ * this blog). Safe to call from inside switch_to_blog().
  */
-function notice_vault_delete_options() {
+function notice_vault_uninstall_current_site() {
+	global $wpdb;
+
 	delete_option( 'notice_vault_settings' );
 	delete_option( 'notice_vault_notices' );
-}
 
-/**
- * Drop the custom notices table.
- */
-function notice_vault_drop_table() {
-	global $wpdb;
 	$table = $wpdb->prefix . 'notice_vault_notices';
-	// $table is built from $wpdb->prefix + a constant; uninstall is a one-shot teardown so caching is irrelevant.
+	// $table is built from $wpdb->prefix + a constant; uninstall is a one-shot teardown.
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
-}
 
-/**
- * Delete plugin transients.
- *
- * Per-user unread-count transients have the form `notice_vault_notice_count_<user_id>`,
- * so we sweep them all from the options table in one go (transients live in
- * `_transient_` / `_transient_timeout_` prefixed options).
- */
-function notice_vault_delete_transients() {
-	global $wpdb;
-
+	// Per-user unread-count transients have the form `notice_vault_notice_count_<user_id>`.
 	delete_transient( 'notice_vault_activation_redirect' );
 	delete_transient( 'notice_vault_notice_count' );
 
@@ -59,7 +43,9 @@ function notice_vault_delete_transients() {
 }
 
 /**
- * Clear scheduled events.
+ * Unschedule the daily cleanup cron. Cron events are stored as a sitemeta-style
+ * option but `wp_next_scheduled`/`wp_unschedule_event` are switch_to_blog-aware,
+ * so it's safe to call this per-site.
  */
 function notice_vault_clear_scheduled_events() {
 	$timestamp = wp_next_scheduled( 'notice_vault_cleanup_notices' );
@@ -68,8 +54,21 @@ function notice_vault_clear_scheduled_events() {
 	}
 }
 
-// Run cleanup.
-notice_vault_delete_options();
-notice_vault_drop_table();
-notice_vault_delete_transients();
-notice_vault_clear_scheduled_events();
+// On multisite, uninstall fires once for the whole network — but Notice Vault
+// stores per-site tables (and is documented as per-site activation). Iterate
+// every blog so subsite tables don't orphan.
+if ( is_multisite() ) {
+	$notice_vault_sites = function_exists( 'get_sites' )
+		? get_sites( array( 'fields' => 'ids', 'number' => 0 ) )
+		: array( get_current_blog_id() );
+
+	foreach ( $notice_vault_sites as $notice_vault_site_id ) {
+		switch_to_blog( (int) $notice_vault_site_id );
+		notice_vault_uninstall_current_site();
+		notice_vault_clear_scheduled_events();
+		restore_current_blog();
+	}
+} else {
+	notice_vault_uninstall_current_site();
+	notice_vault_clear_scheduled_events();
+}

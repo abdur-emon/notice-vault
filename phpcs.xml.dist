@@ -24,9 +24,9 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="anh"/>
-				<element value="ANH"/>
+				<element value="notice_vault"/>
 				<element value="Notice_Vault"/>
+				<element value="NOTICE_VAULT"/>
 			</property>
 		</properties>
 	</rule>

@@ -210,15 +210,41 @@ class Notice_Capture {
 		$wrapper = $doc->getElementById( 'notice-vault-wrapper' );
 
 		if ( $wrapper instanceof \DOMElement ) {
+			$pending_text = '';
+
 			foreach ( $wrapper->childNodes as $child ) {
+				// Text nodes between/around elements would normally be lost. Buffer
+				// them and either merge into the next element node (so a leading
+				// "Heads up: " stays attached to its notice div) or, failing that,
+				// emit them as their own captured chunk so the text isn't dropped.
+				if ( XML_TEXT_NODE === $child->nodeType ) {
+					$pending_text .= $child->nodeValue;
+					continue;
+				}
+
 				if ( XML_ELEMENT_NODE !== $child->nodeType ) {
 					continue;
 				}
+
 				$serialized = $doc->saveHTML( $child );
 				if ( ! is_string( $serialized ) || '' === trim( wp_strip_all_tags( $serialized ) ) ) {
 					continue;
 				}
+
+				if ( '' !== trim( $pending_text ) ) {
+					$serialized   = esc_html( trim( $pending_text ) ) . $serialized;
+					$pending_text = '';
+				} else {
+					$pending_text = '';
+				}
+
 				$notices[] = $serialized;
+			}
+
+			// Trailing loose text after the last element: emit as its own chunk
+			// wrapped in a paragraph so the classifier still gets a normal element.
+			if ( '' !== trim( $pending_text ) ) {
+				$notices[] = '<p>' . esc_html( trim( $pending_text ) ) . '</p>';
 			}
 		}
 
@@ -316,14 +342,20 @@ class Notice_Capture {
 			return;
 		}
 
-		// Extract plain text content.
+		// Plain text fallback for the toolbar preview / when JS can't render the HTML.
 		$content = Notice_Classifier::extract_content( $html );
+
+		// Strict allowlist so links and basic formatting survive the round-trip
+		// but no scripts/iframes/inline handlers ever do. This is intentionally
+		// tighter than wp_kses_post — captured notices originate from third-party
+		// plugins and we want to keep the trust surface small.
+		$safe_html = self::sanitize_notice_html( $html );
 
 		// Prepare notice data.
 		$notice = array(
 			'type'    => $type,
 			'content' => $content,
-			'html'    => wp_kses_post( $html ),
+			'html'    => $safe_html,
 			'hash'    => $hash,
 		);
 
@@ -332,6 +364,40 @@ class Notice_Capture {
 
 		// Update hash index.
 		$this->hash_index[ $hash ] = true;
+	}
+
+	/**
+	 * Strict allowlist for the HTML version of a captured notice. Keeps links
+	 * (so users can still click through) and basic formatting; drops scripts,
+	 * iframes, forms, event handlers, etc.
+	 *
+	 * @since 1.0.0
+	 * @param string $html Raw captured notice HTML.
+	 * @return string
+	 */
+	public static function sanitize_notice_html( $html ) {
+		$allowed = array(
+			'a'      => array(
+				'href'   => true,
+				'title'  => true,
+				'rel'    => true,
+				'target' => true,
+			),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			'br'     => array(),
+			'code'   => array(),
+			'p'      => array(),
+			'span'   => array(),
+			'ul'     => array(),
+			'ol'     => array(),
+			'li'     => array(),
+		);
+
+		return wp_kses( (string) $html, $allowed );
 	}
 }
 

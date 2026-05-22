@@ -66,6 +66,14 @@ class Notice_Classifier {
 	 * @return string Notice type (success, error, warning, info, system, other).
 	 */
 	public static function classify( $html ) {
+		// System markers (update-nag, update-message, …) win over the generic
+		// notice-* severity classes: WP core often emits an update nag as
+		// `<div class="notice notice-warning update-nag">`, and we want that
+		// routed to the `system` bucket — not classified as a plain warning.
+		if ( self::is_system_notice( $html ) ) {
+			return 'system';
+		}
+
 		// Check for WordPress notice classes.
 		if ( self::contains_class( $html, 'notice-success' ) || self::contains_class( $html, 'updated' ) ) {
 			return 'success';
@@ -81,11 +89,6 @@ class Notice_Classifier {
 
 		if ( self::contains_class( $html, 'notice-info' ) ) {
 			return 'info';
-		}
-
-		// Check if it's a WordPress system notice.
-		if ( self::is_system_notice( $html ) ) {
-			return 'system';
 		}
 
 		// Default to 'other' for non-standard notices.
@@ -147,17 +150,9 @@ class Notice_Classifier {
 	 * @return string Plain text content.
 	 */
 	public static function extract_content( $html ) {
-		// Remove script and style tags.
-		$html = preg_replace( '/<script\b[^>]*>(.*?)<\/script>/is', '', $html );
-		$html = preg_replace( '/<style\b[^>]*>(.*?)<\/style>/is', '', $html );
-
-		// Strip HTML tags.
+		// wp_strip_all_tags() already drops <script>/<style> bodies before stripping tags.
 		$text = wp_strip_all_tags( $html );
-
-		// Clean up whitespace.
-		$text = trim( preg_replace( '/\s+/', ' ', $text ) );
-
-		return $text;
+		return trim( preg_replace( '/\s+/', ' ', $text ) );
 	}
 
 	/**

@@ -126,12 +126,21 @@ By default, every captured notice category (success, error, warning, info, syste
 
 == Changelog ==
 
-= 1.0.0 - 2026-05-18 =
+= 1.0.0 - 2026-05-22 =
 * Initial release.
 * Notice capture system covering `admin_notices`, `network_admin_notices`, `user_admin_notices`, and `all_admin_notices`.
 * Admin toolbar counter with quick-preview submenu.
 * Popup interface with three display styles (Slide from Right, Modal, Slide Background Panel).
 * Settings page with per-type rules, per-user visibility controls, and configurable auto-expire window.
+* "Load more" pagination in the popup for users with large notice lists.
+* Captured notice content preserves clickable links and basic formatting through a strict server-side `wp_kses` allowlist (`<a>`, `<strong>`, `<em>`, `<code>`, lists, …); scripts, iframes, and inline event handlers always stripped.
+* System notices (`update-nag`, `update-message`, …) are detected before generic `notice-*` severity classes so they reliably route to the System bucket.
+* Filterable popup type dropdown — custom buckets registered via the `notice_vault_notice_types` filter appear here too.
+* Multisite uninstall iterates every blog and drops its per-blog notices table.
+* Daily cleanup cron sweeps per-user unread-count transients when anything actually expires, so the admin-bar badge can't show a stale count past expiry.
+* Long URLs inside notice content wrap instead of overflowing the popup.
+* Confirm modal is localized and specific to the clear-all action.
+* AJAX errors (mark-as-read / dismiss / mark-all-read / clear-all) surface a toast on failure instead of silently doing nothing.
 
 
 == Upgrade Notice ==

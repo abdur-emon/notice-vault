@@ -356,6 +356,33 @@
 	line-height: 1.6;
 	color: #2c3338;
 	margin-bottom: 8px;
+	/* Long unbroken strings (URLs, hashes) should wrap instead of overflowing the popup. */
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.notice-vault-notice-content a {
+	color: #2271b1;
+	text-decoration: underline;
+}
+
+.notice-vault-notice-content a:hover {
+	color: #135e96;
+}
+
+/* Load-more pagination */
+.notice-vault-load-more-wrap {
+	text-align: center;
+	padding: 12px 0 4px;
+}
+
+.notice-vault-load-more {
+	min-width: 160px;
+}
+
+.notice-vault-load-more[disabled] {
+	opacity: 0.6;
+	cursor: not-allowed;
 }
 
 /* Notice Meta */

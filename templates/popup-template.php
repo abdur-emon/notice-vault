@@ -30,18 +30,24 @@ if (!defined('ABSPATH')) {
 		<div class="notice-vault-popup-toolbar">
 			<div class="notice-vault-filters">
 				<select id="notice-vault-filter-type" class="notice-vault-filter-select">
-					<option value="all"><?php esc_html_e('All Types', 'notice-vault'); ?></option>
-					<option value="success"><?php esc_html_e('Success', 'notice-vault'); ?></option>
-					<option value="error"><?php esc_html_e('Errors', 'notice-vault'); ?></option>
-					<option value="warning"><?php esc_html_e('Warnings', 'notice-vault'); ?></option>
-					<option value="info"><?php esc_html_e('Info', 'notice-vault'); ?></option>
-					<option value="system"><?php esc_html_e('System', 'notice-vault'); ?></option>
-					<option value="other"><?php esc_html_e('Other', 'notice-vault'); ?></option>
+					<option value="all"><?php esc_html_e( 'All Types', 'notice-vault' ); ?></option>
+					<?php
+					// Render filter options from the same filterable type list the settings
+					// page uses, so a third party that registers a custom bucket via
+					// `notice_vault_notice_types` automatically gets a filter entry too.
+					foreach ( \Notice_Vault\Notices\Notice_Classifier::get_types() as $notice_vault_type_key => $notice_vault_type_label ) {
+						printf(
+							'<option value="%1$s">%2$s</option>',
+							esc_attr( $notice_vault_type_key ),
+							esc_html( $notice_vault_type_label )
+						);
+					}
+					?>
 				</select>
 
 				<label class="notice-vault-checkbox-label">
 					<input type="checkbox" id="notice-vault-show-read" class="notice-vault-checkbox">
-					<?php esc_html_e('Show Read', 'notice-vault'); ?>
+					<?php esc_html_e( 'Show Read', 'notice-vault' ); ?>
 				</label>
 			</div>
 
@@ -66,9 +72,17 @@ if (!defined('ABSPATH')) {
 				<!-- Notices will be loaded here via AJAX -->
 			</div>
 
+			<div class="notice-vault-load-more-wrap" id="notice-vault-load-more-wrap" style="display: none;">
+				<button type="button"
+					class="notice-vault-btn notice-vault-btn-secondary notice-vault-load-more"
+					id="notice-vault-load-more">
+					<?php esc_html_e( 'Load more', 'notice-vault' ); ?>
+				</button>
+			</div>
+
 			<div class="notice-vault-empty-state" style="display: none;">
 				<span class="dashicons dashicons-yes-alt"></span>
-				<p><?php esc_html_e('You\'re all caught up! No new notices.', 'notice-vault'); ?></p>
+				<p><?php esc_html_e( 'You\'re all caught up! No new notices.', 'notice-vault' ); ?></p>
 			</div>
 		</div>
 
@@ -87,13 +101,13 @@ if (!defined('ABSPATH')) {
 		<!-- Custom Confirm Modal -->
 		<div class="notice-vault-confirm-modal" id="notice-vault-confirm-modal" style="display: none;" role="alertdialog" aria-labelledby="notice-vault-confirm-title" aria-describedby="notice-vault-confirm-message">
 			<div class="notice-vault-confirm-content">
-				<h3 id="notice-vault-confirm-title"><?php esc_html_e('Confirm Action', 'notice-vault'); ?></h3>
-				<p id="notice-vault-confirm-message"><?php esc_html_e('Are you sure?', 'notice-vault'); ?></p>
+				<h3 id="notice-vault-confirm-title"><?php esc_html_e( 'Clear All Notices?', 'notice-vault' ); ?></h3>
+				<p id="notice-vault-confirm-message"><?php esc_html_e( 'Are you sure you want to clear all notices? This cannot be undone.', 'notice-vault' ); ?></p>
 				<div class="notice-vault-confirm-actions">
 					<button type="button" class="notice-vault-btn notice-vault-btn-secondary"
-						id="notice-vault-confirm-cancel"><?php esc_html_e('Cancel', 'notice-vault'); ?></button>
+						id="notice-vault-confirm-cancel"><?php esc_html_e( 'Cancel', 'notice-vault' ); ?></button>
 					<button type="button" class="notice-vault-btn notice-vault-btn-danger"
-						id="notice-vault-confirm-yes"><?php esc_html_e('Clear All', 'notice-vault'); ?></button>
+						id="notice-vault-confirm-yes"><?php esc_html_e( 'Clear All', 'notice-vault' ); ?></button>
 				</div>
 			</div>
 		</div>

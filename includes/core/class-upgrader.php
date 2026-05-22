@@ -79,12 +79,15 @@ class Upgrader {
 		// IMPORTANT: dbDelta is picky — two spaces between PRIMARY KEY and the
 		// column list, indexes on their own lines, no leading whitespace on the
 		// CREATE TABLE line.
+		// `html` is nullable so dbDelta can ALTER existing tables in place without
+		// failing on legacy rows. New rows always write a sanitized HTML payload.
 		$sql = "CREATE TABLE $table_name (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			notice_id VARCHAR(64) NOT NULL,
 			user_id BIGINT(20) UNSIGNED NOT NULL DEFAULT 0,
 			notice_type VARCHAR(20) NOT NULL,
 			content TEXT NOT NULL,
+			html TEXT NULL DEFAULT NULL,
 			hash VARCHAR(32) NOT NULL,
 			is_read TINYINT(1) NOT NULL DEFAULT 0,
 			created_at DATETIME NOT NULL,
@@ -140,6 +143,14 @@ class Upgrader {
 				$migrations['settings_autoload_no'] = NOTICE_VAULT_VERSION;
 				$dirty                              = true;
 			}
+		}
+
+		// Migration: add `html` column for sanitized notice markup.
+		// dbDelta is idempotent so calling ensure_table() here just adds the missing column.
+		if ( empty( $migrations['schema_html_column'] ) ) {
+			self::ensure_table();
+			$migrations['schema_html_column'] = NOTICE_VAULT_VERSION;
+			$dirty                            = true;
 		}
 
 		if ( $dirty ) {
