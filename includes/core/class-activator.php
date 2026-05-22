@@ -51,11 +51,16 @@ class Activator {
 
 		// Create the notices custom table. Schema definition lives in Upgrader so
 		// both fresh activation and the on-admin-init migrator share one source.
-		require_once NOTICE_VAULT_PLUGIN_DIR . 'includes/core/class-upgrader.php';
 		Upgrader::ensure_table();
 
 		// Seed default settings (autoload=no — this plugin is admin-only).
 		self::set_default_options();
+
+		// Schedule the daily cleanup cron immediately so it runs even on installs
+		// that activate the plugin without ever visiting wp-admin afterward.
+		if ( ! wp_next_scheduled( 'notice_vault_cleanup_notices' ) ) {
+			wp_schedule_event( time(), 'daily', 'notice_vault_cleanup_notices' );
+		}
 	}
 
 	/**
@@ -77,6 +82,7 @@ class Activator {
 				'schema_v1'               => NOTICE_VAULT_VERSION,
 				'notices_option_to_table' => NOTICE_VAULT_VERSION,
 				'settings_autoload_no'    => NOTICE_VAULT_VERSION,
+				'schema_html_column'      => NOTICE_VAULT_VERSION,
 			),
 		);
 

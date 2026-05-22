@@ -88,18 +88,18 @@ class Admin_Toolbar {
 	 * @return string HTML title.
 	 */
 	private function get_toolbar_title( $count ) {
-		$icon = '<span class="ab-icon dashicons dashicons-bell"></span>';
-
-		if ( $count > 0 ) {
-			$badge = sprintf(
-				'<span class="notice-vault-count-badge">%s</span>',
-				esc_html( $count )
-			);
-			$text = esc_html__( 'Notices', 'notice-vault' );
-			return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
-		}
-
-		return $icon . '<span class="ab-label">' . esc_html__( 'Notices', 'notice-vault' ) . '</span>';
+		$icon  = '<span class="ab-icon dashicons dashicons-bell"></span>';
+		$text  = esc_html__( 'Notices', 'notice-vault' );
+		// Always render the badge element — hidden via inline style when there's
+		// nothing to show — so JS can update it from 0 to N without needing to
+		// inject the element. Without this, going from 0 unread to N unread
+		// (e.g. after a future "refresh" action) would silently fail to update.
+		$badge = sprintf(
+			'<span class="notice-vault-count-badge"%1$s>%2$s</span>',
+			$count > 0 ? '' : ' style="display:none;"',
+			esc_html( (string) $count )
+		);
+		return $icon . '<span class="ab-label">' . $text . '</span>' . $badge;
 	}
 
 	/**

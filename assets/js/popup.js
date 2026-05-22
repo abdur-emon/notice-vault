@@ -7,11 +7,17 @@
 (function ($) {
 	'use strict';
 
+	const PER_PAGE = 20;
+
 	/**
 	 * Notice Popup Handler
 	 */
 	const NoticePopup = {
 		previousFocus: null,
+		currentPage: 1,
+		totalCount: 0,
+		hasMore: false,
+		isLoading: false,
 
 		/**
 		 * Initialize
@@ -24,14 +30,16 @@
 		 * Bind events
 		 */
 		bindEvents: function () {
-			// Open popup when clicking toolbar item
-			$(document).on('click', '#wp-admin-bar-notice-vault-notices > a, .notice-vault-view-all', function (e) {
+			// Open popup when clicking the toolbar item OR any preview submenu link
+			// (everything inside #wp-admin-bar-notice-vault-notices). Without this,
+			// the unread-preview submenu items were clickable but did nothing.
+			$(document).on('click', '#wp-admin-bar-notice-vault-notices a, .notice-vault-view-all', function (e) {
 				e.preventDefault();
 				NoticePopup.openPopup();
 			});
 
 			// Close popup
-			$(document).on('click', '.notice-vault-close-popup', function (e) {
+			$(document).on('click', '.notice-vault-close-popup', function () {
 				NoticePopup.closePopup();
 			});
 
@@ -48,9 +56,9 @@
 				}
 			});
 
-			// Filter change
+			// Filter change — reset to page 1 and reload.
 			$(document).on('change', '#notice-vault-filter-type, #notice-vault-show-read', function () {
-				NoticePopup.loadNotices();
+				NoticePopup.resetAndLoad();
 			});
 
 			// Mark as read
@@ -90,6 +98,12 @@
 				NoticePopup.clearAll();
 			});
 
+			// Load more pagination
+			$(document).on('click', '#notice-vault-load-more', function (e) {
+				e.preventDefault();
+				NoticePopup.loadMore();
+			});
+
 			// Focus Trapping within Popup
 			$(document).on('keydown', '#notice-vault-popup', function (e) {
 				if (e.key === 'Tab') {
@@ -108,12 +122,12 @@
 			const firstElement = focusableElements[0];
 			const lastElement = focusableElements[focusableElements.length - 1];
 
-			if (e.shiftKey) { // Shift + Tab
+			if (e.shiftKey) {
 				if (document.activeElement === firstElement) {
 					lastElement.focus();
 					e.preventDefault();
 				}
-			} else { // Tab
+			} else {
 				if (document.activeElement === lastElement) {
 					firstElement.focus();
 					e.preventDefault();
@@ -125,14 +139,18 @@
 		 * Open popup
 		 */
 		openPopup: function () {
-			this.previousFocus = document.activeElement;
+			// Only capture the previous focus if we don't already have one stashed —
+			// otherwise a double-click or programmatic re-open would overwrite the
+			// real return target with the popup's own close button.
+			if (!this.previousFocus) {
+				this.previousFocus = document.activeElement;
+			}
 			$('#notice-vault-popup-overlay').show();
 			setTimeout(function () {
 				$('#notice-vault-popup-overlay').addClass('notice-vault-active');
-				// Focus the close button for accessibility
 				$('#notice-vault-popup-overlay').find('.notice-vault-close-popup').focus();
 			}, 10);
-			this.loadNotices();
+			this.resetAndLoad();
 		},
 
 		/**
@@ -142,23 +160,47 @@
 			$('#notice-vault-popup-overlay').removeClass('notice-vault-active');
 			setTimeout(function () {
 				$('#notice-vault-popup-overlay').hide();
-				// Restore focus
-				if (NoticePopup.previousFocus) {
+				if (NoticePopup.previousFocus && typeof NoticePopup.previousFocus.focus === 'function') {
 					NoticePopup.previousFocus.focus();
 				}
+				// Clear so the next open re-captures whatever the user came from.
+				NoticePopup.previousFocus = null;
 			}, 300);
 		},
 
 		/**
-		 * Load notices via AJAX
+		 * Reset state to first page, then load.
 		 */
-		loadNotices: function () {
+		resetAndLoad: function () {
+			this.currentPage = 1;
+			$('#notice-vault-notices-list').empty();
+			$('#notice-vault-load-more-wrap').hide();
+			this.loadNotices(false);
+		},
+
+		/**
+		 * Load notices via AJAX. When `append` is false the list is replaced;
+		 * when true (used by "Load more"), new rows are appended.
+		 */
+		loadNotices: function (append) {
+			if (this.isLoading) {
+				return;
+			}
+			this.isLoading = true;
+
 			const filterType = $('#notice-vault-filter-type').val();
 			const showRead = $('#notice-vault-show-read').is(':checked');
+			const i18n = noticeVaultPopup.i18n || {};
 
-			$('.notice-vault-loading').show();
-			$('.notice-vault-notices-list').hide();
-			$('.notice-vault-empty-state').hide();
+			if (!append) {
+				$('.notice-vault-loading').show();
+				$('.notice-vault-notices-list').hide();
+				$('.notice-vault-empty-state').hide();
+			} else {
+				$('#notice-vault-load-more')
+					.prop('disabled', true)
+					.text(i18n.loadMoreLoading || 'Loading…');
+			}
 
 			$.ajax({
 				url: noticeVaultPopup.ajaxUrl,
@@ -167,49 +209,98 @@
 					action: 'notice_vault_get_notices',
 					nonce: noticeVaultPopup.nonce,
 					filter_type: filterType,
-					show_read: showRead
+					show_read: showRead,
+					page: NoticePopup.currentPage
 				},
 				success: function (response) {
 					$('.notice-vault-loading').hide();
 
-					if (response.success && response.data.notices.length > 0) {
-						NoticePopup.renderNotices(response.data.notices);
-						$('.notice-vault-notices-list').show();
-					} else {
-						$('.notice-vault-empty-state').show();
-					}
-
 					if (response.success && response.data) {
-						// In-popup badge tracks unread total (independent of active filter).
+						const notices = response.data.notices || [];
+						NoticePopup.totalCount = response.data.total_count || 0;
+						NoticePopup.hasMore = !!response.data.has_more;
+
+						if (append) {
+							NoticePopup.appendNotices(notices);
+						} else {
+							NoticePopup.renderNotices(notices);
+						}
+
+						if ($('#notice-vault-notices-list').children().length > 0) {
+							$('.notice-vault-notices-list').show();
+							$('.notice-vault-empty-state').hide();
+						} else {
+							$('.notice-vault-notices-list').hide();
+							$('.notice-vault-empty-state').show();
+						}
+
+						NoticePopup.updateLoadMore();
 						NoticePopup.updateCount(response.data.unread_total);
 						NoticePopup.updateToolbarCount(response.data.unread_total);
+					} else {
+						NoticePopup.showToast(i18n.error, 'error');
 					}
 				},
 				error: function () {
 					$('.notice-vault-loading').hide();
-					NoticePopup.showToast(noticeVaultPopup.i18n.error, 'error');
+					NoticePopup.showToast(i18n.error, 'error');
+				},
+				complete: function () {
+					NoticePopup.isLoading = false;
+					$('#notice-vault-load-more')
+						.prop('disabled', false)
+						.text(i18n.loadMore || 'Load more');
 				}
 			});
 		},
 
 		/**
-		 * Render notices
+		 * Load the next page (called by the Load-more button).
+		 */
+		loadMore: function () {
+			if (!this.hasMore || this.isLoading) {
+				return;
+			}
+			this.currentPage += 1;
+			this.loadNotices(true);
+		},
+
+		/**
+		 * Show/hide the Load-more button based on hasMore.
+		 */
+		updateLoadMore: function () {
+			if (this.hasMore) {
+				$('#notice-vault-load-more-wrap').show();
+			} else {
+				$('#notice-vault-load-more-wrap').hide();
+			}
+		},
+
+		/**
+		 * Render notices (replace).
 		 */
 		renderNotices: function (notices) {
 			const $list = $('#notice-vault-notices-list');
 			$list.empty();
+			this.appendNotices(notices);
+		},
 
+		/**
+		 * Append notices (used for Load more).
+		 */
+		appendNotices: function (notices) {
+			const $list = $('#notice-vault-notices-list');
 			notices.forEach(function (notice) {
-				const $item = NoticePopup.createNoticeItem(notice);
-				$list.append($item);
+				$list.append(NoticePopup.createNoticeItem(notice));
 			});
 		},
 
 		/**
-		 * Create notice item HTML.
+		 * Create notice item.
 		 *
-		 * Notice content is appended via .text() so any literal <, >, & in the
-		 * stripped notice copy can never be re-interpreted as HTML.
+		 * Content rendering: prefer notice.html (which the server has already passed
+		 * through a strict wp_kses allowlist — see Notice_Capture::sanitize_notice_html),
+		 * fall back to .text(notice.content) for legacy rows where html is empty.
 		 */
 		createNoticeItem: function (notice) {
 			const readClass = notice.is_read ? 'notice-vault-notice-read' : '';
@@ -225,7 +316,7 @@
 			$header.append(
 				$('<div class="notice-vault-notice-type">')
 					.append($('<span class="dashicons">').addClass(notice.icon).attr('aria-hidden', 'true'))
-					.append(document.createTextNode(' ' + notice.type))
+					.append(document.createTextNode(' ' + (notice.type_label || notice.type)))
 			);
 
 			const $actions = $('<div class="notice-vault-notice-actions">');
@@ -248,7 +339,16 @@
 			$header.append($actions);
 
 			$item.append($header);
-			$item.append($('<div class="notice-vault-notice-content">').text(notice.content || ''));
+
+			const $content = $('<div class="notice-vault-notice-content">');
+			if (notice.html && notice.html.length > 0) {
+				// Server-sanitized via wp_kses with a strict tag allowlist.
+				$content.html(notice.html);
+			} else {
+				$content.text(notice.content || '');
+			}
+			$item.append($content);
+
 			$item.append(
 				$('<div class="notice-vault-notice-meta">').append(
 					$('<div class="notice-vault-notice-time">')
@@ -264,6 +364,7 @@
 		 * Mark notice as read
 		 */
 		markRead: function (noticeId) {
+			const i18n = noticeVaultPopup.i18n || {};
 			$.ajax({
 				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
@@ -277,7 +378,12 @@
 						$('[data-notice-id="' + noticeId + '"]').addClass('notice-vault-notice-read');
 						$('[data-notice-id="' + noticeId + '"] .notice-vault-mark-read').remove();
 						NoticePopup.updateToolbarCount(response.data.unread_total);
+					} else {
+						NoticePopup.showToast((response.data && response.data.message) || i18n.error, 'error');
 					}
+				},
+				error: function () {
+					NoticePopup.showToast(i18n.error, 'error');
 				}
 			});
 		},
@@ -286,6 +392,7 @@
 		 * Dismiss notice
 		 */
 		dismissNotice: function (noticeId) {
+			const i18n = noticeVaultPopup.i18n || {};
 			$.ajax({
 				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
@@ -305,15 +412,21 @@
 							});
 						});
 						NoticePopup.updateToolbarCount(response.data.unread_total);
+					} else {
+						NoticePopup.showToast((response.data && response.data.message) || i18n.error, 'error');
 					}
+				},
+				error: function () {
+					NoticePopup.showToast(i18n.error, 'error');
 				}
 			});
 		},
 
 		/**
-		 * Mark all as read (single bulk AJAX call)
+		 * Mark all as read
 		 */
 		markAllRead: function () {
+			const i18n = noticeVaultPopup.i18n || {};
 			$.ajax({
 				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
@@ -326,16 +439,22 @@
 						$('.notice-vault-notice-item').addClass('notice-vault-notice-read');
 						$('.notice-vault-mark-read').remove();
 						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
-						NoticePopup.showToast(response.data.message || noticeVaultPopup.i18n.markAllRead);
+						NoticePopup.showToast((response.data && response.data.message) || i18n.markedAllRead);
+					} else {
+						NoticePopup.showToast((response.data && response.data.message) || i18n.error, 'error');
 					}
+				},
+				error: function () {
+					NoticePopup.showToast(i18n.error, 'error');
 				}
 			});
 		},
 
 		/**
-		 * Clear all notices (single bulk AJAX call)
+		 * Clear all notices
 		 */
 		clearAll: function () {
+			const i18n = noticeVaultPopup.i18n || {};
 			$.ajax({
 				url: noticeVaultPopup.ajaxUrl,
 				type: 'POST',
@@ -348,35 +467,53 @@
 						$('#notice-vault-notices-list').empty();
 						$('.notice-vault-empty-state').show();
 						$('.notice-vault-notices-list').hide();
+						$('#notice-vault-load-more-wrap').hide();
+						NoticePopup.hasMore = false;
+						NoticePopup.totalCount = 0;
 						NoticePopup.updateToolbarCount(response.data.unread_total || 0);
-						NoticePopup.showToast(response.data.message || noticeVaultPopup.i18n.clearAll);
+						NoticePopup.showToast((response.data && response.data.message) || i18n.cleared);
+					} else {
+						NoticePopup.showToast((response.data && response.data.message) || i18n.error, 'error');
 					}
+				},
+				error: function () {
+					NoticePopup.showToast(i18n.error, 'error');
 				}
 			});
 		},
 
 		/**
-		 * Update count badge
+		 * Update count badge inside the popup header.
 		 */
 		updateCount: function (count) {
 			$('.notice-vault-notice-count-badge').text(count);
 		},
 
 		/**
-		 * Update toolbar count
+		 * Update the admin-bar count.
+		 *
+		 * Server-side renders the badge element even at 0 (hidden via inline style)
+		 * so this can always find it. As a defensive last resort, if it's missing
+		 * we still inject one.
 		 */
 		updateToolbarCount: function (count) {
 			const i18n = noticeVaultPopup.i18n || {};
 			const $label = $('#wp-admin-bar-notice-vault-notices .ab-label');
 			const num = parseInt(count, 10) || 0;
 
+			let $badge = $('#wp-admin-bar-notice-vault-notices .notice-vault-count-badge');
+			if ($badge.length === 0) {
+				$badge = $('<span class="notice-vault-count-badge" style="display:none;"></span>');
+				$label.after($badge);
+			}
+
 			if (num > 0) {
 				const tmpl = i18n.noticesWithCount || 'Notices (%d)';
 				$label.text(tmpl.replace('%d', num));
-				$('.notice-vault-count-badge').text(num).show();
+				$badge.text(num).show();
 			} else {
 				$label.text(i18n.notices || 'Notices');
-				$('.notice-vault-count-badge').hide();
+				$badge.hide();
 			}
 			this.updateCount(num);
 		},
@@ -406,15 +543,16 @@
 		/**
 		 * Show Toast Notification
 		 */
-		showToast: function (message, type = 'success') {
+		showToast: function (message, type) {
+			type = type || 'success';
 			const $toast = $('<div>')
 				.addClass('notice-vault-toast notice-vault-toast-' + type)
-				.text(message);
+				.text(message || '');
 
 			$('#notice-vault-toast-container').append($toast);
 
 			// Trigger reflow for transition
-			$toast[0].offsetHeight;
+			$toast[0].offsetHeight; // eslint-disable-line no-unused-expressions
 			$toast.addClass('notice-vault-toast-show');
 
 			setTimeout(function () {
@@ -426,10 +564,13 @@
 		}
 	};
 
+	// Expose for parity with the earlier surface; PER_PAGE intentionally unused on
+	// the client but kept here so future "page size" tweaks are obvious.
+	NoticePopup.PER_PAGE = PER_PAGE;
+
 	// Initialize on document ready
 	$(document).ready(function () {
 		NoticePopup.init();
 	});
 
 })(jQuery);
-

@@ -154,13 +154,21 @@ class Settings_Page
 			'notice_vault_visibility'
 		);
 
-		// Visibility users field.
+		// Visibility users field. The wrapping <tr> is hidden server-side when the
+		// current mode doesn't need a user list, so there's no flash of visible
+		// row before admin.js kicks in. JS still flips it on subsequent changes.
+		$settings   = get_option( self::OPTION_NAME, array() );
+		$mode       = isset( $settings['visibility_mode'] ) ? $settings['visibility_mode'] : 'show-all';
+		$needs_list = in_array( $mode, array( 'hide-selected', 'show-selected' ), true );
 		add_settings_field(
 			'visibility_users',
 			__( 'Select Users', 'notice-vault' ),
 			array( $this, 'render_visibility_users_field' ),
 			self::PAGE_SLUG,
-			'notice_vault_visibility'
+			'notice_vault_visibility',
+			array(
+				'class' => $needs_list ? 'notice-vault-visibility-users-row' : 'notice-vault-visibility-users-row hidden',
+			)
 		);
 
 		// Auto expire days field.
@@ -378,7 +386,15 @@ class Settings_Page
 	 */
 	public function sanitize_settings($input)
 	{
-		$sanitized = array();
+		// Start from the existing option so internal sub-keys the form doesn't touch
+		// (notably `migrations`, used by Upgrader to gate one-shot DB migrations)
+		// survive a "Save Settings" round-trip. Without this, every save would
+		// erase migration flags and force the next admin request to re-run them.
+		$existing = get_option( self::OPTION_NAME, array() );
+		if ( ! is_array( $existing ) ) {
+			$existing = array();
+		}
+		$sanitized = $existing;
 
 		// Sanitize notice type settings — uses the filtered type list so custom buckets
 		// registered via `notice_vault_notice_types` are validated too.
@@ -424,7 +440,7 @@ class Settings_Page
 			}
 		}
 
-		// Keep version.
+		// Stamp current version on every save.
 		$sanitized['version'] = NOTICE_VAULT_VERSION;
 
 		return $sanitized;

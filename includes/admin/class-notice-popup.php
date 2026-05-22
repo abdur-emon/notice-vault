@@ -81,25 +81,30 @@ class Notice_Popup
 				'nonce'      => wp_create_nonce( 'notice_vault_ajax_nonce' ),
 				'popupStyle' => $this->get_popup_style(),
 				'i18n'       => array(
-					'noNotices'       => __( 'No notices to display', 'notice-vault' ),
-					'markAllRead'     => __( 'Mark All as Read', 'notice-vault' ),
-					'clearAll'        => __( 'Clear All', 'notice-vault' ),
-					'confirmClearAll' => __( 'Are you sure you want to clear all notices?', 'notice-vault' ),
-					'loading'         => __( 'Loading...', 'notice-vault' ),
-					'error'           => __( 'An error occurred', 'notice-vault' ),
-					'markAsRead'      => __( 'Mark as read', 'notice-vault' ),
-					'dismiss'         => __( 'Dismiss', 'notice-vault' ),
-					'dismissNotice'   => __( 'Dismiss notice', 'notice-vault' ),
-					'notices'         => __( 'Notices', 'notice-vault' ),
+					'noNotices'        => __( 'No notices to display', 'notice-vault' ),
+					'markAllRead'      => __( 'Mark All as Read', 'notice-vault' ),
+					'clearAll'         => __( 'Clear All', 'notice-vault' ),
+					'confirmClearAll'  => __( 'Are you sure you want to clear all notices?', 'notice-vault' ),
+					'loading'          => __( 'Loading...', 'notice-vault' ),
+					'error'            => __( 'An error occurred. Please try again.', 'notice-vault' ),
+					'markAsRead'       => __( 'Mark as read', 'notice-vault' ),
+					'dismiss'          => __( 'Dismiss', 'notice-vault' ),
+					'dismissNotice'    => __( 'Dismiss notice', 'notice-vault' ),
+					'notices'          => __( 'Notices', 'notice-vault' ),
 					/* translators: %d: number of unread notices. */
 					'noticesWithCount' => __( 'Notices (%d)', 'notice-vault' ),
-					'justNow'         => __( 'Just now', 'notice-vault' ),
+					'justNow'          => __( 'Just now', 'notice-vault' ),
 					/* translators: %d: number of minutes ago. */
-					'minutesAgo'      => __( '%d minutes ago', 'notice-vault' ),
+					'minutesAgo'       => __( '%d minutes ago', 'notice-vault' ),
 					/* translators: %d: number of hours ago. */
-					'hoursAgo'        => __( '%d hours ago', 'notice-vault' ),
+					'hoursAgo'         => __( '%d hours ago', 'notice-vault' ),
 					/* translators: %d: number of days ago. */
-					'daysAgo'         => __( '%d days ago', 'notice-vault' ),
+					'daysAgo'          => __( '%d days ago', 'notice-vault' ),
+					'loadMore'         => __( 'Load more', 'notice-vault' ),
+					'loadMoreLoading'  => __( 'Loading…', 'notice-vault' ),
+					'allLoaded'        => __( 'All notices loaded', 'notice-vault' ),
+					'markedAllRead'    => __( 'All notices marked as read', 'notice-vault' ),
+					'cleared'          => __( 'All notices cleared', 'notice-vault' ),
 				),
 			)
 		);
@@ -181,11 +186,15 @@ class Notice_Popup
 		// Get notices.
 		$notices = $this->storage->get_all( $args );
 
-		// Get total count for pagination (same filters, no limit/offset).
-		$total_args           = $args;
-		$total_args['limit']  = 0;
-		$total_args['offset'] = 0;
-		$total_count          = count( $this->storage->get_all( $total_args ) );
+		// Total count for pagination, same filters but no limit/offset — a single COUNT(*) query.
+		$count_args = array();
+		if ( isset( $args['type'] ) ) {
+			$count_args['type'] = $args['type'];
+		}
+		if ( isset( $args['is_read'] ) ) {
+			$count_args['is_read'] = $args['is_read'];
+		}
+		$total_count = $this->storage->count( $count_args );
 
 		// Format notices for output.
 		$formatted_notices = array();
@@ -198,6 +207,9 @@ class Notice_Popup
 				'notices'      => $formatted_notices,
 				'count'        => count( $formatted_notices ),
 				'total_count'  => $total_count,
+				'page'         => $page,
+				'per_page'     => $per_page,
+				'has_more'     => ( $page * $per_page ) < $total_count,
 				'unread_total' => $this->storage->get_unread_count(),
 			)
 		);
@@ -370,13 +382,25 @@ class Notice_Popup
 	 */
 	private function format_notice($notice)
 	{
-		// 'html' intentionally omitted from the AJAX payload. The popup only renders
-		// the stripped 'content' field; shipping the full HTML wastes bandwidth and
-		// widens the trust surface if a future UI ever decides to render it.
+		// The stored `html` field is already sanitized through a strict allowlist at
+		// capture time (see Notice_Capture::sanitize_notice_html). Re-running wp_kses
+		// here is belt-and-braces — defends rows that pre-date the allowlist (when
+		// `html` was empty) and rows from any direct callers that bypassed Capture.
+		$html = isset( $notice['html'] ) ? (string) $notice['html'] : '';
+		if ( '' !== $html ) {
+			$html = \Notice_Vault\Notices\Notice_Capture::sanitize_notice_html( $html );
+		}
+
+		$type        = $notice['type'];
+		$types_index = Notice_Classifier::get_types();
+		$type_label  = isset( $types_index[ $type ] ) ? $types_index[ $type ] : ucfirst( $type );
+
 		return array(
 			'id'         => $notice['id'],
-			'type'       => $notice['type'],
+			'type'       => $type,
+			'type_label' => $type_label,
 			'content'    => $notice['content'],
+			'html'       => $html,
 			'is_read'    => ! empty( $notice['is_read'] ),
 			'created_at' => isset( $notice['created_at'] ) ? $notice['created_at'] : '',
 			'icon'       => Notice_Classifier::get_icon( $notice['type'] ),

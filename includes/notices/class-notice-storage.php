@@ -112,12 +112,13 @@ class Notice_Storage {
 			'user_id'     => isset( $notice['user_id'] ) ? (int) $notice['user_id'] : $user_id,
 			'notice_type' => isset( $notice['type'] ) ? sanitize_key( $notice['type'] ) : 'other',
 			'content'     => isset( $notice['content'] ) ? (string) $notice['content'] : '',
+			'html'        => isset( $notice['html'] ) ? (string) $notice['html'] : '',
 			'hash'        => isset( $notice['hash'] ) ? (string) $notice['hash'] : md5( (string) ( $notice['content'] ?? '' ) ),
 			'is_read'     => empty( $notice['is_read'] ) ? 0 : 1,
 			'created_at'  => isset( $notice['created_at'] ) ? (string) $notice['created_at'] : $created,
 			'expires_at'  => isset( $notice['expires_at'] ) ? (string) $notice['expires_at'] : $expires,
 		);
-		$formats = array( '%s', '%d', '%s', '%s', '%s', '%d', '%s', '%s' );
+		$formats = array( '%s', '%d', '%s', '%s', '%s', '%s', '%d', '%s', '%s' );
 
 		$inserted = $wpdb->insert( $this->table(), $row, $formats ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
@@ -245,6 +246,46 @@ class Notice_Storage {
 	}
 
 	/**
+	 * Count notices for the current user with the same filters get_all() accepts,
+	 * minus limit/offset. Used for pagination "total" without rehydrating rows.
+	 *
+	 * @since 1.0.0
+	 * @param array $args See get_all().
+	 * @return int
+	 */
+	public function count( $args = array() ) {
+		global $wpdb;
+
+		$defaults = array(
+			'type'    => '',
+			'is_read' => null,
+		);
+		$args = wp_parse_args( $args, $defaults );
+
+		$user_id = (int) get_current_user_id();
+		$now     = current_time( 'mysql', true );
+		$table   = $this->table();
+
+		$where      = array( 'user_id = %d', 'expires_at > %s' );
+		$where_args = array( $user_id, $now );
+
+		if ( ! empty( $args['type'] ) ) {
+			$where[]      = 'notice_type = %s';
+			$where_args[] = $args['type'];
+		}
+
+		if ( null !== $args['is_read'] ) {
+			$where[]      = 'is_read = %d';
+			$where_args[] = $args['is_read'] ? 1 : 0;
+		}
+
+		$sql = "SELECT COUNT(*) FROM {$table} WHERE " . implode( ' AND ', $where );
+
+		// $table is built from $wpdb->prefix + a class constant; remaining values are placeholders.
+		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $where_args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+	}
+
+	/**
 	 * Convert a DB row to the array shape v0.x callers expect.
 	 *
 	 * @param array $row Row from $wpdb->get_results( ..., ARRAY_A ).
@@ -256,6 +297,7 @@ class Notice_Storage {
 			'user_id'    => (int) $row['user_id'],
 			'type'       => $row['notice_type'],
 			'content'    => $row['content'],
+			'html'       => isset( $row['html'] ) ? (string) $row['html'] : '',
 			'hash'       => $row['hash'],
 			'is_read'    => (bool) $row['is_read'],
 			'created_at' => $row['created_at'],
@@ -431,12 +473,24 @@ class Notice_Storage {
 		$now   = current_time( 'mysql', true );
 		$table = $this->table();
 
-		$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$wpdb->prepare(
 				"DELETE FROM {$table} WHERE expires_at <= %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$now
 			)
 		);
-		// Per-user unread-count transients will refresh on their next read (1h TTL).
+
+		// If anything actually expired, sweep the per-user unread-count transients so
+		// users don't see a stale badge until the 1h TTL elapses. Transients live in
+		// the options table as `_transient_<key>` and `_transient_timeout_<key>`.
+		if ( $deleted ) {
+			$wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+				$wpdb->prepare(
+					"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+					$wpdb->esc_like( '_transient_notice_vault_notice_count_' ) . '%',
+					$wpdb->esc_like( '_transient_timeout_notice_vault_notice_count_' ) . '%'
+				)
+			);
+		}
 	}
 }

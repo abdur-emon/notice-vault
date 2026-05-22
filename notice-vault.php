@@ -42,7 +42,6 @@ Notice_Vault\Core\Autoloader::register();
  * Activation Hook
  */
 function notice_vault_activate_plugin() {
-	require_once NOTICE_VAULT_PLUGIN_DIR . 'includes/core/class-activator.php';
 	Notice_Vault\Core\Activator::activate();
 }
 register_activation_hook( __FILE__, 'notice_vault_activate_plugin' );
@@ -51,7 +50,6 @@ register_activation_hook( __FILE__, 'notice_vault_activate_plugin' );
  * Deactivation Hook
  */
 function notice_vault_deactivate_plugin() {
-	require_once NOTICE_VAULT_PLUGIN_DIR . 'includes/core/class-deactivator.php';
 	Notice_Vault\Core\Deactivator::deactivate();
 }
 register_deactivation_hook( __FILE__, 'notice_vault_deactivate_plugin' );

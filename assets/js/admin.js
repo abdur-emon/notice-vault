@@ -62,17 +62,16 @@
 		},
 
 		/**
-		 * Toggle visibility users field
+		 * Toggle visibility users field. PHP renders the wrapping <tr> with the
+		 * `hidden` class when the saved mode doesn't need a user list (avoids
+		 * a flash of visible row on load); we just keep that class in sync as
+		 * the user changes the dropdown.
 		 */
 		toggleVisibilityUsers: function () {
 			const mode = $('#notice-vault-visibility-mode').val();
 			const $usersField = $('#notice-vault-visibility-users').closest('tr');
-
-			if (mode === 'hide-selected' || mode === 'show-selected') {
-				$usersField.show();
-			} else {
-				$usersField.hide();
-			}
+			const needsList = (mode === 'hide-selected' || mode === 'show-selected');
+			$usersField.toggleClass('hidden', !needsList);
 		}
 	};
 
