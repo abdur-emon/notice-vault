@@ -1,5 +1,5 @@
 === Notice Vault ===
-Contributors: abduremon, mdismail-cse
+Contributors: abduremon, ismail0071
 Tags: admin notices, dashboard, notifications, productivity
 Requires at least: 5.0
 Tested up to: 7.0
