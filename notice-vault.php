@@ -3,8 +3,8 @@
  * Plugin Name:       Notice Vault
  * Plugin URI:        https://github.com/abdur-emon/notice-vault
  * Description:       Manage and organize WordPress admin notices by moving them from the cluttered dashboard into a centralized notice management system.
- * Version:           1.0.0
- * Requires at least: 5.0
+ * Version:           1.0.1
+ * Requires at least: 6.4
  * Requires PHP:      7.2
  * Author:            Abdur Rahman Emon
  * Author URI:        https://github.com/abdur-emon
