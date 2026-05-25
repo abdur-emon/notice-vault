@@ -126,7 +126,11 @@ By default, every captured notice category (success, error, warning, info, syste
 
 == Changelog ==
 
-= 1.0.0 - 2026-05-22 =
+= 1.0.1 =
+* Fix: Updated minimum WordPress version requirement to 6.4
+
+
+= 1.0.0 - 2026-05-20 =
 * Initial release.
 * Notice capture system covering `admin_notices`, `network_admin_notices`, `user_admin_notices`, and `all_admin_notices`.
 * Admin toolbar counter with quick-preview submenu.
