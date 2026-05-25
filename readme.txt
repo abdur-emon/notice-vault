@@ -4,7 +4,7 @@ Tags: admin notices, dashboard, notifications, productivity
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,10 @@ By default, every captured notice category (success, error, warning, info, syste
 
 
 == Changelog ==
+
+= 1.0.2 =
+* Fix: Sync NOTICE_VAULT_VERSION constant with plugin version
+
 
 = 1.0.1 =
 * Fix: Updated minimum WordPress version requirement to 6.4
